@@ -18,6 +18,7 @@
             width: 100%;
             max-width: 600px;
             margin: 20px auto;
+            position: relative;
         }
         button {
             padding: 10px 20px;
@@ -27,11 +28,16 @@
         #info {
             margin-top: 20px;
         }
+        #loading {
+            margin-top: 10px;
+            color: #555;
+        }
     </style>
 </head>
 <body>
     <h1>Random Capital City Explorer</h1>
     <button onclick="selectRandomCapital()">Show Random Capital</button>
+    <div id="loading">Loading Pyodide...</div>
     <div id="map"></div>
     <div id="info"></div>
 
@@ -40,8 +46,9 @@
         let mapInstance = null;
 
         async function loadPyodideAndRun() {
+            console.log("Starting Pyodide load...");
             const pyodide = await loadPyodide();
-            // Python code to select random capital
+            console.log("Pyodide loaded successfully");
             const pythonCode = `
 import random
 
@@ -55,9 +62,10 @@ capitals = [
 def get_random_capital():
     return random.choice(capitals)
             `;
-
             await pyodide.runPythonAsync(pythonCode);
-            window.pyodide = pyodide; // Make pyodide available globally
+            console.log("Python code executed");
+            window.pyodide = pyodide;
+            document.getElementById('loading').style.display = 'none';
         }
 
         loadPyodideAndRun();
@@ -65,26 +73,24 @@ def get_random_capital():
         function selectRandomCapital() {
             const pyodide = window.pyodide;
             if (!pyodide) {
-                alert("Pyodide is still loading. Please try again in a moment.");
+                alert("Pyodideが読み込み中です。しばらくお待ちください。");
                 return;
             }
 
             // Run Python function to get random capital
             const capital = pyodide.runPython('get_random_capital()');
-            // Ensure the capital object is valid
+            console.log("Capital data:", capital);
             if (!capital || !capital.name || !capital.country || isNaN(capital.lat) || isNaN(capital.lng)) {
-                alert("Error: Invalid capital data. Please try again.");
+                alert("エラー：無効な首都データです。もう一度お試しください。");
                 return;
             }
 
-            // Destructure the capital object
             const { name, country, lat, lng, description } = capital;
-
-            // Convert lat and lng to numbers and validate
+            console.log("Coordinates:", lat, lng);
             const latitude = parseFloat(lat);
             const longitude = parseFloat(lng);
             if (isNaN(latitude) || isNaN(longitude)) {
-                alert("Error: Invalid coordinates for the selected capital.");
+                alert("エラー：無効な座標データです。");
                 return;
             }
 
@@ -96,9 +102,10 @@ def get_random_capital():
 
             // Initialize or update Leaflet map
             if (mapInstance) {
-                mapInstance.remove(); // Remove existing map
+                mapInstance.remove();
             }
             mapInstance = L.map('map').setView([latitude, longitude], 10);
+            console.log("Map initialized with coordinates:", latitude, longitude);
 
             // Add OpenStreetMap tile layer
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -110,6 +117,7 @@ def get_random_capital():
                 .addTo(mapInstance)
                 .bindPopup(`${name}, ${country}`)
                 .openPopup();
+            console.log("Marker added");
         }
     </script>
 </body>
