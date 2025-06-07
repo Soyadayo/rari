@@ -164,7 +164,7 @@
         const NEWS_API_KEY = 'f25cbdde9c324c558cce22e2e0cec50c'; // Get from newsapi.org
 
         // GitHub raw URL for GeoJSON
-        const geoJsonUrl = 'https://raw.githubusercontent.com/soyadayo/mappon/main/capitals.geojson';
+        const geoJsonUrl = 'https://github.com/Soyadayo/Mappon/blob/5bc14831c0038264a9ffb5ab2c6249dd94046518/capitals.geojson';
 
         // Fetch GeoJSON data
         fetch(geoJsonUrl)
@@ -213,7 +213,7 @@
             const weatherSection = document.getElementById('weather-section');
             try {
                 const response = await axios.get(
-                    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`
+                    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${733f811ffacc68efe08bb31549727912}&units=metric`
                 );
                 const data = response.data;
                 weatherSection.innerHTML = `
@@ -236,7 +236,7 @@
             const newsSection = document.getElementById('news-section');
             try {
                 const response = await axios.get(
-                    `https://newsapi.org/v2/top-headlines?country=${cca2.toLowerCase()}&apiKey=${NEWS_API_KEY}`
+                    `https://newsapi.org/v2/top-headlines?country=${cca2.toLowerCase()}&apiKey=${f25cbdde9c324c558cce22e2e0cec50c}`
                 );
                 const articles = response.data.articles.slice(0, 3);
                 if (articles.length > 0) {
