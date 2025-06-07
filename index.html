@@ -60,12 +60,60 @@
         .error {
             color: red;
         }
+        #wiki-container {
+            display: flex;
+            width: 80%;
+            max-width: 800px;
+            margin-top: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .wiki-section {
+            flex: 1;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-width: 250px;
+        }
+        .wiki-section h4 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .wiki-section p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+        .wiki-section a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        .wiki-section a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            #wiki-container {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
     <button id="randomButton" onclick="selectRandomCapital()" disabled>Select Random Capital</button>
     <div id="info">Loading data...</div>
     <div id="map"></div>
+    <div id="wiki-container">
+        <div id="country-wiki" class="wiki-section">
+            <h4>Country</h4>
+            <p>Select a capital to see information about the country.</p>
+        </div>
+        <div id="city-wiki" class="wiki-section">
+            <h4>Capital City</h4>
+            <p>Select a capital to see information about the city.</p>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
@@ -79,7 +127,7 @@
         let validCapitals = [];
         let currentMarker = null;
 
-        // Replace with your GitHub raw URL
+        // GitHub raw URL for GeoJSON
         const geoJsonUrl = 'https://raw.githubusercontent.com/soyadayo/mappon/main/capitals.geojson';
 
         // Fetch GeoJSON data
@@ -100,6 +148,30 @@
                 console.error('Error:', error);
                 document.getElementById('info').innerHTML = '<p class="error">Error loading data. Please try again later.</p>';
             });
+
+        // Function to fetch Wikipedia summary
+        async function fetchWikipediaSummary(title, elementId) {
+            const wikiSection = document.getElementById(elementId);
+            try {
+                // Encode title to handle special characters
+                const encodedTitle = encodeURIComponent(title.replace(/ /g, '_'));
+                const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodedTitle}`);
+                if (!response.ok) {
+                    throw new Error('Wikipedia page not found');
+                }
+                const data = await response.json();
+                wikiSection.innerHTML = `
+                    <h4>${data.title}</h4>
+                    <p>${data.extract}</p>
+                    <p><a href="${data.content_urls.desktop.page}" target="_blank">Read more on Wikipedia</a></p>
+                `;
+            } catch (error) {
+                wikiSection.innerHTML = `
+                    <h4>${title}</h4>
+                    <p>No information available on Wikipedia for "${title}".</p>
+                `;
+            }
+        }
 
         function selectRandomCapital() {
             if (validCapitals.length === 0) {
@@ -135,6 +207,10 @@
                 <h3>${city}, ${country}</h3>
                 <p><a href="${googleMapsUrl}" target="_blank">View on Google Maps</a></p>
             `;
+
+            // Fetch Wikipedia summaries
+            fetchWikipediaSummary(country, 'country-wiki');
+            fetchWikipediaSummary(city, 'city-wiki');
         }
     </script>
 </body>
