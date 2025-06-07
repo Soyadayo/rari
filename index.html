@@ -1,1 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Capital City Map</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #info {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random Capital City Explorer</h1>
+    <button onclick="selectRandomCapital()">Show Random Capital</button>
+    <div id="map"></div>
+    <div id="info"></div>
 
+    <script>
+        // Global variable to store map instance
+        let mapInstance = null;
+
+        async function loadPyodideAndRun() {
+            const pyodide = await loadPyodide();
+            // Python code to select random capital
+            const pythonCode = `
+import random
+
+capitals = [
+    {"name": "Tokyo", "country": "Japan", "lat": 35.6762, "lng": 139.6503, "description": "Tokyo, the capital of Japan, is a bustling metropolis known for its blend of ultramodern skyscrapers and traditional temples."},
+    {"name": "Paris", "country": "France", "lat": 48.8566, "lng": 2.3522, "description": "Paris, France's capital, is famous for its cafe culture, major museums, and landmarks like the Eiffel Tower."},
+    {"name": "Brasilia", "country": "Brazil", "lat": -15.8267, "lng": -47.9218, "description": "Brasilia, the capital of Brazil, is known for its modernist architecture and urban planning."},
+    {"name": "Canberra", "country": "Australia", "lat": -35.2809, "lng": 149.1300, "description": "Canberra, Australia's capital, is home to national monuments and cultural institutions."}
+]
+
+def get_random_capital():
+    return random.choice(capitals)
+            `;
+
+            await pyodide.runPythonAsync(pythonCode);
+            window.pyodide = pyodide; // Make pyodide available globally
+        }
+
+        loadPyodideAndRun();
+
+        function selectRandomCapital() {
+            const pyodide = window.pyodide;
+            if (!pyodide) {
+                alert("Pyodide is still loading. Please try again in a moment.");
+                return;
+            }
+
+            // Run Python function to get random capital
+            const capital = pyodide.runPython('get_random_capital()');
+            // Ensure the capital object is valid
+            if (!capital || !capital.name || !capital.country || isNaN(capital.lat) || isNaN(capital.lng)) {
+                alert("Error: Invalid capital data. Please try again.");
+                return;
+            }
+
+            // Destructure the capital object
+            const { name, country, lat, lng, description } = capital;
+
+            // Convert lat and lng to numbers and validate
+            const latitude = parseFloat(lat);
+            const longitude = parseFloat(lng);
+            if (isNaN(latitude) || isNaN(longitude)) {
+                alert("Error: Invalid coordinates for the selected capital.");
+                return;
+            }
+
+            // Update info display
+            document.getElementById('info').innerHTML = `
+                <h2>${name}, ${country}</h2>
+                <p>${description}</p>
+            `;
+
+            // Initialize or update Leaflet map
+            if (mapInstance) {
+                mapInstance.remove(); // Remove existing map
+            }
+            mapInstance = L.map('map').setView([latitude, longitude], 10);
+
+            // Add OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(mapInstance);
+
+            // Add marker
+            L.marker([latitude, longitude])
+                .addTo(mapInstance)
+                .bindPopup(`${name}, ${country}`)
+                .openPopup();
+        }
+    </script>
+</body>
+</html>
