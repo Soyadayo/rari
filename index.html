@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Capital City Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700&display=swap" />
     <style>
         body {
             font-family: 'Noto Sans', sans-serif;
@@ -22,7 +22,7 @@
             max-width: 800px;
             border: 2px solid #333;
             border-radius: 8px;
-            margin-top: 20px;
+            margin-bottom: 20px;
         }
         button {
             padding: 10px 20px;
@@ -39,6 +39,7 @@
         }
         #info {
             margin-top: 10px;
+            margin-bottom: 10px;
             font-size: 16px;
             color: #333;
             text-align: center;
@@ -62,8 +63,8 @@
             color: red;
         }
         #data-container {
-            display: flex;
-            width: 80%;
+            display: 80%;
+            width: flex;
             max-width: 800px;
             margin-top: 20px;
             gap: 20px;
@@ -98,6 +99,20 @@
             vertical-align: middle;
             margin-left: 5px;
         }
+        #credits {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+            max-width: 800px;
+        }
+        #credits a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        #credits a:hover {
+            text-decoration: underline;
+        }
         @media (max-width: 600px) {
             #data-container {
                 flex-direction: column;
@@ -127,6 +142,9 @@
             <p>Select a capital to see recent news.</p>
         </div>
     </div>
+    <div id="credits">
+        <p>Data credits: Capital city coordinates from <a href="http://www.geognos.com/geo/en/world-countries-API.html" target="_blank">GeoGnos World Countries API</a>. Weather data from <a href="https://openweathermap.org" target="_blank">OpenWeatherMap</a>. News headlines from <a href="https://newsapi.org" target="_blank">News API</a>. Map tiles by <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>.</p>
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
@@ -142,8 +160,8 @@
         let currentMarker = null;
 
         // API keys (replace with your own)
-        const OPENWEATHER_API_KEY = '733f811ffacc68efe08bb31549727912'; // Get from openweathermap.org
-        const NEWS_API_KEY = 'f25cbdde9c324c558cce22e2e0cec50c'; // Get from newsapi.org
+        const OPENWEATHER_API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY'; // Get from openweathermap.org
+        const NEWS_API_KEY = 'YOUR_NEWSAPI_KEY'; // Get from newsapi.org
 
         // GitHub raw URL for GeoJSON
         const geoJsonUrl = 'https://raw.githubusercontent.com/soyadayo/mappon/main/capitals.geojson';
@@ -162,8 +180,8 @@
                 document.getElementById('randomButton').disabled = false;
             })
             .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('info').innerHTML = `<p class="error">No data available.</p>`;
+                console.error('Error:', error.message);
+                document.getElementById('info').innerHTML = `<p class="error">No data available. Check GeoJSON URL.</p>`;
             });
 
         // Fetch Wikipedia summary
@@ -182,6 +200,7 @@
                     <p><a href="${data.content_urls.desktop.page}" target="_blank">Read more on Wikipedia</a></p>
                 `;
             } catch (error) {
+                console.error('Error fetching Wikipedia:', error.message);
                 wikiSection.innerHTML = `
                     <h4>${title}</h4>
                     <p>No information available on Wikipedia for "${title}".</p>
