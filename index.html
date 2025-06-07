@@ -79,16 +79,6 @@
         let validCapitals = [];
         let currentMarker = null;
 
-        // Sample fun facts (extend this object with more cities)
-        const funFacts = {
-            "Dhaka": "Dhaka is one of the most densely populated cities in the world, with over 20 million people in its metropolitan area.",
-            "Brussels": "Brussels is home to the headquarters of the European Union and NATO.",
-            "Sofia": "Sofia is one of the oldest capitals in Europe, with history dating back to the 8th century BCE.",
-            "Tokyo": "Tokyo has the most Michelin-starred restaurants of any city in the world.",
-            "London": "London's Big Ben is not the clock but the bell inside the Elizabeth Tower.",
-            // Add more facts here or fetch from an external source
-        };
-
         // Replace with your GitHub raw URL
         const geoJsonUrl = 'https://raw.githubusercontent.com/your-username/your-repo/main/capitals.geojson';
 
@@ -137,16 +127,12 @@
                 .bindPopup(`<b>${city}</b><br>${country}`)
                 .openPopup();
 
-            // Get fun fact
-            const funFact = funFacts[city] || "No fun fact available for this city. Want to contribute one?";
-
             // Generate Google Maps link
             const googleMapsUrl = `https://www.google.com/maps?q=${coords[1]},${coords[0]}`;
 
             // Update info section
             document.getElementById('info').innerHTML = `
                 <h3>${city}, ${country}</h3>
-                <p><strong>Fun Fact:</strong> ${funFact}</p>
                 <p><a href="${googleMapsUrl}" target="_blank">View on Google Maps</a></p>
             `;
         }
