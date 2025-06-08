@@ -1,319 +1,343 @@
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- Axios -->
-<script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Configuration
-    const geoJsonUrl = 'https://raw.githubusercontent.com/soyadayo/mappon/main/cities15000.geojson';
-    const countryCodesUrl = 'https://raw.githubusercontent.com/datasets/country-codes/main/data/country-codes.csv';
-    const gNewsApiKey = 'f25cbdde9c324c558cce22e2e0cec50c';
-    const weatherApiKey = '733f811ffacc68efe08bb31549727912';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random City Map</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { padding-top: 20px; }
+        #map { height: 400px; margin-bottom: 20px; }
+        #suggestions { max-height: 200px; overflow-y: auto; }
+        .suggestion-item { cursor: pointer; padding: 5px; }
+        .suggestion-item:hover { background-color: #f0f0f0; }
+        #weather-container, #wiki-container { margin-top: 20px; }
+        .card { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Random City Map</h1>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input type="text" id="citySearch" class="form-control" placeholder="Search city..." oninput="debounceSearch()">
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-primary w-100" onclick="selectRandomCity()">New Random City</button>
+            </div>
+        </div>
+        <div id="suggestions" class="border rounded mb-3"></div>
+        <div id="map"></div>
+        <div id="info" class="mb-3"></div>
+        <div id="weather-container">
+            <h3>Weather</h3>
+            <div id="weather-info"></div>
+        </div>
+        <div id="wiki-container">
+            <h3>Wikipedia Summary</h3>
+            <div id="city-wiki"></div>
+        </div>
+    </div>
 
-    // Fallback GeoJSON data (subset for testing)
-    const fallbackGeoJson = {
-        "type": "FeatureCollection",
-        "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-        "features": [
-            {
-                "type": "Feature",
-                "properties": { "name": "les Escaldes", "country code": "AD", "latitude": 42.50729, "longitude": 1.53414, "population": 15853 },
-                "geometry": { "type": "Point", "coordinates": [1.53414, 42.50729] }
-            },
-            {
-                "type": "Feature",
-                "properties": { "name": "Andorra la Vella", "country code": "AD", "latitude": 42.50779, "longitude": 1.52109, "population": 20430 },
-                "geometry": { "type": "Point", "coordinates": [1.52109, 42.50779] }
-            },
-            {
-                "type": "Feature",
-                "properties": { "name": "Dubai", "country code": "AE", "latitude": 25.07725, "longitude": 55.30927, "population": 3790000 },
-                "geometry": { "type": "Point", "coordinates": [55.30927, 25.07725] }
-            },
-            {
-                "type": "Feature",
-                "properties": { "name": "Kabul", "country code": "AF", "latitude": 34.52813, "longitude": 69.17233, "population": 4434550 },
-                "geometry": { "type": "Point", "coordinates": [69.17233, 34.52813] }
-            }
-        ]
-    };
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Configuration
+        const geoJsonUrl = 'https://raw.githubusercontent.com/soyadayo/mappon/main/cities15000.geojson';
+        const weatherApiKey = '733f811ffacc68efe08bb31549727912';
 
-    // Global variables
-    let map, currentMarker, allCities = [], validCities = [], countryMap = {};
-    let newsCache = {}, weatherCache = {}, wikiCache = {};
-    let cityIndex = [];
-
-    // Initialize map
-    function initMap() {
-        map = L.map('map').setView([0, 0], 2);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-    }
-
-    // Load country code to country name mapping
-    async function loadCountryMap() {
-        try {
-            const response = await axios.get(countryCodesUrl);
-            const lines = response.data.split('\n').slice(1);
-            lines.forEach(line => {
-                const [alpha2, , , , name] = line.split(',').map(s => s.trim().replace(/^"|"$/g, ''));
-                if (alpha2 && name) countryMap[alpha2.toUpperCase()] = name;
-            });
-        } catch (error) {
-            console.error('Error loading country codes:', error.message, error.stack);
-            countryMap = { 'AD': 'Andorra', 'AE': 'United Arab Emirates', 'AF': 'Afghanistan' };
-        }
-    }
-
-    // Validate feature and return error message if invalid
-    function validateFeature(f) {
-        if (!f.properties) return 'Missing properties';
-        if (!f.properties.name || typeof f.properties.name !== 'string') return `Invalid name: ${f.properties.name}`;
-        if (!f.properties['country code'] || typeof f.properties['country code'] !== 'string') return `Invalid country code: ${f.properties['country code']}`;
-        if (!f.geometry) return 'Missing geometry';
-        if (!f.geometry.coordinates || !Array.isArray(f.geometry.coordinates) || f.geometry.coordinates.length !== 2) return `Invalid coordinates: ${f.geometry.coordinates}`;
-        if (typeof f.geometry.coordinates[0] !== 'number' || typeof f.geometry.coordinates[1] !== 'number') return `Non-numeric coordinates: ${f.geometry.coordinates}`;
-        if (isNaN(parseInt(f.properties.population || 0))) return `Invalid population: ${f.properties.population}`;
-        return null;
-    }
-
-    // Load GeoJSON data
-    async function loadGeoJson() {
-        try {
-            let response;
-            try {
-                response = await axios.get(geoJsonUrl, { timeout: 30000 });
-            } catch (urlError) {
-                console.warn('Failed to load GeoJSON from URL, using fallback data:', urlError.message);
-                response = { data: fallbackGeoJson };
-            }
-            let invalidCount = 0;
-            const maxWarnings = 10; // Limit warning logs
-            allCities = response.data.features.filter(f => {
-                const error = validateFeature(f);
-                if (error) {
-                    if (invalidCount < maxWarnings) {
-                        console.warn(`Invalid feature: ${error}`, f);
-                    }
-                    invalidCount++;
-                    return false;
+        // Fallback GeoJSON data (subset for testing)
+        const fallbackGeoJson = {
+            "type": "FeatureCollection",
+            "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": { "name": "les Escaldes", "latitude": 42.50729, "longitude": 1.53414, "population": 15853 },
+                    "geometry": { "type": "Point", "coordinates": [1.53414, 42.50729] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Andorra la Vella", "latitude": 42.50779, "longitude": 1.52109, "population": 20430 },
+                    "geometry": { "type": "Point", "coordinates": [1.52109, 42.50779] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Dubai", "latitude": 25.07725, "longitude": 55.30927, "population": 3790000 },
+                    "geometry": { "type": "Point", "coordinates": [55.30927, 25.07725] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Kabul", "latitude": 34.52813, "longitude": 69.17233, "population": 4434550 },
+                    "geometry": { "type": "Point", "coordinates": [69.17233, 34.52813] }
                 }
-                return parseInt(f.properties.population || 0) >= 15000;
-            });
-            if (invalidCount > 0) {
-                console.warn(`Filtered out ${invalidCount} invalid features.`);
-                document.getElementById('info').innerHTML += `<p class="text-warning">Warning: ${invalidCount} invalid cities were skipped.</p>`;
-            }
-            if (!allCities.length) throw new Error('No valid cities found in GeoJSON');
-            cityIndex = allCities.map(f => ({
-                name: f.properties.name,
-                countryCode: f.properties['country code'],
-                country: countryMap[f.properties['country code']] || f.properties['country code'],
-                coordinates: f.geometry.coordinates,
-                population: parseInt(f.properties.population || 0)
-            }));
-            validCities = allCities.filter(f => parseInt(f.properties.population || 0) > 50000);
-            selectRandomCity();
-        } catch (error) {
-            console.error('Error loading GeoJSON:', error.message, error.stack);
-            document.getElementById('info').innerHTML = '<p class="text-danger">Failed to load city data. Using fallback data.</p>';
-            // Use fallback data
-            let invalidCount = 0;
-            allCities = fallbackGeoJson.features.filter(f => {
-                const error = validateFeature(f);
-                if (error) {
-                    console.warn(`Invalid fallback feature: ${error}`, f);
-                    invalidCount++;
-                    return false;
-                }
-                return parseInt(f.properties.population || 0) >= 15000;
-            });
-            if (invalidCount > 0) {
-                console.warn(`Filtered out ${invalidCount} invalid fallback features.`);
-            }
-            cityIndex = allCities.map(f => ({
-                name: f.properties.name,
-                countryCode: f.properties['country code'],
-                country: countryMap[f.properties['country code']] || f.properties['country code'],
-                coordinates: f.geometry.coordinates,
-                population: parseInt(f.properties.population || 0)
-            }));
-            validCities = allCities.filter(f => parseInt(f.properties.population || 0) > 50000);
-            selectRandomCity();
-        }
-    }
-
-    // Select random city with population-based weighting
-    function selectRandomCity() {
-        if (!validCities.length) {
-            document.getElementById('info').innerHTML = '<p class="text-danger">No valid cities available.</p>';
-            return;
-        }
-        const totalPop = validCities.reduce((sum, f) => sum + parseInt(f.properties.population || 0), 0);
-        let rand = Math.random() * totalPop;
-        let selectedFeature = validCities[0];
-        for (const feature of validCities) {
-            rand -= parseInt(feature.properties.population || 0);
-            if (rand <= 0) {
-                selectedFeature = feature;
-                break;
-            }
-        }
-        displayCity(selectedFeature);
-    }
-
-    // Display city on map and fetch data
-    function displayCity(feature) {
-        const coords = feature.geometry.coordinates;
-        const city = feature.properties.name;
-        const countryCode = feature.properties['country code'];
-        const country = countryMap[countryCode] || countryCode;
-        const population = feature.properties.population;
-
-        // Update map
-        map.setView([coords[1], coords[0]], 6);
-        if (currentMarker) map.removeLayer(currentMarker);
-        currentMarker = L.marker([coords[1], coords[0]])
-            .addTo(map)
-            .bindPopup(`<b>${city}</b><br>${country}`)
-            .openPopup();
-
-        // Update info
-        document.getElementById('info').innerHTML = `
-            <h3>${city}, ${country}</h3>
-            <p>Population: ${parseInt(population).toLocaleString()}</p>
-            <p><a href="https://www.google.com/maps?q=${coords[1]},${coords[0]}" target="_blank">View on Google Maps</a></p>
-        `;
-
-        // Fetch external data
-        fetchWeatherData(coords[1], coords[0], city);
-        fetchNewsData(countryCode, country);
-        fetchWikipediaSummary(city, 'city-wiki');
-        fetchWikipediaSummary(country, 'country-wiki');
-    }
-
-    // Debounce function for search
-    function debounce(func, wait) {
-        let timeout;
-        return function (...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
+            ]
         };
-    }
 
-    // Search cities
-    const debounceSearch = debounce(function () {
-        const query = document.getElementById('citySearch').value.toLowerCase();
-        if (!query) {
-            document.getElementById('suggestions').innerHTML = '';
-            return;
-        }
-        const suggestions = cityIndex.filter(c =>
-            c.name.toLowerCase().includes(query) ||
-            c.country.toLowerCase().includes(query)
-        ).slice(0, 5);
-        document.getElementById('suggestions').innerHTML = suggestions.map(c => `
-            <div class="suggestion-item" onclick="selectCity('${c.name}', '${c.countryCode}')">
-                ${c.name}, ${c.country}
-            </div>
-        `).join('');
-    }, 300);
+        // Global variables
+        let map, currentMarker, cities = [], validCities = [];
+        let weatherCache = {}, wikiCache = {};
+        let cityIndices = [];
 
-    // Select city from search
-    function selectCity(city, countryCode) {
-        const feature = allCities.find(f => f.properties.name === city && f.properties['country code'] === countryCode);
-        if (feature) {
-            displayCity(feature);
-            document.getElementById('suggestions').innerHTML = '';
-            document.getElementById('citySearch').value = '';
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([0, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
         }
-    }
 
-    // Fetch weather data
-    async function fetchWeatherData(lat, lon, city) {
-        const cacheKey = `${lat},${lon}`;
-        if (weatherCache[cacheKey]) {
-            displayWeather(weatherCache[cacheKey], city);
-            return;
+        // Validate feature and return error message if invalid
+        function validateFeature(f) {
+            if (!f.properties) return 'Missing properties';
+            if (!f.properties.name || typeof f.properties.name !== 'string' || f.properties.name.trim() === '') {
+                return `Invalid name: ${f.properties.name}`;
+            }
+            if (!f.geometry) return 'Missing geometry';
+            if (!f.geometry.coordinates || !Array.isArray(f.geometry.coordinates) || f.geometry.coordinates.length !== 2) {
+                return `Invalid coordinates: ${f.geometry.coordinates} (name: ${f.properties.name || 'unknown'})`;
+            }
+            if (typeof f.geometry.coordinates[0] !== 'number' || typeof f.geometry.coordinates[1] !== 'number' || 
+                isNaN(f.geometry.coordinates[0]) || isNaN(f.geometry.coordinates[1])) {
+                return `Non-numeric coordinates: ${f.geometry.coordinates} (name: ${f.properties.name || 'unknown'})`;
+            }
+            if (isNaN(parseInt(f.properties.population || 0))) {
+                return `Invalid population: ${f.properties.population} (name: ${f.properties.name || 'unknown'})`;
+            }
+            return null;
         }
-        try {
-            const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`);
-            weatherCache[cacheKey] = response.data;
-            displayWeather(response.data, city);
-        } catch (error) {
-            console.error('Weather API error:', error.message, error.stack);
-            document.getElementById('weather-info').innerHTML = '<p class="text-danger">Failed to load weather data.</p>';
-        }
-    }
 
-    // Display weather
-    function displayWeather(data, city) {
-        document.getElementById('weather-info').innerHTML = `
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Weather in ${city}</h5>
-                    <p>Temperature: ${data.main.temp}°C</p>
-                    <p>Condition: ${data.weather[0].description}</p>
-                    <p>Humidity: ${data.main.humidity}%</p>
+        // Load GeoJSON data
+        async function loadGeoJson() {
+            try {
+                let response;
+                let source = 'main';
+                try {
+                    response = await axios.get(geoJsonUrl, { timeout: 30000 });
+                } catch (urlError) {
+                    console.warn('Failed to load GeoJSON from URL, using fallback data:', urlError.message);
+                    response = { data: fallbackGeoJson };
+                    source = 'fallback';
+                }
+                let invalidCount = 0;
+                const maxWarnings = 10;
+                cities = response.data.features.filter(f => {
+                    const error = validateFeature(f);
+                    if (error) {
+                        if (invalidCount < maxWarnings) {
+                            console.warn(`Invalid feature: ${error}`, f);
+                        }
+                        invalidCount++;
+                        return false;
+                    }
+                    return parseInt(f.properties.population || 0) >= 15000;
+                });
+                if (invalidCount > 0) {
+                    console.warn(`Filtered out ${invalidCount} invalid features from ${source} data.`);
+                    document.getElementById('info').innerHTML += `<p class="text-warning">Warning: ${invalidCount} invalid cities were skipped.</p>`;
+                }
+                if (!cities.length) throw new Error(`No valid cities found in ${source} GeoJSON`);
+                cityIndices = cities.map(f => ({
+                    name: f.properties.name,
+                    coordinates: f.geometry.coordinates,
+                    population: parseInt(f.properties.population || 0)
+                }));
+                validCities = cities.filter(f => parseInt(f.properties.population || 0) > 50000);
+                console.log(`Loaded ${cities.length} cities from ${source} data.`);
+                selectRandomCity();
+            } catch (error) {
+                console.error('Error loading GeoJSON:', error.message, error.stack);
+                document.getElementById('info').innerHTML = '<p class="text-danger">Failed to load city data. Using fallback data.</p>';
+                let invalidCount = 0;
+                const maxWarnings = 10;
+                cities = fallbackGeoJson.features.filter(f => {
+                    const error = validateFeature(f);
+                    if (error) {
+                        if (invalidCount < maxWarnings) {
+                            console.warn(`Invalid fallback feature: ${error}`, f);
+                        }
+                        invalidCount++;
+                        return false;
+                    }
+                    return parseInt(f.properties.population || 0) >= 15000;
+                });
+                if (invalidCount > 0) {
+                    console.warn(`Filtered out ${invalidCount} invalid fallback features.`);
+                    document.getElementById('info').innerHTML += `<p class="text-warning">Warning: ${invalidCount} invalid fallback cities were skipped.</p>`;
+                }
+                cityIndices = cities.map(f => ({
+                    name: f.properties.name,
+                    coordinates: f.geometry.coordinates,
+                    population: parseInt(f.properties.population || 0)
+                }));
+                validCities = cities.filter(f => parseInt(f.properties.population || 0) > 50000);
+                console.log(`Loaded ${cities.length} cities from fallback data.`);
+                selectRandomCity();
+            }
+        }
+
+        // Select random city with population-based weighting
+        function selectRandomCity() {
+            if (!validCities.length) {
+                document.getElementById('info').innerHTML = '<p class="text-danger">No valid cities available.</p>';
+                return;
+            }
+            const totalPop = validCities.reduce((sum, f) => sum + parseInt(f.properties.population || 0), 0);
+            let rand = Math.random() * totalPop;
+            let selectedFeature = validCities[0];
+            for (const feature of validCities) {
+                rand -= parseInt(feature.properties.population || 0);
+                if (rand <= 0) {
+                    selectedFeature = feature;
+                    break;
+                }
+            }
+            displayCity(selectedFeature);
+        }
+
+        // Display city on map and fetch data
+        function displayCity(feature) {
+            const coords = feature.geometry.coordinates;
+            const city = feature.properties.name;
+            const population = feature.properties.population;
+
+            // Update map
+            map.setView([coords[1], coords[0]], 6);
+            if (currentMarker) map.removeLayer(currentMarker);
+            currentMarker = L.marker([coords[1], coords[0]])
+                .addTo(map)
+                .bindPopup(`<b>${city}</b>`)
+                .openPopup();
+
+            // Update info
+            document.getElementById('info').innerHTML = `
+                <h3>${city}</h3>
+                <p>Population: ${parseInt(population).toLocaleString()}</p>
+                <p><a href="https://www.google.com/maps?q=${coords[1]},${coords[0]}" target="_blank">View on Google Maps</a></p>
+            `;
+
+            // Fetch external data
+            fetchWeatherData(coords[1], coords[0], city);
+            fetchWikipediaSummary(city, 'city-wiki');
+        }
+
+        // Debounce function for search
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Search cities
+        const debounceSearch = debounce(function () {
+            const query = document.getElementById('citySearch').value.toLowerCase();
+            if (!query) {
+                document.getElementById('suggestions').innerHTML = '';
+                return;
+            }
+            const suggestions = cityIndices.filter(c => c.name.toLowerCase().includes(query)).slice(0, 5);
+            document.getElementById('suggestions').innerHTML = suggestions.map(c => `
+                <div class="suggestion-item" onclick="selectCity('${c.name}')">
+                    ${c.name}
                 </div>
-            </div>
-        `;
-    }
+            `).join('');
+        }, 300);
 
-    // Fetch news data
-    async function fetchNewsData(countryCode, country) {
-        if (newsCache[countryCode]) {
-            displayNews(newsCache[countryCode], country);
-            return;
+        // Select city from search
+        function selectCity(city) {
+            const feature = cities.find(f => f.properties.name === city);
+            if (feature) {
+                displayCity(feature);
+                document.getElementById('suggestions').innerHTML = '';
+                document.getElementById('citySearch').value = '';
+            }
         }
-        try {
-            const response = await axios.get(`https://gnews.io/api/v4/top-headlines?country=${countryCode.toLowerCase()}&lang=en&token=${gNewsApiKey}`);
-            newsCache[countryCode] = response.data.articles;
-            displayNews(response.data.articles, country);
-        } catch (error) {
-            console.error('News API error:', error.message, error.stack);
-            document.getElementById('news-list').innerHTML = '<p class="text-danger">Failed to load news.</p>';
-        }
-    }
 
-    // Display news
-    function displayNews(articles, country) {
-        document.getElementById('news-list').innerHTML = articles.slice(0, 5).map(article => `
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">${article.title}</h5>
-                    <p class="card-text">${article.description || ''}</p>
-                    <a href="${article.url}" target="_blank" class="btn btn-primary">Read More</a>
+        // Fetch weather data
+        async function fetchWeatherData(lat, lon, city) {
+            const cacheKey = `${lat},${lon}`;
+            if (weatherCache[cacheKey]) {
+                displayWeather(weatherCache[cacheKey], city);
+                return;
+            }
+            try {
+                const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, { timeout: 10000 });
+                weatherCache[cacheKey] = response.data;
+                displayWeather(response.data, city);
+            } catch (error) {
+                console.error('Weather API error:', error.message, error.stack);
+                document.getElementById('weather-info').innerHTML = '<p class="text-danger">Failed to load weather data.</p>';
+            }
+        }
+
+        // Display weather
+        function displayWeather(data, city) {
+            document.getElementById('weather-info').innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Weather in ${city}</h5>
+                        <p>Temperature: ${data.main.temp}°C</p>
+                        <p>Condition: ${data.weather[0].description}</p>
+                        <p>Humidity: ${data.main.humidity}%</p>
+                    </div>
                 </div>
-            </div>
-        `).join('');
-    }
-
-    // Fetch Wikipedia summary
-    async function fetchWikipediaSummary(title, containerId) {
-        const cacheKey = title.toLowerCase();
-        if (wikiCache[cacheKey]) {
-            document.getElementById(containerId).innerHTML = wikiCache[cacheKey];
-            return;
+            `;
         }
-        try {
-            const response = await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
-            const summary = response.data.extract || 'No summary available.';
-            wikiCache[cacheKey] = `<p>${summary} <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(title)}" target="_blank">Read more on Wikipedia</a></p>`;
-            document.getElementById(containerId).innerHTML = wikiCache[cacheKey];
-        } catch (error) {
-            console.error('Wikipedia API error:', error.message, error.stack);
-            document.getElementById(containerId).innerHTML = '<p class="text-danger">Failed to load Wikipedia summary.</p>';
-        }
-    }
 
-    // Initialize
-    async function init() {
-        initMap();
-        await loadCountryMap();
-        await loadGeoJson();
-    }
-    init();
-</script>
+        // Fetch Wikipedia summary
+        async function fetchWikipediaSummary(title, containerId) {
+            if (!title || typeof title !== 'string' || title.trim() === '') {
+                console.warn(`Invalid Wikipedia title: ${title}`);
+                document.getElementById(containerId).innerHTML = '<p class="text-warning">Invalid city name for Wikipedia summary.</p>';
+                return;
+            }
+            const cacheKey = title.toLowerCase();
+            if (wikiCache[cacheKey]) {
+                document.getElementById(containerId).innerHTML = wikiCache[cacheKey];
+                return;
+            }
+            try {
+                const response = await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`, { timeout: 10000 });
+                const summary = response.data.extract || 'No summary available.';
+                wikiCache[cacheKey] = `<p>${summary} <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(title)}" target="_blank">Read more on Wikipedia</a></p>`;
+                document.getElementById(containerId).innerHTML = wikiCache[cacheKey];
+            } catch (error) {
+                let message = 'Failed to load Wikipedia summary.';
+                if (error.response) {
+                    if (error.response.status === 404) {
+                        message = `No Wikipedia page found for "${title}".`;
+                    } else if (error.response.status === 429) {
+                        message = 'Wikipedia API rate limit exceeded.';
+                    } else {
+                        message = `Wikipedia API error: ${error.response.status} ${error.response.statusText}`;
+                    }
+                } else if (error.request) {
+                    message = 'Network error: Unable to reach Wikipedia API.';
+                }
+                console.error(`Wikipedia API error for "${title}":`, error.message, {
+                    status: error.response?.status,
+                    statusText: error.response?.statusText,
+                    stack: error.stack
+                });
+                document.getElementById(containerId).innerHTML = `<p class="text-danger">${message}</p>`;
+            }
+        }
+
+        // Initialize
+        async function init() {
+            initMap();
+            await loadGeoJson();
+        }
+        init();
+    </script>
+</body>
+</html>
