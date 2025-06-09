@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Haus Tacorari - Fashion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.9/babel.min.js"></script>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+    }
+    .mode-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+      position: relative;
+    }
+    .mode-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+    .mode-card img {
+      transition: transform 0.5s ease;
+    }
+    .mode-card:hover img {
+      transform: scale(1.1);
+    }
+    .mode-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .mode-card:hover .mode-overlay {
+      opacity: 1;
+    }
+    .header-text {
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .logo {
+      max-width: 150px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const App = () => {
+      const modes = [
+        {
+          id: 'mode1',
+          name: 'Mode 1: Urban Pulse',
+          description: 'Bold designs for city explorers.',
+          image: 'https://raw.githubusercontent.com/Soyadayo/Mappon/fea7bad7b081851ca7ce7765d31959a4eefbea4c/mode1.png',
+        },
+        {
+          id: 'mode2',
+          name: 'Mode 2: Night Drift',
+          description: 'Sleek styles for evening vibes.',
+          image: 'https://raw.githubusercontent.com/Soyadayo/Mappon/fea7bad7b081851ca7ce7765d31959a4eefbea4c/mode2.png',
+        },
+        {
+          id: 'mode3',
+          name: 'Mode 3: Concrete Flow',
+          description: 'Functional yet stylish urban wear.',
+          image: 'https://raw.githubusercontent.com/Soyadayo/Mappon/fea7bad7b081851ca7ce7765d31959a4eefbea4c/mode3.png',
+        },
+        {
+          id: 'mode4',
+          name: 'Mode 4: Metro Edge',
+          description: 'Sharp cuts for modern trendsetters.',
+          image: 'https://raw.githubusercontent.com/Soyadayo/Mappon/fea7bad7b081851ca7ce7765d31959a4eefbea4c/mode4.png',
+        },
+        {
+          id: 'mode5',
+          name: 'Mode 5: Skyline Spirit',
+          description: 'Elevated fashion for city dreamers.',
+          image: 'https://raw.githubusercontent.com/Soyadayo/Mappon/fea7bad7b081851ca7ce7765d31959a4eefbea4c/mode5.png',
+        },
+      ];
+
+      return (
+        <div className="min-h-screen flex flex-col items-center">
+          {/* Header */}
+          <header className="w-full bg-black text-white py-8 text-center">
+            <img
+              src="https://raw.githubusercontent.com/Soyadayo/Mappon/fea7bad7b081851ca7ce7765d31959a4eefbea4c/Logo_Haus_Tacorari_small_upscaled.png"
+              alt="Haus Tacorari Logo"
+              className="logo mx-auto mb-4"
+            />
+            <h1 className="text-5xl font-extrabold header-text">Haus Tacorari</h1>
+            <p className="mt-3 text-xl header-text">Fashion Division</p>
+          </header>
+
+          {/* Main Content */}
+          <main className="max-w-5xl mx-auto p-8 text-center">
+            <p className="text-xl mb-8 font-light tracking-wide">
+              Haus Tacorari's fashion division is dedicated to creating clothing that functions seamlessly within the urban environment. Our designs empower you to navigate the city with style and purpose.
+            </p>
+            <a
+              href="https://www.redbubble.com/people/HausTacorari/shop?asc=u"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-8 py-4 bg-pink-500 text-white font-bold rounded-full hover:bg-pink-600 transition transform hover:scale-105"
+            >
+              <svg
+                className="w-6 h-6 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+              Explore Our Shop
+            </a>
+
+            {/* Modes Section */}
+            <section className="mt-16">
+              <h2 className="text-3xl font-bold mb-10 text-gray-800">Our Collections</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {modes.map((mode) => (
+                  <div
+                    key={mode.id}
+                    className="mode-card bg-white rounded-xl shadow-lg"
+                  >
+                    <div className="relative">
+                      <img
+                        src={mode.image}
+                        alt={mode.name}
+                        className="w-full h-64 object-cover rounded-t-xl"
+                      />
+                      <div className="mode-overlay">
+                        {mode.name}
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold text-gray-800">{mode.name}</h3>
+                      <p className="mt-2 text-gray-600">{mode.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </main>
+
+          {/* Footer */}
+          <footer className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-6 text-center">
+            <p>© 2025 Haus Tacorari. All rights reserved.</p>
+          </footer>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
