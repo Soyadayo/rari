@@ -1,1 +1,113 @@
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>食と欲（仮） - Tacolore</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f0f0;
+      color: #1a1a1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px;
+      padding: 40px;
+      background-color: #fff;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 0.5em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #000;
+    }
+    h2 {
+      font-size: 1.5em;
+      margin-bottom: 1em;
+      color: #333;
+      font-weight: normal;
+    }
+    p {
+      font-size: 1.1em;
+      margin-bottom: 1.5em;
+      color: #555;
+    }
+    .lang-switch {
+      margin-bottom: 20px;
+    }
+    .lang-switch button {
+      background: none;
+      border: none;
+      font-size: 1em;
+      color: #1a1a1a;
+      cursor: pointer;
+      margin: 0 10px;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+    .lang-switch button:hover {
+      color: #555;
+    }
+    .lang-switch button.active {
+      font-weight: bold;
+      color: #000;
+    }
+    .content-ja, .content-en {
+      display: none;
+    }
+    .content-ja.active, .content-en.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="switchLang('ja')">日本語</button>
+      <button class="lang-btn" onclick="switchLang('en')">English</button>
+    </div>
+    <h1>食と欲（仮）</h1>
+    <h2>Tacolore by Tacorari</h2>
+    <div class="content-ja active">
+      <p>
+        「食と欲（仮）」は、TacorariレーベルのTacolore部門が贈る3Dターン制タクティカルSRPGです。ダークファンタジーの世界を舞台に、呪われた狼人間の母ルナリスが、敵を喰らうことで生き延び、特性を受け継ぐ子を産み育てる物語が展開します。
+      </p>
+      <p>
+        ルナリスは、裏切者である悪魔ヴォルザークによって課せられた食人の呪いに苦しみます。彼女は敵を喰らい、卵を産み、その子たちは敵の特性（狼の爪、蛇の毒など）を継承します。ルナリスは呪いを憎みながらも子を愛し、ヴォルザークを倒し呪いを解くため戦います。12のステージを通じて、戦術的な戦闘、子育て、そして希望と絶望が交錯する物語を体験してください。
+      </p>
+      <p>
+        プレイヤーは10×10の3Dグリッド上でルナリスとその子たちを操作し、敵を倒すかステージ目標を達成します。子育てシステムでは、ステージ間で子を訓練し、継承した特性を強化。特定のステージでは、子たちが独り立ちし、ルナリスが見守る中での成長が描かれます。Godot 4.xで構築され、暗い森や血に染まった祭壇など、ダークファンタジーの世界観を表現します。
+      </p>
+    </div>
+    <div class="content-en">
+      <p>
+        "Shoku to Yoku (Tentative)" is a 3D turn-based tactical SRPG presented by Tacorari’s Tacolore division. Set in a dark fantasy world, it follows Lunaris, a cursed werewolf mother who must consume enemies to survive, giving birth to children who inherit their traits.
+      </p>
+      <p>
+        Betrayed by the demon Volzark, Lunaris bears a cannibalistic curse. She devours enemies, producing eggs that hatch into children with inherited traits (e.g., wolf claws, snake venom). While hating the curse, she cherishes her children, fighting to defeat Volzark and break the curse. Across 12 stages, experience tactical combat, child-rearing, and a narrative weaving hope and despair.
+      </p>
+      <p>
+        Players control Lunaris and her children on a 10×10 3D grid, defeating enemies or achieving stage goals. The child-rearing system lets players train children between stages, enhancing inherited traits. In select stages, children fight alone, showcasing their growth as Lunaris watches. Built with Godot 4.x, the game brings to life a dark fantasy world of cursed forests and blood-stained altars.
+      </p>
+    </div>
+  </div>
+  <script>
+    function switchLang(lang) {
+      document.querySelectorAll('.content-ja, .content-en').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.content-${lang}`).classList.add('active');
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`button[onclick="switchLang('${lang}')"]`).classList.add('active');
+    }
+  </script>
+</body>
+</html>
