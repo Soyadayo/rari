@@ -3,326 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random City Explorer</title>
+    <title>Random City Map</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
-        body { 
-            padding-top: 20px; 
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .navbar {
-            background-color: #ffffff !important;
-            border-bottom: 1px solid #e9ecef;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .navbar-brand {
-            color: #495057 !important;
-            font-weight: 600;
-        }
-
-        #map { 
-            height: 400px; 
-            margin-bottom: 20px; 
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-        }
-
-        .card {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        .btn-primary {
-            background-color: #0d6efd;
-            border-color: #0d6efd;
-        }
-
-        .btn-outline-primary {
-            color: #0d6efd;
-            border-color: #0d6efd;
-        }
-
-        .btn-outline-secondary {
-            color: #6c757d;
-            border-color: #6c757d;
-        }
-
-        #suggestions { 
-            max-height: 200px; 
-            overflow-y: auto; 
-            background-color: white;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-        }
-
-        .suggestion-item { 
-            cursor: pointer; 
-            padding: 10px 15px;
-            border-bottom: 1px solid #f8f9fa;
-        }
-
-        .suggestion-item:hover { 
-            background-color: #f8f9fa;
-        }
-
-        .suggestion-item:last-child {
-            border-bottom: none;
-        }
-
-        .stats-row {
-            background-color: white;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #0d6efd;
-        }
-
-        .favorite-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-            background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .favorite-btn:hover {
-            background-color: #f8f9fa;
-        }
-
-        .favorite-btn.active {
-            background-color: #dc3545;
-            color: white;
-            border-color: #dc3545;
-        }
-
-        .distance-info {
-            background-color: #e3f2fd;
-            border: 1px solid #bbdefb;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
-        }
-
-        .quiz-section {
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
-        }
-
-        .filter-section {
-            background-color: white;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .city-photo {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #6c757d;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        body { padding-top: 20px; }
+        #map { height: 400px; margin-bottom: 20px; }
+        #suggestions { max-height: 200px; overflow-y: auto; }
+        .suggestion-item { cursor: pointer; padding: 5px; }
+        .suggestion-item:hover { background-color: #f0f0f0; }
+        #weather-container, #wiki-container { margin-top: 20px; }
+        .card { margin-bottom: 10px; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="http://www.tacorari.eu/">
-                <i class="fas fa-globe-americas"></i> Random City Explorer
-            </a>
-            <div class="d-flex">
-                <a href="http://www.tacorari.eu/" class="btn btn-outline-secondary btn-sm">
-                    <i class="fas fa-home"></i> Back to Home
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container" style="margin-top: 80px;">
-        <div class="text-center mb-4">
-            <h1 class="mb-3">🌍 Explore Random Cities</h1>
-            <p class="text-muted">Discover cities from around the world with weather, photos, and interesting facts!</p>
-        </div>
-
-        <!-- Statistics -->
-        <div class="stats-row">
-            <div class="row">
-                <div class="col-md-4 stat-item">
-                    <div class="stat-number" id="totalCities">-</div>
-                    <small class="text-muted">Total Cities</small>
-                </div>
-                <div class="col-md-4 stat-item">
-                    <div class="stat-number" id="visitedCount">0</div>
-                    <small class="text-muted">Cities Visited</small>
-                </div>
-                <div class="col-md-4 stat-item">
-                    <div class="stat-number" id="favoriteCount">0</div>
-                    <small class="text-muted">Favorites</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Filters -->
-        <div class="filter-section">
-            <h6><i class="fas fa-filter"></i> Filters</h6>
-            <div class="row">
-                <div class="col-md-6">
-                    <label class="form-label">Minimum Population</label>
-                    <select class="form-select" id="populationFilter">
-                        <option value="15000">15,000+</option>
-                        <option value="50000">50,000+</option>
-                        <option value="100000">100,000+</option>
-                        <option value="500000">500,000+</option>
-                        <option value="1000000">1,000,000+</option>
-                    </select>
-                </div>
-                <div class="col-md-6 d-flex align-items-end">
-                    <button class="btn btn-outline-primary w-100" onclick="applyFilters()">
-                        <i class="fas fa-check"></i> Apply Filters
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Search and Random Button -->
+    <div class="container">
+        <h1 class="text-center mb-4">Random City Map</h1>
         <div class="row mb-3">
-            <div class="col-md-8">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input type="text" id="citySearch" class="form-control" placeholder="Search for a city..." oninput="debounceSearch()">
-                </div>
-            </div>
-            <div class="col-md-4">
-                <button class="btn btn-primary w-100" onclick="selectRandomCity()">
-                    <i class="fas fa-dice"></i> Random City
-                </button>
-            </div>
-        </div>
-
-        <div id="suggestions"></div>
-
-        <!-- Map and City Info -->
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="position-relative">
-                    <div id="map"></div>
-                    <button class="favorite-btn" id="favoriteBtn" onclick="toggleFavorite()" style="display: none;">
-                        <i class="far fa-heart"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div id="cityPhotoContainer" style="display: none;">
-                    <img id="cityPhoto" class="city-photo" alt="City photo">
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div id="cityInfo">
-                            <p class="text-muted text-center">Select a city to see information</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Distance Calculator -->
-        <div class="distance-info" id="distanceInfo" style="display: none;">
-            <h6><i class="fas fa-route"></i> Distance Information</h6>
-            <div id="distanceContent"></div>
-        </div>
-
-        <!-- Quiz Section -->
-        <div class="quiz-section" id="quizSection" style="display: none;">
-            <h6><i class="fas fa-question-circle"></i> Quick Quiz</h6>
-            <p id="quizQuestion"></p>
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-outline-primary" onclick="showQuizAnswer()">Show Answer</button>
-                <button class="btn btn-sm btn-outline-secondary" onclick="generateQuiz()">New Question</button>
-            </div>
-            <div id="quizAnswer" style="display: none; margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 4px;"></div>
-        </div>
-
-        <!-- Weather and Wikipedia -->
-        <div class="row">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h6><i class="fas fa-cloud-sun"></i> Weather</h6>
-                    </div>
-                    <div class="card-body">
-                        <div id="weatherInfo">
-                            <p class="text-muted">Select a city to see weather information</p>
-                        </div>
-                    </div>
-                </div>
+                <input type="text" id="citySearch" class="form-control" placeholder="Search city..." oninput="debounceSearch()">
             </div>
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h6><i class="fab fa-wikipedia-w"></i> Wikipedia Summary</h6>
-                    </div>
-                    <div class="card-body">
-                        <div id="wikiInfo">
-                            <p class="text-muted">Select a city to see Wikipedia information</p>
-                        </div>
-                    </div>
-                </div>
+                <button class="btn btn-primary w-100" onclick="selectRandomCity()">New Random City</button>
             </div>
         </div>
-
-        <!-- Favorites -->
-        <div class="card">
-            <div class="card-header">
-                <h6><i class="fas fa-heart text-danger"></i> Favorite Cities</h6>
-            </div>
-            <div class="card-body">
-                <div id="favoritesList">
-                    <p class="text-muted">No favorite cities yet. Click the heart button to add cities!</p>
-                </div>
-            </div>
+        <div id="suggestions" class="border rounded mb-3"></div>
+        <div id="map"></div>
+        <div id="info" class="mb-3"></div>
+        <div id="weather-container">
+            <h3>Weather</h3>
+            <div id="weather-info"></div>
+        </div>
+        <div id="wiki-container">
+            <h3>Wikipedia Summary</h3>
+            <div id="city-wiki"></div>
         </div>
     </div>
 
@@ -334,369 +48,208 @@
         const geoJsonUrl = 'https://raw.githubusercontent.com/soyadayo/mappon/main/cities15000.geojson';
         const weatherApiKey = '733f811ffacc68efe08bb31549727912';
 
-        // Fallback data
+        // Fallback GeoJSON data (subset for testing)
         const fallbackGeoJson = {
             "type": "FeatureCollection",
+            "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
             "features": [
                 {
                     "type": "Feature",
-                    "properties": { "name": "Tokyo", "population": 13929286 },
-                    "geometry": { "type": "Point", "coordinates": [139.6503, 35.6762] }
+                    "properties": { "name": "les Escaldes", "latitude": 42.50729, "longitude": 1.53414, "population": 15853 },
+                    "geometry": { "type": "Point", "coordinates": [1.53414, 42.50729] }
                 },
                 {
                     "type": "Feature",
-                    "properties": { "name": "New York", "population": 8175133 },
-                    "geometry": { "type": "Point", "coordinates": [-74.0060, 40.7128] }
+                    "properties": { "name": "Andorra la Vella", "latitude": 42.50779, "longitude": 1.52109, "population": 20430 },
+                    "geometry": { "type": "Point", "coordinates": [1.52109, 42.50779] }
                 },
                 {
                     "type": "Feature",
-                    "properties": { "name": "London", "population": 8982000 },
-                    "geometry": { "type": "Point", "coordinates": [-0.1278, 51.5074] }
+                    "properties": { "name": "Dubai", "latitude": 25.07725, "longitude": 55.30927, "population": 3790000 },
+                    "geometry": { "type": "Point", "coordinates": [55.30927, 25.07725] }
                 },
                 {
                     "type": "Feature",
-                    "properties": { "name": "Paris", "population": 2161000 },
-                    "geometry": { "type": "Point", "coordinates": [2.3522, 48.8566] }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "name": "Sydney", "population": 5312163 },
-                    "geometry": { "type": "Point", "coordinates": [151.2093, -33.8688] }
+                    "properties": { "name": "Kabul", "latitude": 34.52813, "longitude": 69.17233, "population": 4434550 },
+                    "geometry": { "type": "Point", "coordinates": [69.17233, 34.52813] }
                 }
             ]
         };
 
         // Global variables
         let map, currentMarker, cities = [], validCities = [];
+        let weatherCache = {}, wikiCache = {};
         let cityIndices = [];
-        let visitedCities = new Set();
-        let favoriteCities = new Set();
-        let currentCity = null;
-        let previousCity = null;
-
-        // Initialize
-        async function init() {
-            initMap();
-            loadUserData();
-            await loadGeoJson();
-            updateStats();
-        }
 
         // Initialize map
         function initMap() {
-            map = L.map('map').setView([20, 0], 2);
+            map = L.map('map').setView([0, 0], 2);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }).addTo(map);
         }
 
-        // Validate feature
+        // Validate feature and return error message if invalid
         function validateFeature(f) {
-            if (!f.properties || !f.properties.name || typeof f.properties.name !== 'string') {
-                return false;
+            if (!f.properties) return 'Missing properties';
+            if (!f.properties.name || typeof f.properties.name !== 'string' || f.properties.name.trim() === '') {
+                return `Invalid name: ${f.properties.name}`;
             }
-            if (!f.geometry || !f.geometry.coordinates || !Array.isArray(f.geometry.coordinates) || f.geometry.coordinates.length !== 2) {
-                return false;
+            if (!f.geometry) return 'Missing geometry';
+            if (!f.geometry.coordinates || !Array.isArray(f.geometry.coordinates) || f.geometry.coordinates.length !== 2) {
+                return `Invalid coordinates: ${f.geometry.coordinates} (name: ${f.properties.name || 'unknown'})`;
             }
-            if (typeof f.geometry.coordinates[0] !== 'number' || typeof f.geometry.coordinates[1] !== 'number') {
-                return false;
+            if (typeof f.geometry.coordinates[0] !== 'number' || typeof f.geometry.coordinates[1] !== 'number' || 
+                isNaN(f.geometry.coordinates[0]) || isNaN(f.geometry.coordinates[1])) {
+                return `Non-numeric coordinates: ${f.geometry.coordinates} (name: ${f.properties.name || 'unknown'})`;
             }
-            return true;
+            if (isNaN(parseInt(f.properties.population || 0))) {
+                return `Invalid population: ${f.properties.population} (name: ${f.properties.name || 'unknown'})`;
+            }
+            return null;
         }
 
         // Load GeoJSON data
         async function loadGeoJson() {
             try {
                 let response;
+                let source = 'main';
                 try {
                     response = await axios.get(geoJsonUrl, { timeout: 30000 });
                 } catch (urlError) {
-                    console.warn('Using fallback data');
+                    console.warn('Failed to load GeoJSON from URL, using fallback data:', urlError.message);
                     response = { data: fallbackGeoJson };
+                    source = 'fallback';
                 }
-
+                let invalidCount = 0;
+                const maxWarnings = 10;
                 cities = response.data.features.filter(f => {
-                    if (!validateFeature(f)) return false;
+                    const error = validateFeature(f);
+                    if (error) {
+                        if (invalidCount < maxWarnings) {
+                            console.warn(`Invalid feature: ${error}`, f);
+                        }
+                        invalidCount++;
+                        return false;
+                    }
                     return parseInt(f.properties.population || 0) >= 15000;
                 });
-
-                cityIndices = cities.map(f => ({
-                    name: f.properties.name,
-                    coordinates: f.geometry.coordinates,
-                    population: parseInt(f.properties.population || 0)
-                }));
-
-                applyFilters();
-                if (cities.length > 0) {
-                    selectRandomCity();
+                if (invalidCount > 0) {
+                    console.warn(`Filtered out ${invalidCount} invalid features from ${source} data.`);
+                    document.getElementById('info').innerHTML += `<p class="text-warning">Warning: ${invalidCount} invalid cities were skipped.</p>`;
                 }
-            } catch (error) {
-                console.error('Error loading data:', error);
-                cities = fallbackGeoJson.features;
+                if (!cities.length) throw new Error(`No valid cities found in ${source} GeoJSON`);
                 cityIndices = cities.map(f => ({
                     name: f.properties.name,
                     coordinates: f.geometry.coordinates,
                     population: parseInt(f.properties.population || 0)
                 }));
-                applyFilters();
+                validCities = cities.filter(f => parseInt(f.properties.population || 0) > 50000);
+                console.log(`Loaded ${cities.length} cities from ${source} data.`);
+                selectRandomCity();
+            } catch (error) {
+                console.error('Error loading GeoJSON:', error.message, error.stack);
+                document.getElementById('info').innerHTML = '<p class="text-danger">Failed to load city data. Using fallback data.</p>';
+                let invalidCount = 0;
+                const maxWarnings = 10;
+                cities = fallbackGeoJson.features.filter(f => {
+                    const error = validateFeature(f);
+                    if (error) {
+                        if (invalidCount < maxWarnings) {
+                            console.warn(`Invalid fallback feature: ${error}`, f);
+                        }
+                        invalidCount++;
+                        return false;
+                    }
+                    return parseInt(f.properties.population || 0) >= 15000;
+                });
+                if (invalidCount > 0) {
+                    console.warn(`Filtered out ${invalidCount} invalid fallback features.`);
+                    document.getElementById('info').innerHTML += `<p class="text-warning">Warning: ${invalidCount} invalid fallback cities were skipped.</p>`;
+                }
+                cityIndices = cities.map(f => ({
+                    name: f.properties.name,
+                    coordinates: f.geometry.coordinates,
+                    population: parseInt(f.properties.population || 0)
+                }));
+                validCities = cities.filter(f => parseInt(f.properties.population || 0) > 50000);
+                console.log(`Loaded ${cities.length} cities from fallback data.`);
                 selectRandomCity();
             }
         }
 
-        // Apply filters
-        function applyFilters() {
-            const minPopulation = parseInt(document.getElementById('populationFilter').value);
-            validCities = cities.filter(f => parseInt(f.properties.population || 0) >= minPopulation);
-            updateStats();
-        }
-
-        // Select random city
+        // Select random city with population-based weighting
         function selectRandomCity() {
             if (!validCities.length) {
-                document.getElementById('cityInfo').innerHTML = '<p class="text-danger">No cities match the current filters.</p>';
+                document.getElementById('info').innerHTML = '<p class="text-danger">No valid cities available.</p>';
                 return;
             }
-
-            previousCity = currentCity;
-            const randomIndex = Math.floor(Math.random() * validCities.length);
-            const selectedFeature = validCities[randomIndex];
+            const totalPop = validCities.reduce((sum, f) => sum + parseInt(f.properties.population || 0), 0);
+            let rand = Math.random() * totalPop;
+            let selectedFeature = validCities[0];
+            for (const feature of validCities) {
+                rand -= parseInt(feature.properties.population || 0);
+                if (rand <= 0) {
+                    selectedFeature = feature;
+                    break;
+                }
+            }
             displayCity(selectedFeature);
         }
 
-        // Display city
+        // Display city on map and fetch data
         function displayCity(feature) {
             const coords = feature.geometry.coordinates;
             const city = feature.properties.name;
             const population = feature.properties.population;
-            
-            currentCity = { name: city, coordinates: coords, population: population };
-            visitedCities.add(city);
 
             // Update map
-            map.setView([coords[1], coords[0]], 10);
+            map.setView([coords[1], coords[0]], 6);
             if (currentMarker) map.removeLayer(currentMarker);
             currentMarker = L.marker([coords[1], coords[0]])
                 .addTo(map)
-                .bindPopup(`<b>${city}</b><br>Population: ${parseInt(population).toLocaleString()}`)
+                .bindPopup(`<b>${city}</b>`)
                 .openPopup();
 
-            // Update city info
-            document.getElementById('cityInfo').innerHTML = `
-                <div class="fade-in">
-                    <h5>${city}</h5>
-                    <p><strong>Population:</strong> ${parseInt(population).toLocaleString()}</p>
-                    <p><strong>Coordinates:</strong> ${coords[1].toFixed(4)}, ${coords[0].toFixed(4)}</p>
-                    <div class="d-grid gap-2">
-                        <a href="https://www.google.com/maps/search/?api=1&query=${coords[1]},${coords[0]}" target="_blank" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-external-link-alt"></i> View on Google Maps
-                        </a>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="shareCity()">
-                            <i class="fas fa-share"></i> Share This City
-                        </button>
-                    </div>
-                </div>
+            // Update info
+            document.getElementById('info').innerHTML = `
+                <h3>${city}</h3>
+                <p>Population: ${parseInt(population).toLocaleString()}</p>
+                <p><a href="https://www.google.com/maps/search/?api=1&query=${coords[1]},${coords[0]}" target="_blank">View on Google Maps</a></p>
             `;
 
-            // Show favorite button
-            document.getElementById('favoriteBtn').style.display = 'flex';
-            updateFavoriteButton();
-
-            // Show distance if there's a previous city
-            if (previousCity) {
-                showDistanceInfo();
-            }
-
-            // Fetch data
+            // Fetch external data
             fetchWeatherData(coords[1], coords[0], city);
-            fetchWikipediaSummary(city);
-            fetchCityPhoto(city);
-
-            // Show quiz
-            document.getElementById('quizSection').style.display = 'block';
-            generateQuiz();
-
-            updateStats();
-            saveUserData();
+            fetchWikipediaSummary(city, 'city-wiki');
         }
 
-        // Show distance information
-        function showDistanceInfo() {
-            if (!previousCity || !currentCity) return;
-            
-            const distance = calculateDistance(
-                previousCity.coordinates[1], previousCity.coordinates[0],
-                currentCity.coordinates[1], currentCity.coordinates[0]
-            );
-            
-            document.getElementById('distanceContent').innerHTML = `
-                <p><strong>Distance from ${previousCity.name}:</strong> ${distance.toFixed(0)} km</p>
-                <button class="btn btn-sm btn-outline-primary" onclick="calculateDistanceToTokyo()">Distance to Tokyo</button>
-            `;
-            document.getElementById('distanceInfo').style.display = 'block';
+        // Debounce function for search
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
         }
 
-        // Calculate distance to Tokyo
-        function calculateDistanceToTokyo() {
-            if (!currentCity) return;
-            
-            const tokyoDistance = calculateDistance(35.6762, 139.6503, currentCity.coordinates[1], currentCity.coordinates[0]);
-            document.getElementById('distanceContent').innerHTML += `
-                <p><strong>Distance to Tokyo:</strong> ${tokyoDistance.toFixed(0)} km</p>
-            `;
-        }
-
-        // Calculate distance between two points
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-        }
-
-        // Generate quiz
-        function generateQuiz() {
-            if (!currentCity) return;
-            
-            const questions = [
-                `What is the approximate population of ${currentCity.name}?`,
-                `In which hemisphere is ${currentCity.name} located?`,
-                `Is ${currentCity.name} closer to the equator or to the poles?`
-            ];
-            
-            const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
-            document.getElementById('quizQuestion').textContent = randomQuestion;
-            document.getElementById('quizAnswer').style.display = 'none';
-        }
-
-        // Show quiz answer
-        function showQuizAnswer() {
-            if (!currentCity) return;
-            
-            const hemisphere = currentCity.coordinates[1] >= 0 ? 'Northern' : 'Southern';
-            const equatorDistance = Math.abs(currentCity.coordinates[1]);
-            const closerTo = equatorDistance < 45 ? 'equator' : 'poles';
-            
-            document.getElementById('quizAnswer').innerHTML = `
-                <strong>Answers:</strong><br>
-                Population: ${parseInt(currentCity.population).toLocaleString()}<br>
-                Hemisphere: ${hemisphere}<br>
-                Closer to: ${closerTo}
-            `;
-            document.getElementById('quizAnswer').style.display = 'block';
-        }
-
-        // Toggle favorite
-        function toggleFavorite() {
-            if (!currentCity) return;
-            
-            const cityName = currentCity.name;
-            if (favoriteCities.has(cityName)) {
-                favoriteCities.delete(cityName);
-            } else {
-                favoriteCities.add(cityName);
-            }
-            
-            updateFavoriteButton();
-            updateFavoritesList();
-            updateStats();
-            saveUserData();
-        }
-
-        // Update favorite button
-        function updateFavoriteButton() {
-            if (!currentCity) return;
-            
-            const btn = document.getElementById('favoriteBtn');
-            const icon = btn.querySelector('i');
-            
-            if (favoriteCities.has(currentCity.name)) {
-                btn.classList.add('active');
-                icon.className = 'fas fa-heart';
-            } else {
-                btn.classList.remove('active');
-                icon.className = 'far fa-heart';
-            }
-        }
-
-        // Update favorites list
-        function updateFavoritesList() {
-            const container = document.getElementById('favoritesList');
-            
-            if (favoriteCities.size === 0) {
-                container.innerHTML = '<p class="text-muted">No favorite cities yet. Click the heart button to add cities!</p>';
-                return;
-            }
-            
-            const favoriteArray = Array.from(favoriteCities);
-            container.innerHTML = favoriteArray.map(city => `
-                <span class="badge bg-primary me-2 mb-2">${city} <button class="btn-close btn-close-white ms-1" onclick="removeFavorite('${city}')" style="font-size: 0.7em;"></button></span>
-            `).join('');
-        }
-
-        // Remove favorite
-        function removeFavorite(cityName) {
-            favoriteCities.delete(cityName);
-            updateFavoritesList();
-            updateStats();
-            if (currentCity && currentCity.name === cityName) {
-                updateFavoriteButton();
-            }
-            saveUserData();
-        }
-
-        // Update statistics
-        function updateStats() {
-            document.getElementById('totalCities').textContent = validCities.length.toLocaleString();
-            document.getElementById('visitedCount').textContent = visitedCities.size;
-            document.getElementById('favoriteCount').textContent = favoriteCities.size;
-        }
-
-        // Debounced search
-        const debounceSearch = debounce(function() {
-            const query = document.getElementById('citySearch').value.toLowerCase().trim();
-            const suggestionsDiv = document.getElementById('suggestions');
-            
+        // Search cities
+        const debounceSearch = debounce(function () {
+            const query = document.getElementById('citySearch').value.toLowerCase();
             if (!query) {
-                suggestionsDiv.innerHTML = '';
+                document.getElementById('suggestions').innerHTML = '';
                 return;
             }
-            
-            const matches = cityIndices.filter(city => 
-                city.name.toLowerCase().includes(query)
-            ).slice(0, 5);
-            
-            if (matches.length === 0) {
-                suggestionsDiv.innerHTML = '<div class="suggestion-item text-muted">No cities found</div>';
-                return;
-            }
-            
-            suggestionsDiv.innerHTML = matches.map(city => `
-                <div class="suggestion-item" onclick="selectSpecificCity('${city.name}')">
-                    ${city.name} (${city.population.toLocaleString()})
+            const suggestions = cityIndices.filter(c => c.name.toLowerCase().includes(query)).slice(0, 5);
+            document.getElementById('suggestions').innerHTML = suggestions.map(c => `
+                <div class="suggestion-item" onclick="selectCity('${c.name}')">
+                    ${c.name}
                 </div>
             `).join('');
         }, 300);
 
-        // Debounce function
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // Select specific city
-        function selectSpecificCity(cityName) {
-            const feature = cities.find(f => f.properties.name === cityName);
+        // Select city from search
+        function selectCity(city) {
+            const feature = cities.find(f => f.properties.name === city);
             if (feature) {
                 displayCity(feature);
                 document.getElementById('suggestions').innerHTML = '';
@@ -704,93 +257,82 @@
             }
         }
 
-        // Share city
-        function shareCity() {
-            if (!currentCity) return;
-            
-            const shareText = `Check out ${currentCity.name}! Population: ${parseInt(currentCity.population).toLocaleString()}`;
-            const shareUrl = `https://www.google.com/maps/search/?api=1&query=${currentCity.coordinates[1]},${currentCity.coordinates[0]}`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Random City Explorer',
-                    text: shareText,
-                    url: shareUrl
-                });
-            } else {
-                // Fallback: copy to clipboard
-                navigator.clipboard.writeText(`${shareText} - ${shareUrl}`).then(() => {
-                    alert('City information copied to clipboard!');
-                });
+        // Fetch weather data
+        async function fetchWeatherData(lat, lon, city) {
+            const cacheKey = `${lat},${lon}`;
+            if (weatherCache[cacheKey]) {
+                displayWeather(weatherCache[cacheKey], city);
+                return;
+            }
+            try {
+                const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, { timeout: 10000 });
+                weatherCache[cacheKey] = response.data;
+                displayWeather(response.data, city);
+            } catch (error) {
+                console.error('Weather API error:', error.message, error.stack);
+                document.getElementById('weather-info').innerHTML = '<p class="text-danger">Failed to load weather data.</p>';
             }
         }
 
-        // Fetch weather data
-        async function fetchWeatherData(lat, lon, city) {
-            try {
-                const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, { timeout: 10000 });
-                const data = response.data;
-                
-                document.getElementById('weatherInfo').innerHTML = `
-                    <p><strong>Temperature:</strong> ${Math.round(data.main.temp)}°C</p>
-                    <p><strong>Condition:</strong> ${data.weather[0].description}</p>
-                    <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
-                    <p><strong>Wind:</strong> ${data.wind.speed} m/s</p>
-                `;
-            } catch (error) {
-                document.getElementById('weatherInfo').innerHTML = '<p class="text-muted">Weather data unavailable</p>';
-            }
+        // Display weather
+        function displayWeather(data, city) {
+            document.getElementById('weather-info').innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Weather in ${city}</h5>
+                        <p>Temperature: ${data.main.temp}°C</p>
+                        <p>Condition: ${data.weather[0].description}</p>
+                        <p>Humidity: ${data.main.humidity}%</p>
+                    </div>
+                </div>
+            `;
         }
 
         // Fetch Wikipedia summary
-        async function fetchWikipediaSummary(title) {
+        async function fetchWikipediaSummary(title, containerId) {
+            if (!title || typeof title !== 'string' || title.trim() === '') {
+                console.warn(`Invalid Wikipedia title: ${title}`);
+                document.getElementById(containerId).innerHTML = '<p class="text-warning">Invalid city name for Wikipedia summary.</p>';
+                return;
+            }
+            const cacheKey = title.toLowerCase();
+            if (wikiCache[cacheKey]) {
+                document.getElementById(containerId).innerHTML = wikiCache[cacheKey];
+                return;
+            }
             try {
                 const response = await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`, { timeout: 10000 });
                 const summary = response.data.extract || 'No summary available.';
-                
-                document.getElementById('wikiInfo').innerHTML = `
-                    <p class="small">${summary}</p>
-                    <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(title)}" target="_blank" class="btn btn-sm btn-outline-primary">
-                        Read more on Wikipedia
-                    </a>
-                `;
+                wikiCache[cacheKey] = `<p>${summary} <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(title)}" target="_blank">Read more on Wikipedia</a></p>`;
+                document.getElementById(containerId).innerHTML = wikiCache[cacheKey];
             } catch (error) {
-                document.getElementById('wikiInfo').innerHTML = '<p class="text-muted">Wikipedia information unavailable</p>';
-            }
-        }
-
-        // Fetch city photo
-        async function fetchCityPhoto(city) {
-            try {
-                const response = await axios.get(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(city)}&per_page=1&client_id=your-unsplash-api-key`);
-                if (response.data.results && response.data.results.length > 0) {
-                    const photo = response.data.results[0];
-                    document.getElementById('cityPhoto').src = photo.urls.regular;
-                    document.getElementById('cityPhotoContainer').style.display = 'block';
+                let message = 'Failed to load Wikipedia summary.';
+                if (error.response) {
+                    if (error.response.status === 404) {
+                        message = `No Wikipedia page found for "${title}".`;
+                    } else if (error.response.status === 429) {
+                        message = 'Wikipedia API rate limit exceeded.';
+                    } else {
+                        message = `Wikipedia API error: ${error.response.status} ${error.response.statusText}`;
+                    }
+                } else if (error.request) {
+                    message = 'Network error: Unable to reach Wikipedia API.';
                 }
-            } catch (error) {
-                // Photo loading failed - hide photo container
-                document.getElementById('cityPhotoContainer').style.display = 'none';
+                console.error(`Wikipedia API error for "${title}":`, error.message, {
+                    status: error.response?.status,
+                    statusText: error.response?.statusText,
+                    stack: error.stack
+                });
+                document.getElementById(containerId).innerHTML = `<p class="text-danger">${message}</p>`;
             }
         }
 
-        // Load user data from localStorage (only if available)
-        function loadUserData() {
-            try {
-                const visited = JSON.parse(localStorage.getItem('visitedCities') || '[]');
-                const favorites = JSON.parse(localStorage.getItem('favoriteCities') || '[]');
-                visitedCities = new Set(visited);
-                favoriteCities = new Set(favorites);
-                updateFavoritesList();
-            } catch (error) {
-                // localStorage not available, use in-memory storage
-                visitedCities = new Set();
-                favoriteCities = new Set();
-            }
+        // Initialize
+        async function init() {
+            initMap();
+            await loadGeoJson();
         }
-
-        // Save user data to localStorage (only if available)
-        function saveUserData() {
-            try {
-                localStorage.setItem('visitedCities', JSON.stringify([...visitedCities]));
-                localStorage.setItem('favoriteCities', JSON.stringify([...fav
+        init();
+    </script>
+</body>
+</html>
