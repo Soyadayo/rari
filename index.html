@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +7,13 @@
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Haus Tacorari - Independent game development, Japanese design aesthetics, fashion, and creative web services. Discover unique digital experiences and artistic tools.">
-    <meta name="keywords" content="インディーゲーム, 日本デザイン, ファッション, クリエイティブツール, ウェブサービス, independent games, Japanese design, fashion, creative tools, web services, game development">
+    <meta name="keywords" content="independent games, Japanese design, fashion, creative tools, web services, game development, indie games, minimalist design, digital art, creative innovation">
     <meta name="author" content="Haus Tacorari">
     <meta name="robots" content="index, follow">
+    
+    <!-- Hidden SEO Keywords -->
+    <meta name="hidden-keywords" content="indie game development, Japanese design aesthetics, creative web services, fashion technology, digital art tools, game creation, digital creation, minimalist games, interactive design">
+    
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -119,8 +123,27 @@
         }
 
         .logo:hover {
-            transform: translateY(-5px) scale(1.02);
+            transform: translateY(-5px) scale(1.02) rotate(1deg);
             filter: brightness(1.2) contrast(1.2);
+        }
+
+        .container {
+            position: relative;
+        }
+
+        .container::after {
+            content: '⚡';
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 1.2em;
+            opacity: 0.3;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
         }
 
         h1 {
@@ -293,9 +316,9 @@
         <p class="subtitle">Independent Games • Japanese Design • Creative Web Services</p>
         
         <nav class="link-container" role="navigation" aria-label="Main navigation">
-            <a href="games.html" class="nav-link" title="Explore our independent games">Games</a>
-            <a href="mappon.html" class="nav-link" title="Discover Mappon creative tools">Mappon</a>
-            <a href="mode.html" class="nav-link" title="Browse our fashion and design collection">Mode</a>
+            <a href="games.html" class="nav-link" title="Explore our independent games">🎮 Games</a>
+            <a href="mappon.html" class="nav-link" title="Discover Mappon creative tools">🗺️ Mappon</a>
+            <a href="mode.html" class="nav-link" title="Browse our fashion and design collection">👘 Mode</a>
         </nav>
         
         <section class="about-section">
@@ -304,18 +327,17 @@
             <p>We develop small, thoughtful <strong>independent games</strong> that tell stories through quiet moments, strange encounters, and playful interactions.</p>
             <p>Our platform supports creative innovation through specialized <strong>web services</strong> and tools designed for artists, designers, and creators seeking to bring their ideas to life.</p>
             <p>From digital concepts to tangible fashion pieces, from code to contemplation—we explore the intersection of technology and traditional Japanese design principles.</p>
-            <p>Join us on this creative journey. Your support helps us continue building meaningful experiences.</p>
+            <p>Join us on this creative journey. Your support helps us continue building meaningful experiences. ✨</p>
         </section>
         
         <div class="social-links">
-            <a href="https://buymeacoffee.com/tacorari" target="_blank" rel="noopener noreferrer" class="social-link" title="Support our creative work">Buy Me a Coffee</a>
-            <a href="https://www.instagram.com/haustacorari/" target="_blank" rel="noopener noreferrer" class="social-link" title="Follow us on Instagram">Instagram</a>
+            <a href="https://buymeacoffee.com/tacorari" target="_blank" rel="noopener noreferrer" class="social-link" title="Support our creative work">☕ Buy Me a Coffee</a>
+            <a href="https://www.instagram.com/haustacorari/" target="_blank" rel="noopener noreferrer" class="social-link" title="Follow us on Instagram">📷 Instagram</a>
         </div>
         
-        <div class="keywords-section">
-            <div class="keywords">
-                インディーゲーム開発 | 日本のデザイン美学 | クリエイティブウェブサービス | ファッションテック | アートツール | ゲーム制作 | デジタルクリエイション | Independent Game Development | Japanese Design Aesthetics | Creative Web Services | Fashion Technology | Digital Art Tools | Game Creation | Creative Innovation
-            </div>
+        <!-- Hidden SEO Content -->
+        <div style="position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;">
+            <span>indie game development Japanese design aesthetics creative web services fashion technology digital art tools game creation digital creation minimalist games interactive design</span>
         </div>
     </div>
 </body>
