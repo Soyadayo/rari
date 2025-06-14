@@ -1,57 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Haus Tacorari - Independent Games, Japanese Design & Creative Web Services</title>
     
+    <!-- Performance Optimization -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap"></noscript>
+    
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Haus Tacorari - Independent game development, Japanese design aesthetics, fashion, and creative web services. Discover unique digital experiences and artistic tools.">
+    <meta name="description" content="Haus Tacorari - Independent game development, Japanese design aesthetics, fashion, and creative web services. Discover unique digital experiences and artistic innovation.">
     <meta name="keywords" content="independent games, Japanese design, fashion, creative tools, web services, game development, indie games, minimalist design, digital art, creative innovation">
     <meta name="author" content="Haus Tacorari">
     <meta name="robots" content="index, follow">
     
-    <!-- Hidden SEO Keywords -->
-    <meta name="hidden-keywords" content="indie game development, Japanese design aesthetics, creative web services, fashion technology, digital art tools, game creation, digital creation, minimalist games, interactive design">
-    
-    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourusername.github.io/">
+    <meta property="og:url" content="https://soyadayo.github.io/Mappon/">
     <meta property="og:title" content="Haus Tacorari - Independent Games & Creative Design">
     <meta property="og:description" content="Independent game development, Japanese design aesthetics, fashion, and creative web services.">
-    <meta property="og:image" content="Logo_Haus_Tacorari_small_upscaled.png">
+    <meta property="og:image" content="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png">
+    <meta property="og:image:width" content="400">
+    <meta property="og:image:height" content="400">
     
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://yourusername.github.io/">
-    <meta property="twitter:title" content="Haus Tacorari - Independent Games & Creative Design">
-    <meta property="twitter:description" content="Independent game development, Japanese design aesthetics, fashion, and creative web services.">
-    <meta property="twitter:image" content="Logo_Haus_Tacorari_small_upscaled.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://soyadayo.github.io/Mappon/">
+    <meta name="twitter:title" content="Haus Tacorari - Independent Games & Creative Design">
+    <meta name="twitter:description" content="Independent game development, Japanese design aesthetics, fashion, and creative web services.">
+    <meta name="twitter:image" content="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://yourusername.github.io/">
+    <link rel="canonical" href="https://soyadayo.github.io/Mappon/">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d4af37">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Organization",
+        "@type": ["Organization", "CreativeWork"],
         "name": "Haus Tacorari",
         "description": "Independent game development, Japanese design aesthetics, fashion, and creative web services",
-        "url": "https://yourusername.github.io/",
-        "logo": "Logo_Haus_Tacorari_small_upscaled.png",
+        "url": "https://soyadayo.github.io/Mappon/",
+        "logo": "https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png",
         "sameAs": [
             "https://www.instagram.com/haustacorari/",
             "https://buymeacoffee.com/tacorari"
         ],
         "foundingDate": "2024",
         "industry": ["Game Development", "Design", "Fashion", "Web Services"],
-        "keywords": "independent games, Japanese design, fashion, creative tools, web services"
+        "keywords": "independent games, Japanese design, fashion, creative tools, web services",
+        "offers": {
+            "@type": "Service",
+            "serviceType": ["Game Development", "Web Design", "Creative Services", "Fashion Design"]
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "url": "https://www.instagram.com/haustacorari/"
+        }
     }
     </script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-dark: #1a1a1a;
@@ -63,6 +81,9 @@
             --bg-gradient: linear-gradient(135deg, #0a0a0a 0%, #1e1e1e 50%, #2a2a2a 100%);
             --card-bg: rgba(255, 255, 255, 0.03);
             --card-border: rgba(255, 255, 255, 0.1);
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.25);
+            --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
         * {
@@ -71,8 +92,31 @@
             box-sizing: border-box;
         }
 
+        /* Accessibility improvements */
+        .sr-only {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border: 0 !important;
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-gradient);
             color: var(--text-light);
             min-height: 100vh;
@@ -83,6 +127,7 @@
             padding: 20px;
             position: relative;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
         body::before {
@@ -110,24 +155,8 @@
             border-radius: 24px;
             padding: 60px 40px;
             box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.4),
+                var(--shadow-strong),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        }
-
-        .logo {
-            max-width: 200px;
-            margin-bottom: 30px;
-            transition: all 0.4s ease;
-            filter: brightness(1.1) contrast(1.1);
-            border-radius: 12px;
-        }
-
-        .logo:hover {
-            transform: translateY(-5px) scale(1.02) rotate(1deg);
-            filter: brightness(1.2) contrast(1.2);
-        }
-
-        .container {
             position: relative;
         }
 
@@ -144,6 +173,23 @@
         @keyframes pulse {
             0%, 100% { opacity: 0.3; transform: scale(1); }
             50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .logo-container {
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: brightness(1.1) contrast(1.1);
+            border-radius: 12px;
+        }
+
+        .logo:hover {
+            transform: translateY(-5px) scale(1.02) rotate(1deg);
+            filter: brightness(1.2) contrast(1.2);
         }
 
         h1 {
@@ -166,13 +212,16 @@
 
         .link-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin: 40px 0;
         }
 
         .nav-link {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
             padding: 18px 30px;
             background: linear-gradient(135deg, var(--secondary-dark) 0%, rgba(45, 45, 45, 0.8) 100%);
             color: var(--text-light);
@@ -198,15 +247,27 @@
             z-index: -1;
         }
 
-        .nav-link:hover {
+        .nav-link:hover,
+        .nav-link:focus {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-medium);
             color: var(--primary-dark);
             border-color: var(--accent-gold);
+            outline: none;
+        }
+
+        .nav-link:focus {
+            outline: 2px solid var(--accent-gold);
+            outline-offset: 2px;
         }
 
         .nav-link:hover::before {
             left: 0;
+        }
+
+        .icon {
+            font-size: 1.2em;
+            line-height: 1;
         }
 
         .about-section {
@@ -235,6 +296,11 @@
             margin-bottom: 16px;
         }
 
+        .about-section strong {
+            color: var(--accent-warm);
+            font-weight: 500;
+        }
+
         .social-links {
             display: flex;
             justify-content: center;
@@ -244,6 +310,9 @@
         }
 
         .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             padding: 12px 24px;
             background: rgba(255, 255, 255, 0.05);
             color: var(--text-light);
@@ -256,26 +325,42 @@
             backdrop-filter: blur(5px);
         }
 
-        .social-link:hover {
+        .social-link:hover,
+        .social-link:focus {
             background: var(--accent-gold);
             color: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+            outline: none;
         }
 
-        .keywords-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .social-link:focus {
+            outline: 2px solid var(--accent-gold);
+            outline-offset: 2px;
         }
 
-        .keywords {
-            font-size: 0.85em;
-            color: var(--text-muted);
-            opacity: 0.7;
-            line-height: 1.6;
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--accent-gold);
+            color: var(--primary-dark);
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 1000;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        /* Improved responsive design */
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 800px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -286,6 +371,7 @@
             
             .link-container {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
             
             .about-section {
@@ -298,6 +384,13 @@
             }
         }
 
+        @media (max-width: 640px) {
+            .nav-link {
+                padding: 15px 20px;
+                font-size: 1rem;
+            }
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 30px 20px;
@@ -306,23 +399,79 @@
             h1 {
                 font-size: 2em;
             }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --card-border: rgba(255, 255, 255, 0.3);
+                --text-muted: #e0e0e0;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .container {
+                box-shadow: none;
+                border: 1px solid black;
+            }
+            
+            .nav-link,
+            .social-link {
+                border: 1px solid black;
+                background: white;
+                color: black;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="Logo_Haus_Tacorari_small_upscaled.png" alt="Haus Tacorari Logo - Independent Games and Creative Design" class="logo">
-        <h1>Haus Tacorari</h1>
-        <p class="subtitle">Independent Games • Japanese Design • Creative Web Services</p>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <main id="main-content" class="container">
+        <header class="logo-container">
+            <picture>
+                <source srcset="Logo_Haus_Tacorari_small.webp" type="image/webp">
+                <img src="Logo_Haus_Tacorari_small_upscaled.png" 
+                     alt="Haus Tacorari Logo - Independent Games and Creative Design" 
+                     class="logo"
+                     width="200" 
+                     height="200"
+                     loading="eager">
+            </picture>
+            <h1>Haus Tacorari</h1>
+            <p class="subtitle">Independent Games • Japanese Design • Creative Web Services</p>
+        </header>
         
-        <nav class="link-container" role="navigation" aria-label="Main navigation">
-            <a href="games.html" class="nav-link" title="Explore our independent games">🎮 Games</a>
-            <a href="mappon.html" class="nav-link" title="Discover Mappon creative tools">🗺️ Mappon</a>
-            <a href="mode.html" class="nav-link" title="Browse our fashion and design collection">👘 Mode</a>
+        <nav class="link-container" role="navigation" aria-label="Main services navigation">
+            <a href="games.html" class="nav-link" aria-describedby="games-desc">
+                <span class="icon" aria-hidden="true">🎮</span>
+                <span class="link-text">Games</span>
+                <span id="games-desc" class="sr-only">Explore our independent games and interactive experiences</span>
+            </a>
+            <a href="mappon.html" class="nav-link" aria-describedby="mappon-desc">
+                <span class="icon" aria-hidden="true">🗺️</span>
+                <span class="link-text">Mappon</span>
+                <span id="mappon-desc" class="sr-only">Discover Mappon creative mapping and design tools</span>
+            </a>
+            <a href="mode.html" class="nav-link" aria-describedby="mode-desc">
+                <span class="icon" aria-hidden="true">👘</span>
+                <span class="link-text">Mode</span>
+                <span id="mode-desc" class="sr-only">Browse our fashion and design collection inspired by Japanese aesthetics</span>
+            </a>
         </nav>
         
-        <section class="about-section">
-            <h2>About Haus Tacorari</h2>
+        <section class="about-section" aria-labelledby="about-heading">
+            <h2 id="about-heading">About Haus Tacorari</h2>
             <p>Haus Tacorari is an independent creative label where <strong>games</strong>, <strong>Japanese design aesthetics</strong>, and <strong>fashion</strong> converge into unique digital experiences.</p>
             <p>We develop small, thoughtful <strong>independent games</strong> that tell stories through quiet moments, strange encounters, and playful interactions.</p>
             <p>Our platform supports creative innovation through specialized <strong>web services</strong> and tools designed for artists, designers, and creators seeking to bring their ideas to life.</p>
@@ -330,15 +479,60 @@
             <p>Join us on this creative journey. Your support helps us continue building meaningful experiences. ✨</p>
         </section>
         
-        <div class="social-links">
-            <a href="https://buymeacoffee.com/tacorari" target="_blank" rel="noopener noreferrer" class="social-link" title="Support our creative work">☕ Buy Me a Coffee</a>
-            <a href="https://www.instagram.com/haustacorari/" target="_blank" rel="noopener noreferrer" class="social-link" title="Follow us on Instagram">📷 Instagram</a>
-        </div>
-        
-        <!-- Hidden SEO Content -->
-        <div style="position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;">
-            <span>indie game development Japanese design aesthetics creative web services fashion technology digital art tools game creation digital creation minimalist games interactive design</span>
-        </div>
-    </div>
+        <footer class="social-links" role="contentinfo" aria-label="Social media and support links">
+            <a href="https://buymeacoffee.com/tacorari" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="social-link" 
+               aria-label="Support our creative work on Buy Me a Coffee">
+                <span aria-hidden="true">☕</span>
+                <span>Buy Me a Coffee</span>
+            </a>
+            <a href="https://www.instagram.com/haustacorari/" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="social-link"
+               aria-label="Follow us on Instagram">
+                <span aria-hidden="true">📷</span>
+                <span>Instagram</span>
+            </a>
+        </footer>
+    </main>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered successfully');
+                    })
+                    .catch(registrationError => {
+                        console.log('ServiceWorker registration failed');
+                    });
+            });
+        }
+
+        // Image error handling
+        document.addEventListener('DOMContentLoaded', () => {
+            const logo = document.querySelector('.logo');
+            if (logo) {
+                logo.addEventListener('error', () => {
+                    logo.style.opacity = '0.5';
+                    console.warn('Logo image failed to load');
+                });
+            }
+        });
+
+        // Performance monitoring
+        window.addEventListener('load', () => {
+            if ('performance' in window) {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                if (perfData.loadEventEnd - perfData.navigationStart > 3000) {
+                    console.warn('Page load time exceeded 3 seconds');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
