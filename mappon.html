@@ -4,53 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random City Map</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for a modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS for map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <style>
-        body { padding-top: 20px; }
-        #map { height: 400px; margin-bottom: 20px; }
-        #suggestions { max-height: 200px; overflow-y: auto; }
-        .suggestion-item { cursor: pointer; padding: 5px; }
-        .suggestion-item:hover { background-color: #f0f0f0; }
-        #weather-container, #wiki-container { margin-top: 20px; }
-        .card { margin-bottom: 10px; }
-        #back-to-top { position: fixed; bottom: 20px; right: 20px; }
+        /* Apply Inter font to the body */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        #map {
+            height: 400px;
+        }
+        #suggestions {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .suggestion-item {
+            cursor: pointer;
+            padding: 8px 16px;
+            transition: background-color 0.2s;
+        }
+        .suggestion-item:hover {
+            background-color: #eff6ff;
+        }
+        /* Custom styles for cards */
+        .card-custom {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        /* Style for the back to top button */
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        #back-to-top:hover {
+            background-color: #2563eb;
+            transform: scale(1.05);
+        }
+        /* Loading indicator styling */
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1 class="text-center mb-4">Random City Map</h1>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <input type="text" id="citySearch" class="form-control" placeholder="Search city..." oninput="debounceSearch()">
+<body class="bg-slate-50 text-gray-800">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <h1 class="text-center text-4xl font-extrabold text-blue-700 mb-8">Random City Map</h1>
+
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+            <div class="flex-grow">
+                <input type="text" id="citySearch"
+                    class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    placeholder="Search city..." oninput="debounceSearch()">
             </div>
-            <div class="col-md-6">
-                <button class="btn btn-primary w-100" onclick="selectRandomCity()">New Random City</button>
+            <div class="md:w-1/3">
+                <button
+                    class="w-full bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 transition-all duration-300 ease-in-out"
+                    onclick="selectRandomCity()">
+                    New Random City
+                </button>
             </div>
         </div>
-        <div id="suggestions" class="border rounded mb-3"></div>
-        <div id="map"></div>
-        <div id="info" class="mb-3"></div>
-        <div id="weather-container">
-            <h3>Weather</h3>
-            <div id="weather-info"></div>
+
+        <div id="suggestions" class="hidden mb-6 bg-white border border-gray-200 rounded-lg shadow-md"></div>
+
+        <div id="map" class="w-full rounded-xl shadow-lg mb-6"></div>
+
+        <div id="info" class="card-custom text-center">
+            <p class="text-gray-500">Select a city or search to begin.</p>
         </div>
-        <div id="wiki-container">
-            <h3>Wikipedia Summary</h3>
-            <div id="city-wiki"></div>
+
+        <div id="weather-container" class="card-custom">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Weather</h3>
+            <div id="weather-info">
+                <p class="text-gray-500">Click "New Random City" to load weather data</p>
+            </div>
         </div>
-        <a href="http://www.tacorari.eu/">
-            <button id="back-to-top" class="btn btn-primary">Back to Top Page</button>
+
+        <div id="wiki-container" class="card-custom">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Wikipedia Summary</h3>
+            <div id="city-wiki">
+                <p class="text-gray-500">Click "New Random City" to load Wikipedia summary</p>
+            </div>
+        </div>
+
+        <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" id="back-to-top">
+            Back to Top
         </a>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios@1.7.7/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Axios for HTTP requests -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+
     <script>
         // Configuration
         const geoJsonUrl = 'https://raw.githubusercontent.com/soyadayo/mappon/main/cities15000.geojson';
-        const weatherApiKey = '733f811ffacc68efe08bb31549727912';
+        const weatherApiKey = '733f811ffacc68efe08bb31549727912'; // Replace with your actual API key
 
         // Fallback GeoJSON data (subset for testing)
         const fallbackGeoJson = {
@@ -76,6 +156,26 @@
                     "type": "Feature",
                     "properties": { "name": "Kabul", "latitude": 34.52813, "longitude": 69.17233, "population": 4434550 },
                     "geometry": { "type": "Point", "coordinates": [69.17233, 34.52813] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Tokyo", "latitude": 35.6762, "longitude": 139.6503, "population": 13960000 },
+                    "geometry": { "type": "Point", "coordinates": [139.6503, 35.6762] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "New York", "latitude": 40.7128, "longitude": -74.0060, "population": 8175000 },
+                    "geometry": { "type": "Point", "coordinates": [-74.0060, 40.7128] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "London", "latitude": 51.5074, "longitude": -0.1278, "population": 8982000 },
+                    "geometry": { "type": "Point", "coordinates": [-0.1278, 51.5074] }
+                },
+                {
+                    "type": "Feature",
+                    "properties": { "name": "Paris", "latitude": 48.8566, "longitude": 2.3522, "population": 2161000 },
+                    "geometry": { "type": "Point", "coordinates": [2.3522, 48.8566] }
                 }
             ]
         };
@@ -89,7 +189,7 @@
         function initMap() {
             map = L.map('map').setView([0, 0], 2);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
         }
 
@@ -103,7 +203,7 @@
             if (!f.geometry.coordinates || !Array.isArray(f.geometry.coordinates) || f.geometry.coordinates.length !== 2) {
                 return `Invalid coordinates: ${f.geometry.coordinates} (name: ${f.properties.name || 'unknown'})`;
             }
-            if (typeof f.geometry.coordinates[0] !== 'number' || typeof f.geometry.coordinates[1] !== 'number' || 
+            if (typeof f.geometry.coordinates[0] !== 'number' || typeof f.geometry.coordinates[1] !== 'number' ||
                 isNaN(f.geometry.coordinates[0]) || isNaN(f.geometry.coordinates[1])) {
                 return `Non-numeric coordinates: ${f.geometry.coordinates} (name: ${f.properties.name || 'unknown'})`;
             }
@@ -140,7 +240,6 @@
                 });
                 if (invalidCount > 0) {
                     console.warn(`Filtered out ${invalidCount} invalid features from ${source} data.`);
-                    document.getElementById('info').innerHTML += `<p class="text-warning">Warning: ${invalidCount} invalid cities were skipped.</p>`;
                 }
                 if (!cities.length) throw new Error(`No valid cities found in ${source} GeoJSON`);
                 cityIndices = cities.map(f => ({
@@ -149,11 +248,15 @@
                     population: parseInt(f.properties.population || 0)
                 }));
                 validCities = cities.filter(f => parseInt(f.properties.population || 0) > 50000);
+                if (validCities.length === 0) {
+                    validCities = cities; // Use all cities if none meet the population threshold
+                }
                 console.log(`Loaded ${cities.length} cities from ${source} data.`);
-                selectRandomCity();
+                // Don't auto-select a city on load
+                document.getElementById('info').innerHTML = '<p class="text-gray-500">Click "New Random City" to explore a random city!</p>';
             } catch (error) {
-                console.error('Error loading GeoJSON:', error.message, error.stack);
-                document.getElementById('info').innerHTML = '<p class="text-danger">Failed to load city data. Using fallback data.</p>';
+                console.error('Error loading GeoJSON:', error.message);
+                document.getElementById('info').innerHTML = '<p class="text-red-500">Failed to load city data. Using fallback data.</p>';
                 let invalidCount = 0;
                 const maxWarnings = 10;
                 cities = fallbackGeoJson.features.filter(f => {
@@ -169,7 +272,6 @@
                 });
                 if (invalidCount > 0) {
                     console.warn(`Filtered out ${invalidCount} invalid fallback features.`);
-                    document.getElementById('info').innerHTML += `<p class="text-warning">Warning: ${invalidCount} invalid fallback cities were skipped.</p>`;
                 }
                 cityIndices = cities.map(f => ({
                     name: f.properties.name,
@@ -177,15 +279,17 @@
                     population: parseInt(f.properties.population || 0)
                 }));
                 validCities = cities.filter(f => parseInt(f.properties.population || 0) > 50000);
+                if (validCities.length === 0) {
+                    validCities = cities;
+                }
                 console.log(`Loaded ${cities.length} cities from fallback data.`);
-                selectRandomCity();
             }
         }
 
         // Select random city with population-based weighting
         function selectRandomCity() {
             if (!validCities.length) {
-                document.getElementById('info').innerHTML = '<p class="text-danger">No valid cities available.</p>';
+                document.getElementById('info').innerHTML = '<p class="text-red-500">No valid cities available.</p>';
                 return;
             }
             const totalPop = validCities.reduce((sum, f) => sum + parseInt(f.properties.population || 0), 0);
@@ -208,21 +312,22 @@
             const population = feature.properties.population;
 
             // Update map
-            map.setView([coords[1], coords[0]], 6);
+            map.setView([coords[1], coords[0]], 10);
             if (currentMarker) map.removeLayer(currentMarker);
             currentMarker = L.marker([coords[1], coords[0]])
                 .addTo(map)
-                .bindPopup(`<b>${city}</b>`)
+                .bindPopup(`<b>${city}</b><br>Population: ${parseInt(population).toLocaleString()}`)
                 .openPopup();
 
             // Update info
             document.getElementById('info').innerHTML = `
-                <h3>${city}</h3>
-                <p>Population: ${parseInt(population).toLocaleString()}</p>
-                <p><a href="https://www.google.com/maps/search/?api=1&query=${coords[1]},${coords[0]}" target="_blank">View on Google Maps</a></p>
+                <h3 class="text-3xl font-bold text-blue-600 mb-2">${city}</h3>
+                <p class="text-lg text-gray-700">Population: ${parseInt(population).toLocaleString()}</p>
+                <p class="mt-2 text-sm text-gray-600">Coordinates: ${coords[1].toFixed(4)}, ${coords[0].toFixed(4)}</p>
+                <p class="mt-2"><a href="https://www.google.com/maps/search/?api=1&query=${coords[1]},${coords[0]}" target="_blank" class="text-blue-500 hover:underline">View on Google Maps</a></p>
             `;
 
-            // Fetch external data
+            // Fetch external data with loading indicators
             fetchWeatherData(coords[1], coords[0], city);
             fetchWikipediaSummary(city, 'city-wiki');
         }
@@ -239,16 +344,24 @@
         // Search cities
         const debounceSearch = debounce(function () {
             const query = document.getElementById('citySearch').value.toLowerCase();
+            const suggestionsDiv = document.getElementById('suggestions');
             if (!query) {
-                document.getElementById('suggestions').innerHTML = '';
+                suggestionsDiv.innerHTML = '';
+                suggestionsDiv.classList.add('hidden');
                 return;
             }
             const suggestions = cityIndices.filter(c => c.name.toLowerCase().includes(query)).slice(0, 5);
-            document.getElementById('suggestions').innerHTML = suggestions.map(c => `
-                <div class="suggestion-item" onclick="selectCity('${c.name}')">
-                    ${c.name}
-                </div>
-            `).join('');
+            if (suggestions.length > 0) {
+                suggestionsDiv.innerHTML = suggestions.map(c => `
+                    <div class="suggestion-item" onclick="selectCity('${c.name.replace(/'/g, "\\'")}')">
+                        ${c.name} <span class="text-gray-500 text-sm">(${parseInt(c.population).toLocaleString()})</span>
+                    </div>
+                `).join('');
+                suggestionsDiv.classList.remove('hidden');
+            } else {
+                suggestionsDiv.innerHTML = '<div class="suggestion-item text-gray-500">No cities found.</div>';
+                suggestionsDiv.classList.remove('hidden');
+            }
         }, 300);
 
         // Select city from search
@@ -257,58 +370,106 @@
             if (feature) {
                 displayCity(feature);
                 document.getElementById('suggestions').innerHTML = '';
+                document.getElementById('suggestions').classList.add('hidden');
                 document.getElementById('citySearch').value = '';
             }
         }
 
         // Fetch weather data
         async function fetchWeatherData(lat, lon, city) {
-            const cacheKey = `${lat},${lon}`;
+            const weatherInfoDiv = document.getElementById('weather-info');
+            weatherInfoDiv.innerHTML = '<p class="text-gray-500">Loading weather data...</p><div class="loading-spinner"></div>';
+            const cacheKey = `${lat.toFixed(2)},${lon.toFixed(2)}`;
             if (weatherCache[cacheKey]) {
                 displayWeather(weatherCache[cacheKey], city);
                 return;
             }
             try {
-                const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, { timeout: 10000 });
+                const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=metric`, { 
+                    timeout: 10000,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
                 weatherCache[cacheKey] = response.data;
                 displayWeather(response.data, city);
             } catch (error) {
-                console.error('Weather API error:', error.message, error.stack);
-                document.getElementById('weather-info').innerHTML = '<p class="text-danger">Failed to load weather data.</p>';
+                console.error('Weather API error:', error.message);
+                let errorMessage = 'Failed to load weather data.';
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        errorMessage = 'Weather API key is invalid. Please check your API key.';
+                    } else if (error.response.status === 429) {
+                        errorMessage = 'Weather API rate limit exceeded. Please try again later.';
+                    } else {
+                        errorMessage = `Weather API error: ${error.response.status}`;
+                    }
+                } else if (error.code === 'ECONNABORTED') {
+                    errorMessage = 'Weather request timed out. Please try again.';
+                }
+                weatherInfoDiv.innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
             }
         }
 
         // Display weather
         function displayWeather(data, city) {
+            const timezoneOffsetSeconds = data.timezone;
+
+            // Get current UTC time
+            const now = new Date();
+            const utcMilliseconds = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+            const localTimestamp = utcMilliseconds + (timezoneOffsetSeconds * 1000);
+            const localDate = new Date(localTimestamp);
+
+            // Format the time
+            const options = {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            };
+            const localTime = localDate.toLocaleTimeString('en-US', options);
+            const localDateString = localDate.toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+            });
+
             document.getElementById('weather-info').innerHTML = `
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Weather in ${city}</h5>
-                        <p>Temperature: ${data.main.temp}°C</p>
-                        <p>Condition: ${data.weather[0].description}</p>
-                        <p>Humidity: ${data.main.humidity}%</p>
-                    </div>
+                <div class="space-y-2">
+                    <p class="text-lg"><span class="font-medium">Local Time:</span> ${localDateString}, ${localTime}</p>
+                    <p class="text-lg"><span class="font-medium">Temperature:</span> ${Math.round(data.main.temp)}°C (feels like ${Math.round(data.main.feels_like)}°C)</p>
+                    <p class="text-lg"><span class="font-medium">Condition:</span> ${data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1)}</p>
+                    <p class="text-lg"><span class="font-medium">Humidity:</span> ${data.main.humidity}%</p>
+                    <p class="text-lg"><span class="font-medium">Wind:</span> ${data.wind?.speed || 0} m/s</p>
                 </div>
             `;
         }
 
         // Fetch Wikipedia summary
         async function fetchWikipediaSummary(title, containerId) {
+            const wikiContainerDiv = document.getElementById(containerId);
+            wikiContainerDiv.innerHTML = '<p class="text-gray-500">Loading Wikipedia summary...</p><div class="loading-spinner"></div>';
+
             if (!title || typeof title !== 'string' || title.trim() === '') {
                 console.warn(`Invalid Wikipedia title: ${title}`);
-                document.getElementById(containerId).innerHTML = '<p class="text-warning">Invalid city name for Wikipedia summary.</p>';
+                wikiContainerDiv.innerHTML = '<p class="text-yellow-600">Invalid city name for Wikipedia summary.</p>';
                 return;
             }
             const cacheKey = title.toLowerCase();
             if (wikiCache[cacheKey]) {
-                document.getElementById(containerId).innerHTML = wikiCache[cacheKey];
+                wikiContainerDiv.innerHTML = wikiCache[cacheKey];
                 return;
             }
             try {
-                const response = await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`, { timeout: 10000 });
+                const response = await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`, { 
+                    timeout: 10000,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
                 const summary = response.data.extract || 'No summary available.';
-                wikiCache[cacheKey] = `<p>${summary} <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(title)}" target="_blank">Read more on Wikipedia</a></p>`;
-                document.getElementById(containerId).innerHTML = wikiCache[cacheKey];
+                wikiCache[cacheKey] = `<p class="text-gray-700 leading-relaxed">${summary}</p><p class="mt-3"><a href="https://en.wikipedia.org/wiki/${encodeURIComponent(title)}" target="_blank" class="text-blue-500 hover:underline font-medium">Read more on Wikipedia →</a></p>`;
+                wikiContainerDiv.innerHTML = wikiCache[cacheKey];
             } catch (error) {
                 let message = 'Failed to load Wikipedia summary.';
                 if (error.response) {
@@ -317,17 +478,15 @@
                     } else if (error.response.status === 429) {
                         message = 'Wikipedia API rate limit exceeded.';
                     } else {
-                        message = `Wikipedia API error: ${error.response.status} ${error.response.statusText}`;
+                        message = `Wikipedia API error: ${error.response.status}`;
                     }
+                } else if (error.code === 'ECONNABORTED') {
+                    message = 'Wikipedia request timed out. Please try again.';
                 } else if (error.request) {
                     message = 'Network error: Unable to reach Wikipedia API.';
                 }
-                console.error(`Wikipedia API error for "${title}":`, error.message, {
-                    status: error.response?.status,
-                    statusText: error.response?.statusText,
-                    stack: error.stack
-                });
-                document.getElementById(containerId).innerHTML = `<p class="text-danger">${message}</p>`;
+                console.error(`Wikipedia API error for "${title}":`, error.message);
+                wikiContainerDiv.innerHTML = `<p class="text-red-500">${message}</p>`;
             }
         }
 
