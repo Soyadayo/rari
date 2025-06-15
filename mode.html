@@ -3,303 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haus Tacorari - Urban Fashion</title>
+    <title>Haus Tacorari - Urban Fashion Redefined</title>
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Apply Inter font (included in Tailwind's default, but explicitly specified) */
         body {
-            font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: #2c3e50;
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7; /* Light background color */
+            color: #333; /* Dark text color */
             line-height: 1.6;
             min-height: 100vh;
         }
 
+        /* Custom styles */
         .container {
-            max-width: 1200px;
+            max-width: 1280px; /* Wider container */
             margin: 0 auto;
-            padding: 20px;
+            padding: 2rem;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            background: transparent;
-            padding: 20px 0;
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #eee; /* Thin border */
+            margin-bottom: 2rem;
         }
 
-        .logo {
-            max-width: 150px;
-            height: auto;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        .logo-text {
+            font-size: 2.5rem; /* Larger logo text */
+            font-weight: 600; /* Semi-bold */
+            color: #1a202c; /* Dark logo color */
+            letter-spacing: -0.05em; /* Tighter letter spacing */
         }
 
-        h1 {
-            font-size: 1.8em;
-            margin-bottom: 5px;
-            color: #ecf0f1;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            font-weight: 300;
-            letter-spacing: 2px;
-            font-family: 'Times New Roman', serif;
+        .nav-link {
+            color: #4a5568; /* Nav link color */
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
 
-        .subtitle {
-            font-size: 0.9em;
-            color: #bdc3c7;
-            margin-bottom: 0;
-            font-weight: 300;
-            font-style: italic;
-            opacity: 0.8;
+        .nav-link:hover {
+            color: #000; /* Darker on hover */
         }
 
-        .description {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 15px;
-            margin-bottom: 50px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            font-size: 1.1em;
-            text-align: center;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 50px;
-            color: #ecf0f1;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .hero-section {
+            background-color: #e2e8f0; /* Hero section background */
+            border-radius: 0.75rem; /* Rounded corners */
+            overflow: hidden;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column; /* Stack vertically on small screens */
         }
 
-        .cta-button {
-            display: inline-block;
-            background: linear-gradient(45deg, #8b7355, #a0825d);
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 400;
-            font-size: 1em;
-            margin: 20px 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        @media (min-width: 768px) {
+            .hero-section {
+                flex-direction: row; /* Row on desktop */
+            }
         }
 
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            background: linear-gradient(45deg, #a0825d, #8b7355);
+        .hero-content {
+            padding: 3rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
         }
 
-        .home-button {
-            display: inline-block;
-            background: rgba(0, 0, 0, 0.6);
-            color: #ecf0f1;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 400;
-            font-size: 0.9em;
-            margin: 10px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .hero-image-container {
+            flex: 1;
+            min-height: 300px; /* Minimum image height */
+            background-color: #cbd5e0; /* Placeholder if no image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .home-button:hover {
-            background: rgba(0, 0, 0, 0.8);
-            transform: translateY(-1px);
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .mode-item {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .mode-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        .mode-image {
+        .hero-image {
             width: 100%;
-            height: 250px;
+            height: 100%;
+            object-fit: cover; /* Cover container while maintaining aspect ratio */
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            gap: 2rem; /* Gap between grid items */
+        }
+
+        .gallery-item {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px); /* Lift slightly on hover */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 350px; /* Fixed image height */
             object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-            filter: grayscale(20%);
-            transition: filter 0.3s ease;
         }
 
-        .mode-image:hover {
-            filter: grayscale(0%);
+        .gallery-title {
+            padding: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2d3748;
         }
 
-        .mode-title {
-            font-size: 1.2em;
-            color: #bdc3c7;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 300;
-            font-family: 'Times New Roman', serif;
+        .shop-link-section {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 3rem 0;
+            background-color: #f0f4f8; /* Light background color */
+            border-radius: 0.75rem;
+        }
+
+        .shop-button {
+            display: inline-block;
+            background-color: #1a202c; /* Dark button color */
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .shop-button:hover {
+            background-color: #2d3748; /* Slightly lighter on hover */
         }
 
         footer {
             text-align: center;
-            margin-top: 80px;
-            padding: 40px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            color: #bdc3c7;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-            
-            .container {
-                padding: 10px;
-            }
-            
-            .gallery {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            header {
-                padding: 20px;
-            }
-        }
-
-        .floating-elements {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .floating-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .floating-circle:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            top: 20%;
-            left: 10%;
-            animation-delay: -0s;
-        }
-
-        .floating-circle:nth-child(2) {
-            width: 120px;
-            height: 120px;
-            top: 60%;
-            right: 10%;
-            animation-delay: -2s;
-        }
-
-        .floating-circle:nth-child(3) {
-            width: 60px;
-            height: 60px;
-            bottom: 20%;
-            left: 20%;
-            animation-delay: -4s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+            margin-top: 4rem;
+            padding: 2rem 0;
+            color: #718096; /* Footer text color */
+            font-size: 0.9rem;
+            border-top: 1px solid #eee; /* Top border */
         }
     </style>
 </head>
 <body>
-    <div class="floating-elements">
-        <div class="floating-circle"></div>
-        <div class="floating-circle"></div>
-        <div class="floating-circle"></div>
-    </div>
-
     <div class="container">
-        <div style="text-align: right; margin-bottom: 20px;">
-            <a href="http://www.tacorari.eu/" class="home-button">
-                ← Back to Tacorari.eu
-            </a>
-        </div>
-
-        <header>
-            <img src="Logo_Haus_Tacorari_small_upscaled.png" alt="Haus Tacorari Logo" class="logo">
-            <h1>Haus Tacorari</h1>
-            <p class="subtitle">Fashion Division</p>
+        <!-- Header Section -->
+        <header class="header-section">
+            <div class="logo-text">Haus Tacorari</div>
+            <nav>
+                <a href="http://www.tacorari.eu/" class="nav-link">← Back to Tacorari.eu</a>
+            </nav>
         </header>
 
-        <div class="description">
-            <p>Welcome to Haus Tacorari's Fashion Division. We are dedicated to creating clothing that functions seamlessly when your body is placed within the urban environment. Our designs merge contemporary aesthetics with practical functionality, crafting garments that adapt to the rhythm and demands of city life.</p>
-            <br>
-            <p>Each piece is thoughtfully designed to enhance your urban experience, providing comfort, style, and utility in the dynamic landscape of modern metropolitan living.</p>
-            
-            <a href="https://www.redbubble.com/people/HausTacorari/shop?asc=u" target="_blank" class="cta-button">
-                🛍️ Shop Our Collection
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="text-5xl font-bold mb-4 text-gray-900">
+                    Urban Fashion<br>Redefined.
+                </h1>
+                <p class="text-lg text-gray-700 mb-6">
+                    Welcome to Haus Tacorari's Fashion Division.
+                    We are dedicated to creating clothing that functions seamlessly when your body is placed within the urban environment.
+                    Our designs merge contemporary aesthetics with practical functionality,
+                    crafting garments that adapt to the rhythm and demands of city life.
+                </p>
+                <a href="https://www.redbubble.com/people/HausTacorari/shop?asc=u" target="_blank" class="shop-button">
+                    View Collection
+                </a>
+            </div>
+            <div class="hero-image-container">
+                <!-- Hero image placeholder. Use product images like the Biffi site -->
+                <img src="https://placehold.co/800x600/f0f4f8/333333?text=Hero+Image" alt="Hero Image" class="hero-image">
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="mb-12">
+            <h2 class="section-title">Our Collection</h2>
+            <div class="gallery-grid">
+                <!-- Gallery Item 1 -->
+                <div class="gallery-item">
+                    <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/main/mode1.png" alt="Mode 1" class="gallery-image">
+                    <h3 class="gallery-title">Mode 1</h3>
+                </div>
+                <!-- Gallery Item 2 -->
+                <div class="gallery-item">
+                    <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/main/mode2.png" alt="Mode 2" class="gallery-image">
+                    <h3 class="gallery-title">Mode 2</h3>
+                </div>
+                <!-- Gallery Item 3 -->
+                <div class="gallery-item">
+                    <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/main/mode3.png" alt="Mode 3" class="gallery-image">
+                    <h3 class="gallery-title">Mode 3</h3>
+                </div>
+                <!-- Gallery Item 4 -->
+                <div class="gallery-item">
+                    <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/main/mode4.png" alt="Mode 4" class="gallery-image">
+                    <h3 class="gallery-title">Mode 4</h3>
+                </div>
+                <!-- Gallery Item 5 -->
+                <div class="gallery-item">
+                    <img src="https://raw.githubusercontent.com/Mappon/main/mode5.png" alt="Mode 5" class="gallery-image">
+                    <h3 class="gallery-title">Mode 5</h3>
+                </div>
+                <!-- Additional gallery items can be added here -->
+                <div class="gallery-item">
+                    <img src="https://placehold.co/800x600/e2e8f0/333333?text=New+Mode+A" alt="New Mode A" class="gallery-image">
+                    <h3 class="gallery-title">New Mode A</h3>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://placehold.co/800x600/e2e8f0/333333?text=New+Mode+B" alt="New Mode B" class="gallery-image">
+                    <h3 class="gallery-title">New Mode B</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shop Link Section -->
+        <section class="shop-link-section">
+            <h2 class="text-3xl font-bold mb-6 text-gray-800">
+                Check Out Our Latest Collection Now
+            </h2>
+            <a href="https://www.redbubble.com/people/HausTacorari/shop?asc=u" target="_blank" class="shop-button">
+                Visit Our Shop
             </a>
-        </div>
+        </section>
 
-        <div class="gallery">
-            <div class="mode-item">
-                <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/main/mode1.png" alt="Mode 1" class="mode-image">
-                <h3 class="mode-title">Mode 1</h3>
-            </div>
-            <div class="mode-item">
-                <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/main/mode2.png" alt="Mode 2" class="mode-image">
-                <h3 class="mode-title">Mode 2</h3>
-            </div>
-            <div class="mode-item">
-                <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/main/mode3.png" alt="Mode 3" class="mode-image">
-                <h3 class="mode-title">Mode 3</h3>
-            </div>
-            <div class="mode-item">
-                <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/main/mode4.png" alt="Mode 4" class="mode-image">
-                <h3 class="mode-title">Mode 4</h3>
-            </div>
-            <div class="mode-item">
-                <img src="https://raw.githubusercontent.com/Mappon/main/mode5.png" alt="Mode 5" class="mode-image">
-                <h3 class="mode-title">Mode 5</h3>
-            </div>
-        </div>
-
+        <!-- Footer -->
         <footer>
             <p>&copy; 2025 Haus Tacorari. Urban Fashion Redefined.</p>
-            <a href="https://www.redbubble.com/people/HausTacorari/shop?asc=u" target="_blank" class="cta-button">
-                Visit Our Store
-            </a>
         </footer>
     </div>
 </body>
