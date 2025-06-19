@@ -3,614 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haus Tacorari - Independent Games, Japanese Design & Creative Web Services</title>
-    
-    <!-- Performance Optimization -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"></noscript>
-    
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" xintegrity="sha512-1ycn6IcaQQ40jBliWEc//yWJTyUaStI/gk4g/o+/aW/JUtIadkL8pG/sN92p+Hjof03C2S3S0e+A1p1v0zGg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Haus Tacorari - Independent game development, Japanese design aesthetics, fashion, and creative web services. Discover unique digital experiences and artistic innovation.">
-    <meta name="keywords" content="independent games, Japanese design, fashion, creative tools, web services, game development, indie games, minimalist design, digital art, creative innovation">
+    <meta name="description" content="Haus Tacorari is a creative label focusing on independent game development, Japanese design aesthetics, fashion, and creative web services. It is a solo project by a Japanese creator based in Germany.">
+    <meta name="keywords" content="Independent games, Japanese design, fashion, creative tools, web services, game development, indie games, minimalist design, digital art, creative innovation">
     <meta name="author" content="Haus Tacorari">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://soyadayo.github.io/Mappon/">
-    <meta property="og:title" content="Haus Tacorari - Independent Games & Creative Design">
-    <meta property="og:description" content="Independent game development, Japanese design aesthetics, fashion, and creative web services.">
-    <meta property="og:image" content="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png">
-    <meta property="og:image:width" content="400">
-    <meta property="og:image:height" content="400">
-    
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://soyadayo.github.io/Mappon/">
-    <meta name="twitter:title" content="Haus Tacorari - Independent Games & Creative Design">
-    <meta name="twitter:description" content="Independent game development, Japanese design aesthetics, fashion, and creative web services.">
-    <meta name="twitter:image" content="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png">
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://soyadayo.github.io/Mappon/">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#172A45">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": ["Organization", "CreativeWork"],
-        "name": "Haus Tacorari",
-        "description": "Independent game development, Japanese design aesthetics, fashion, and creative web services",
-        "url": "https://soyadayo.github.io/Mappon/",
-        "logo": "https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png",
-        "sameAs": [
-            "https://www.instagram.com/haustacorari/",
-            "https://buymeacoffee.com/tacorari"
-        ],
-        "foundingDate": "2024",
-        "industry": ["Game Development", "Design", "Fashion", "Web Services"],
-        "keywords": "independent games, Japanese design, fashion, creative tools, web services",
-        "offers": {
-            "@type": "Service",
-            "serviceType": ["Game Development", "Web Design", "Creative Services", "Fashion Design"]
-        },
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "contactType": "customer support",
-            "url": "https://www.instagram.com/haustacorari/"
-        }
-    }
-    </script>
-    
+    <title>Haus Tacorari - Independent Games, Japanese Design & Creative Web Services</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-dark: #0D1117; /* GitHub dark background */
-            --secondary-dark: #161B22; /* Slightly lighter dark */
-            --accent-blue: #00BFFF; /* Deep Sky Blue - vibrant */
-            --accent-cyan: #00FFFF; /* Cyan - lighter accent */
-            --accent-green: #00FF7F; /* Spring Green */
-            --accent-red: #FF6347; /* Tomato Red */
-            --text-light: #E6EDF3; /* Off-white */
-            --text-muted: #8B949E; /* Greyish blue */
-            --bg-gradient: linear-gradient(135deg, #0A192F 0%, #172A45 50%, #1F385B 100%); /* Deep blue/indigo gradient */
-            --card-bg: rgba(23, 42, 69, 0.5); /* Slightly transparent dark blue */
-            --card-border: rgba(0, 191, 255, 0.3); /* Faint blue border */
-            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.25);
-            --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Accessibility improvements */
-        .sr-only {
-            position: absolute !important;
-            width: 1px !important;
-            height: 1px !important;
-            padding: 0 !important;
-            margin: -1px !important;
-            overflow: hidden !important;
-            clip: rect(0, 0, 0, 0) !important;
-            white-space: nowrap !important;
-            border: 0 !important;
-        }
-
-        /* Reduced motion support */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-light);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-            line-height: 1.6;
+            font-family: 'Arial', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
         }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(0, 191, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(0, 191, 255, 0.04) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
         }
-
-        .container {
-            max-width: 900px;
-            width: 100%;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            padding: 60px 40px;
-            box-shadow: 
-                var(--shadow-strong),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            position: relative;
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
-
-        .container::after {
-            content: '✨'; /* Changed to a cool sparkle */
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            font-size: 1.2em;
-            opacity: 0.3;
-            animation: pulse 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-        }
-
-        .logo-container {
-            margin-bottom: 30px;
-        }
-
-        .logo {
-            max-width: 200px;
-            height: auto;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            filter: brightness(1.1) contrast(1.1);
-            border-radius: 12px;
-        }
-
-        .logo:hover {
-            transform: translateY(-5px) scale(1.02) rotate(1deg);
-            filter: brightness(1.2) contrast(1.2);
-        }
-
-        h1 {
-            font-family: 'Inter', sans-serif; /* Changed font */
-            font-size: clamp(2.2em, 4vw, 3.2em);
-            font-weight: 300;
-            color: var(--text-light);
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
-            line-height: 1.2;
-        }
-
-        .subtitle {
-            font-size: 1.1em;
-            color: var(--text-muted);
-            margin-bottom: 40px;
-            font-weight: 300;
-            letter-spacing: 0.3px;
-        }
-
-        .section-title {
-            font-family: 'Inter', sans-serif; /* Changed font */
-            color: var(--text-light);
-            font-size: clamp(1.8em, 3vw, 2.5em);
-            margin-top: 60px;
-            margin-bottom: 30px;
-            font-weight: 400;
-            text-align: center;
-        }
-
-        .content-block {
-            margin-bottom: 40px;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            text-align: left;
-            backdrop-filter: blur(5px);
-        }
-
-        .content-block h3 {
-            font-family: 'Inter', sans-serif; /* Changed font */
-            color: var(--accent-blue); /* Changed accent color */
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            font-weight: 500;
-            text-align: center;
-        }
-
-        .content-block p {
-            margin-bottom: 1em;
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-
-        .content-block strong {
-            color: var(--accent-cyan); /* Changed accent color */
-            font-weight: 500;
-        }
-
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 40px;
-            margin-bottom: 60px;
-        }
-
-        .project-card {
-            background: linear-gradient(145deg, var(--secondary-dark) 0%, rgba(22, 27, 34, 0.8) 100%); /* Adjusted gradient */
-            border: 1px solid var(--card-border);
-            border-radius: 18px;
-            overflow: hidden;
-            text-align: center;
-            box-shadow: var(--shadow-soft);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        /* Dynamic border color on hover using JavaScript */
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-medium);
-        }
-        /* No fixed border color here, handled by JS for random accent */
-
-        .project-card .icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-            color: var(--accent-blue); /* Changed accent color */
-            display: block;
-        }
-
-        .project-card h4 {
-            font-family: 'Inter', sans-serif; /* Changed font */
-            font-size: 1.4em;
-            color: var(--text-light);
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .project-card p {
-            font-size: 0.95em;
-            color: var(--text-muted);
-            line-height: 1.6;
-            flex-grow: 1; /* Allows paragraph to take available space */
-        }
-
-        .project-link {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: var(--accent-blue); /* Changed accent color */
-            color: var(--primary-dark);
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9em;
-            transition: all 0.2s ease;
-        }
-
-        .project-link:hover,
-        .project-link:focus {
-            background: var(--accent-cyan); /* Changed accent color */
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4); /* Adjusted shadow color */
-            outline: none;
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
-        .social-link {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-light);
-            text-decoration: none;
-            border-radius: 12px;
-            font-size: 0.95em;
-            font-weight: 400;
-            border: 1px solid var(--card-border);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        .social-link:hover,
-        .social-link:focus {
-            background: var(--accent-blue); /* Changed accent color */
-            color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 191, 255, 0.3); /* Adjusted shadow color */
-            outline: none;
-        }
-
-        .social-link:focus {
-            outline: 2px solid var(--accent-blue); /* Changed accent color */
-            outline-offset: 2px;
-        }
-
-        /* Skip link for accessibility */
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 6px;
-            background: var(--accent-blue); /* Changed accent color */
-            color: var(--primary-dark);
-            padding: 8px;
-            text-decoration: none;
-            border-radius: 4px;
-            z-index: 1000;
-        }
-
-        .skip-link:focus {
-            top: 6px;
-        }
-
-        /* Improved responsive design */
-        @media (max-width: 1200px) {
-            .container {
-                max-width: 800px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 40px 25px;
-                margin: 10px;
-            }
-            
-            .content-block, .project-card {
-                padding: 25px;
-            }
-            
-            .project-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
-            .social-links {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .section-title {
-                font-size: 1.8em;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 30px 20px;
-            }
-            
-            h1 {
-                font-size: 2em;
-            }
-            
-            .subtitle {
-                font-size: 1em;
-            }
-            
-            .content-block, .project-card {
-                padding: 20px;
-            }
-        }
-
-        /* High contrast mode support */
-        @media (prefers-contrast: high) {
-            :root {
-                --card-border: rgba(255, 255, 255, 0.3);
-                --text-muted: #e0e0e0;
-            }
-        }
-
-        /* Print styles */
-        @media print {
-            body {
-                background: white;
-                color: black;
-            }
-            
-            .container {
-                box-shadow: none;
-                border: 1px solid black;
-            }
-            
-            .project-card,
-            .social-link {
-                border: 1px solid black;
-                background: white;
-                color: black;
-            }
+        .hover-scale:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
         }
     </style>
 </head>
-<body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    
-    <main id="main-content" class="container">
-        <header class="logo-container">
-            <picture>
-                <source srcset="Logo_Haus_Tacorari_small.webp" type="image/webp">
-                <img src="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png" 
-                     alt="Haus Tacorari Logo - Independent Games and Creative Design" 
-                     class="logo"
-                     width="200" 
-                     height="200"
-                     loading="eager"
-                     onerror="this.onerror=null;this.src='https://placehold.co/200x200/cccccc/333333?text=Logo+Missing';">
-            </picture>
-            <h1>Haus Tacorari</h1>
-            <p class="subtitle">Independent Games • Japanese Design • Creative Web Services</p>
-            <p class="intro-statement">
-                Haus Tacorari is a creative label that fuses games, Japanese design aesthetics, and fashion into unique digital experiences. Organized by a Japanese creator based in Germany as a solo project, we explore the intersection of technology and traditional Japanese design principles, continuously creating meaningful experiences.
-            </p>
-        </header>
-        
-        <section class="about-section" aria-labelledby="about-heading">
-            <h2 id="about-heading" class="section-title">About Haus Tacorari</h2>
-            
-            <div class="content-block">
-                <h3>Philosophy and Vision</h3>
-                <p>Haus Tacorari develops independent games that tell stories through quiet moments and strange encounters. We pursue artistic expression beyond mere entertainment, creating experiences that resonate deeply with players.</p>
-            </div>
-
-            <div class="content-block">
-                <h3>Creation Process</h3>
-                <p>We emphasize attention to detail and creative exploration, building core gameplay mechanics and immersive worlds. Drawing on expertise in fine arts and linguistic analysis, we refine our works through both visual expression and narrative depth.</p>
-            </div>
-        </section>
-        
-        <section class="projects-section" aria-labelledby="projects-heading">
-            <h2 id="projects-heading" class="section-title">Our Works</h2>
-            <div class="project-grid">
-                <div class="project-card">
-                    <i class="fas fa-gamepad icon" aria-hidden="true"></i>
-                    <h4>Games</h4>
-                    <p>
-                        Explore independent games offering quiet and thoughtful experiences. Each game brings deep emotion and discovery through unique narratives and playful interactions.
-                    </p>
-                    <a href="games.html" class="project-link" aria-label="Learn more about our games">Learn More</a>
-                </div>
-                <div class="project-card">
-                    <i class="fas fa-map icon" aria-hidden="true"></i>
-                    <h4>Mappon</h4>
-                    <p>
-                        Mappon is a creative mapping and design tool engineered for artists, designers, and creators. Visualize your ideas and bring them to life in the real world.
-                    </p>
-                    <a href="mappon.html" class="project-link" aria-label="Learn more about Mappon">Learn More</a>
-                </div>
-                <div class="project-card">
-                    <i class="fas fa-tshirt icon" aria-hidden="true"></i>
-                    <h4>Mode</h4>
-                    <p>
-                        Discover our collection where Japanese aesthetics merge with contemporary fashion. From digital concepts to tangible fashion pieces, we push the boundaries of creativity.
-                    </p>
-                    <a href="mode.html" class="project-link" aria-label="Learn more about our Mode collection">Learn More</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="contact-info" aria-labelledby="contact-heading">
-            <h2 id="contact-heading" class="section-title">Contact Us</h2>
-            <div class="content-block">
-                <h3>Interested in Creative Collaboration?</h3>
-                <p>
-                    For inquiries, collaboration opportunities, or just to say hello, feel free to reach out.
-                    We always welcome new ideas and connections with those who wish to join us on our creative journey.
-                </p>
-                <p>
-                    For our latest updates and projects, follow us on our social links below.
-                </p>
-            </div>
-        </section>
-        
-        <footer class="social-links" role="contentinfo" aria-label="Social media and support links">
-            <a href="https://buymeacoffee.com/tacorari" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               class="social-link" 
-               aria-label="Support our creative work on Buy Me a Coffee">
-                <i class="fas fa-mug-hot" aria-hidden="true"></i>
-                <span>Buy Me a Coffee</span>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-md py-4 sticky top-0 z-10">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="/" class="flex items-center">
+                <img src="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png" alt="Haus Tacorari Logo" class="h-12 fade-in">
+                <h1 class="ml-4 text-2xl font-bold text-gray-800">Haus Tacorari</h1>
             </a>
-            <a href="https://www.instagram.com/haustacorari/" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               class="social-link"
-               aria-label="Follow us on Instagram">
-                <i class="fab fa-instagram" aria-hidden="true"></i>
-                <span>Instagram</span>
-            </a>
-        </footer>
-    </main>
+            <nav class="space-x-6">
+                <a href="#services" class="text-gray-600 hover:text-gray-900">Services</a>
+                <a href="#about" class="text-gray-600 hover:text-gray-900">About</a>
+                <a href="#contact" class="text-gray-600 hover:text-gray-900">Contact</a>
+                <select class="border-none bg-transparent text-gray-600" onchange="window.location.href=this.value">
+                    <option value="">English</option>
+                    <option value="/ja">日本語</option>
+                </select>
+            </nav>
+        </div>
+    </header>
 
-    <!-- Service Worker Registration -->
+    <!-- Hero Section -->
+    <section class="bg-gray-100 py-20 text-center">
+        <div class="container mx-auto px-4 fade-in">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Haus Tacorari</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Independent Games, Japanese Design & Creative Web Services. A solo project bridging Japanese aesthetics with German precision.</p>
+            <div class="mt-8 space-x-4">
+                <a href="#services" class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700">Explore Services</a>
+                <a href="#contact" class="border border-gray-800 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-800 hover:text-white">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 fade-in">Our Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md hover-scale fade-in">
+                    <h3 class="text-xl font-semibold mb-4">Games Development</h3>
+                    <p class="text-gray-600 mb-4">Explore independent games offering quiet and thoughtful experiences. Each game brings deep emotion and discovery through unique narratives and playful interactions.</p>
+                    <a href="https://www.tacorari.eu/games.html" class="text-gray-800 font-semibold hover:underline">Learn More</a>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md hover-scale fade-in">
+                    <h3 class="text-xl font-semibold mb-4">Mappon Project</h3>
+                    <p class="text-gray-600 mb-4">A creative mapping and design tool engineered for artists, designers, and creators. Visualize your ideas and bring them to life in the real world.</p>
+                    <a href="https://www.tacorari.eu/mappon.html" class="text-gray-800 font-semibold hover:underline">Learn More</a>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md hover-scale fade-in">
+                    <h3 class="text-xl font-semibold mb-4">Mode/Fashion</h3>
+                    <p class="text-gray-600 mb-4">Creating clothing that functions seamlessly in urban environments, merging contemporary aesthetics with practical functionality.</p>
+                    <a href="https://www.tacorari.eu/mode.html" class="text-gray-800 font-semibold hover:underline">Learn More</a>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md hover-scale fade-in">
+                    <h3 class="text-xl font-semibold mb-4">Wolf Project</h3>
+                    <p class="text-gray-600 mb-4">Creative web services and digital solutions with a focus on innovative user experiences.</p>
+                    <a href="https://www.tacorari.eu/wolf.html" class="text-gray-800 font-semibold hover:underline">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="bg-gray-50 py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 fade-in">About Haus Tacorari</h2>
+            <div class="max-w-3xl mx-auto text-center">
+                <p class="text-gray-600 mb-6">Founded in 2024, Haus Tacorari represents the creative vision of a solo Japanese creator based in Germany. We combine games, Japanese design aesthetics, and fashion into unique digital experiences.</p>
+                <p class="text-gray-600 mb-6">Our approach explores the intersection of technology and traditional Japanese design principles, creating meaningful experiences that bridge cultural boundaries. Each project is a carefully crafted journey that invites others to explore new possibilities in digital creativity.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                    <div class="fade-in">
+                        <h4 class="font-semibold">Founded</h4>
+                        <p class="text-gray-600">2024</p>
+                    </div>
+                    <div class="fade-in">
+                        <h4 class="font-semibold">Based in</h4>
+                        <p class="text-gray-600">Germany</p>
+                    </div>
+                    <div class="fade-in">
+                        <h4 class="font-semibold">Creator</h4>
+                        <p class="text-gray-600">Solo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="bg-gray-100 py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 fade-in">Get in Touch</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Contact Information</h3>
+                    <p class="text-gray-600 mb-4">Based in Germany with global collaborations.</p>
+                    <p class="text-gray-600 mb-4">Email: <a href="mailto:rarika100@protonmail.com" class="text-gray-800 hover:underline">rarika100@protonmail.com</a></p>
+                    <p class="text-gray-600 mb-4">Follow us on <a href="#" class="text-gray-800 hover:underline">Instagram</a> for updates and behind-the-scenes.</p>
+                    <p class="text-gray-600">Support our creative endeavors on <a href="#" class="text-gray-800 hover:underline">Buy Me a Coffee</a>.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Send a Message</h3>
+                    <div>
+                        <input type="text" placeholder="Name" class="w-full p-3 mb-4 border rounded-md">
+                        <input type="email" placeholder="Email" class="w-full p-3 mb-4 border rounded-md">
+                        <input type="text" placeholder="Subject" class="w-full p-3 mb-4 border rounded-md">
+                        <textarea placeholder="Message" class="w-full p-3 mb-4 border rounded-md h-32"></textarea>
+                        <label class="flex items-center mb-4">
+                            <input type="checkbox" class="mr-2">
+                            <span class="text-gray-600 text-sm">I consent to having this website store my submitted information so they can respond to my inquiry.</span>
+                        </label>
+                        <button class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700">Send Message</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Haus Tacorari</h4>
+                    <p class="text-gray-400">Independent Games, Japanese Design & Creative Web Services. A solo project bridging Japanese aesthetics with German precision.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="https://www.tacorari.eu/games.html" class="text-gray-400 hover:text-white">Games</a></li>
+                        <li><a href="https://www.tacorari.eu/mappon.html" class="text-gray-400 hover:text-white">Mappon</a></li>
+                        <li><a href="https://www.tacorari.eu/mode.html" class="text-gray-400 hover:text-white">Mode/Fashion</a></li>
+                        <li><a href="https://www.tacorari.eu/wolf.html" class="text-gray-400 hover:text-white">Wolf Project</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#about" class="text-gray-400 hover:text-white">About</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-700 pt-4 text-center">
+                <p class="text-gray-400">© 2025 Haus Tacorari. All rights reserved.</p>
+                <div class="space-x-4 mt-2">
+                    <a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registered successfully');
-                    })
-                    .catch(registrationError => {
-                        console.log('ServiceWorker registration failed');
-                    });
+        // Simple JavaScript for form submission placeholder
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', () => {
+                alert('This is a static demo. Form submission is not implemented.');
             });
-        }
-
-        // Image error handling
-        document.addEventListener('DOMContentLoaded', () => {
-            const logo = document.querySelector('.logo');
-            if (logo) {
-                logo.addEventListener('error', () => {
-                    logo.style.opacity = '0.5';
-                    console.warn('Logo image failed to load');
-                });
-            }
-
-            // Apply random green/red border to project cards on hover
-            const projectCards = document.querySelectorAll('.project-card');
-            const accentColors = ['var(--accent-green)', 'var(--accent-red)'];
-
-            projectCards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    const randomColor = accentColors[Math.floor(Math.random() * accentColors.length)];
-                    card.style.borderColor = randomColor;
-                });
-                card.addEventListener('mouseleave', () => {
-                    card.style.borderColor = 'var(--card-border)'; // Revert to default
-                });
-            });
-        });
-
-        // Performance monitoring
-        window.addEventListener('load', () => {
-            if ('performance' in window) {
-                const perfData = performance.getEntriesByType('navigation')[0];
-                if (perfData.loadEventEnd - perfData.navigationStart > 3000) {
-                    console.warn('Page load time exceeded 3 seconds');
-                }
-            }
         });
     </script>
 </body>
