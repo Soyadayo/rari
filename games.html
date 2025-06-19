@@ -1,165 +1,557 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Hunger Within - Haus Tacorari</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Georgia', serif;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
-      color: #e0e0e0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      line-height: 1.8;
-    }
-    .container {
-      max-width: 900px;
-      padding: 50px;
-      background: rgba(20, 20, 20, 0.95);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      text-align: center;
-      border: 1px solid #4a4a4a;
-      border-radius: 10px;
-    }
-    h1 {
-      font-size: 2.8em;
-      margin-bottom: 0.5em;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #d4a017;
-      font-family: 'Cinzel', serif;
-      text-shadow: 0 0 10px rgba(212, 160, 23, 0.3);
-    }
-    h2 {
-      font-size: 1.6em;
-      margin-bottom: 1.5em;
-      color: #b0b0b0;
-      font-weight: normal;
-      font-style: italic;
-    }
-    p {
-      font-size: 1.1em;
-      margin-bottom: 1.8em;
-      color: #cccccc;
-      letter-spacing: 0.5px;
-    }
-    .lang-switch {
-      margin-bottom: 30px;
-    }
-    .lang-switch button {
-      background: none;
-      border: none;
-      font-size: 1em;
-      color: #b0b0b0;
-      cursor: pointer;
-      margin: 0 15px;
-      text-transform: uppercase;
-      transition: color 0.3s ease, transform 0.2s ease;
-      font-family: 'Georgia', serif;
-    }
-    .lang-switch button:hover {
-      color: #d4a017;
-      transform: scale(1.05);
-    }
-    .lang-switch button.active {
-      font-weight: bold;
-      color: #d4a017;
-      text-shadow: 0 0 5px rgba(212, 160, 23, 0.2);
-    }
-    .content-ja, .content-en {
-      display: none;
-    }
-    .content-ja.active, .content-en.active {
-      display: block;
-    }
-    .back-button {
-      display: inline-block;
-      padding: 12px 25px;
-      background: linear-gradient(45deg, #d4a017, #a88112);
-      color: #1a1a1a;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 1em;
-      font-family: 'Georgia', serif;
-      transition: background 0.3s ease, transform 0.2s ease;
-      margin-top: 30px;
-      box-shadow: 0 5px 15px rgba(212, 160, 23, 0.3);
-    }
-    .back-button:hover {
-      background: linear-gradient(45deg, #e0b52b, #d4a017);
-      transform: translateY(-2px);
-    }
-    .game-image {
-      max-width: 100%;
-      height: auto;
-      margin-top: 20px;
-      border: 2px solid #4a4a4a;
-      border-radius: 5px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel&display=swap');
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="lang-switch">
-      <button class="lang-btn active" onclick="switchLang('ja')">日本語</button>
-      <button class="lang-btn" onclick="switchLang('en')">English</button>
-    </div>
-    <h1>The Hunger Within</h1>
-    <h2>by Haus Tacorari</h2>
-    <div class="content-ja active">
-      <p>
-        「食と欲（仮）」は、Haus Tacorariレーベルのゲーム部門がお送りする3Dターン制タクティカルSRPGです。
-      </p>
-      <p>
-        ある母が、呪いを受けて狼人間になってしまいます。その母の望みは、自分の種族の反映ですが、何の因果か自分が食した敵の特性を持った子供が生まれてきます。彼女は気づきました。反映の為には戦い続け、そして食らい続けるべきだと。
-      </p>
-      <p>
-        彼女は呪いを恨みますが、生まれてくる子供には罪はありません。
-      </p>
-      <p>
-        彼女は悪魔によって課せられた食人の呪いに苦しみます。彼女は敵を喰らい、卵を産み、その子たちは敵の特性（狼の爪、蛇の毒など）を継承します。彼女は呪いを憎みながらも子を愛し、悪魔を倒し呪いを解くため戦います。12のステージを通じて、戦術的な戦闘、子育て、そして希望と絶望が交錯する物語を体験してください。
-      </p>
-      <p>
-        プレイヤーは10×10の3Dグリッド上で彼女とその子たちを操作し、敵を倒すかステージ目標を達成することでステージを進めて行きます。子育てシステムでは、ステージ間で子を訓練し、継承した特性を強化。特定のステージでは、子たちが独り立ちし、彼女が見守る中での成長が描かれます。Godot 4.xで構築され、暗い森や血に染まった祭壇など、ダークファンタジーの世界観を表現したものになるのでその世界をご堪能ください。
-      </p>
-      <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/07413872692c8e4a06e26383ce6f3bd6079f695f/wolf1.jpg" alt="Werewolf in Combat" class="game-image">
-      <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/main/wolf2.png" alt="Werewolf in Combat" class="game-image">
-    </div>
-    <div class="content-en">
-      <p>
-        "The Hunger Within" is a 3D turn-based tactical SRPG presented by Haus Tacorari’s game division.
-      </p>
-      <p>
-        A mother, cursed to become a werewolf, desires the prosperity of her kind. By some twist of fate, the children she bears inherit the traits of the enemies she consumes. She realizes that to ensure prosperity, she must keep fighting and devouring.
-      </p>
-      <p>
-        She resents the curse, but her children bear no blame.
-      </p>
-      <p>
-        Tormented by a cannibalistic curse imposed by a demon, she devours enemies, lays eggs, and her children inherit their traits (e.g., wolf claws, snake venom). Hating the curse yet loving her offspring, she fights to defeat the demon and break the curse. Across 12 stages, experience tactical combat, child-rearing, and a story of hope and despair intertwined.
-      </p>
-      <p>
-        Players control her and her children on a 10×10 3D grid, advancing by defeating enemies or achieving stage goals. The child-rearing system allows training between stages to enhance inherited traits. In certain stages, children stand alone, their growth depicted as she watches. Built with Godot 4.x, immerse yourself in a dark fantasy world of shadowed forests and blood-stained altars.
-      </p>
-      <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/07413872692c8e4a06e26383ce6f3bd6079f695f/wolf1.jpg" alt="Werewolf in Combat" class="game-image">
-      <img src="https://raw.githubusercontent.com/Soyadayo/Mappon/main/wolf2.png" alt="Werewolf in Combat" class="game-image">
-    </div>
-    <a href="http://www.tacorari.eu/" class="back-button">Back to Homepage</a>
-  </div>
-  <script>
-    function switchLang(lang) {
-      document.querySelectorAll('.content-ja, .content-en').forEach(el => el.classList.remove('active'));
-      document.querySelector(`.content-${lang}`).classList.add('active');
-      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelector(`button[onclick="switchLang('${lang}')"]`).classList.add('active');
-    }
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Hunger Within - Haus Tacorari</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#d4a017", secondary: "#a88112" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+JP:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+        font-family: 'Noto Serif JP', serif;
+        color: #e0e0e0;
+      }
+      .cinzel {
+        font-family: 'Cinzel', serif;
+      }
+      .game-title {
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #d4a017;
+        text-shadow: 0 0 10px rgba(212, 160, 23, 0.3);
+      }
+      .section-title {
+        position: relative;
+        display: inline-block;
+      }
+      .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 2px;
+        background-color: #d4a017;
+      }
+      .feature-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+      .screenshot {
+        transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+      .screenshot:hover {
+        transform: scale(1.03);
+        opacity: 0.9;
+      }
+      .language-btn {
+        transition: all 0.3s ease;
+      }
+      .language-btn:hover {
+        transform: translateY(-2px);
+      }
+      .language-btn.active {
+        color: #d4a017;
+        border-color: #d4a017;
+      }
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+      }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #d4a017;
+        transition: width 0.3s ease;
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+      .nav-link:hover {
+        color: #d4a017;
+      }
+      .cta-button {
+        background: linear-gradient(45deg, #d4a017, #a88112);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(212, 160, 23, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <header
+      class="w-full bg-[#121212] bg-opacity-90 fixed top-0 z-50 border-b border-gray-800"
+    >
+      <div
+        class="container mx-auto px-4 py-4 flex justify-between items-center"
+      >
+        <div class="flex items-center">
+          <h1 class="text-2xl font-bold cinzel text-primary">
+            The Hunger Within
+          </h1>
+        </div>
+        <nav class="hidden md:flex space-x-8">
+          <a href="#story" class="nav-link text-gray-300 hover:text-primary"
+            >ストーリー</a
+          >
+          <a href="#gameplay" class="nav-link text-gray-300 hover:text-primary"
+            >ゲームプレイ</a
+          >
+          <a href="#features" class="nav-link text-gray-300 hover:text-primary"
+            >特徴</a
+          >
+          <a
+            href="#screenshots"
+            class="nav-link text-gray-300 hover:text-primary"
+            >スクリーンショット</a
+          >
+        </nav>
+        <div class="flex items-center space-x-4">
+          <button
+            class="language-btn active px-3 py-1 text-sm border border-gray-600 rounded-full"
+          >
+            日本語
+          </button>
+          <button
+            class="language-btn px-3 py-1 text-sm border border-gray-600 rounded-full text-gray-400"
+          >
+            English
+          </button>
+          <button
+            class="md:hidden w-10 h-10 flex items-center justify-center text-gray-300"
+          >
+            <i class="ri-menu-line ri-lg"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section
+      class="w-full h-screen flex items-center justify-center relative overflow-hidden"
+      style="background-image: url('https://readdy.ai/api/search-image?query=dark%20fantasy%20forest%20with%20moonlight%2C%20mystical%20atmosphere%2C%20werewolf%20silhouette%2C%20gothic%20horror%2C%20cinematic%20lighting%2C%20high%20quality%2C%20detailed%2C%20atmospheric&width=1920&height=1080&seq=hero1&orientation=landscape'); background-size: cover; background-position: center;"
+    >
+      <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+      <div
+        class="container mx-auto px-4 z-10 flex flex-col items-center text-center"
+      >
+        <h1 class="text-5xl md:text-7xl font-bold mb-4 game-title cinzel">
+          The Hunger Within
+        </h1>
+        <p class="text-xl md:text-2xl italic mb-8 text-gray-300">
+          闇に潜む飢えと、母の愛の物語
+        </p>
+        <p class="text-lg md:text-xl max-w-3xl mb-10 leading-relaxed">
+          呪いを受け狼人間となった母親が、自らの種族の繁栄と子供たちの未来のために戦う、
+          ダークファンタジー3Dターン制タクティカルSRPG
+        </p>
+        <div
+          class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6"
+        >
+          <button
+            class="cta-button px-8 py-3 text-lg font-bold text-gray-900 rounded-button whitespace-nowrap"
+          >
+            デモをプレイ
+          </button>
+          <button
+            class="px-8 py-3 text-lg font-bold border-2 border-primary text-primary bg-transparent rounded-button hover:bg-primary hover:bg-opacity-10 transition-all whitespace-nowrap"
+          >
+            詳細を見る
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="story" class="py-20 bg-[#1a1a1a]">
+      <div class="container mx-auto px-4">
+        <h2
+          class="text-3xl md:text-4xl font-bold mb-16 text-center section-title cinzel"
+        >
+          ストーリー
+        </h2>
+        <div class="flex flex-col md:flex-row items-center gap-10">
+          <div class="w-full md:w-1/2">
+            <img
+              src="https://readdy.ai/api/search-image?query=female%20werewolf%20with%20glowing%20eyes%20in%20moonlight%2C%20dark%20fantasy%20style%2C%20emotional%2C%20protective%2C%20detailed%20fur%20texture%2C%20cinematic%20lighting%2C%20high%20quality&width=600&height=800&seq=story1&orientation=portrait"
+              alt="狼人間の母"
+              class="w-full h-auto rounded-lg shadow-2xl"
+            />
+          </div>
+          <div class="w-full md:w-1/2 space-y-6">
+            <p class="text-lg leading-relaxed">
+              <span class="text-primary font-bold">呪われた母の物語。</span>
+              ある母が、呪いを受けて狼人間になってしまいます。彼女の望みは自分の種族の繁栄でしたが、何の因果か自分が食した敵の特性を持った子供が生まれてきます。
+            </p>
+            <p class="text-lg leading-relaxed">
+              彼女は気づきました。繁栄の為には戦い続け、そして食らい続けるべきだと。彼女は呪いを恨みますが、生まれてくる子供には罪はありません。
+            </p>
+            <p class="text-lg leading-relaxed">
+              彼女は悪魔によって課せられた食人の呪いに苦しみます。彼女は敵を喰らい、卵を産み、その子たちは敵の特性（狼の爪、蛇の毒など）を継承します。
+            </p>
+            <p class="text-lg leading-relaxed">
+              彼女は呪いを憎みながらも子を愛し、悪魔を倒し呪いを解くため戦います。12のステージを通じて、戦術的な戦闘、子育て、そして希望と絶望が交錯する物語を体験してください。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameplay" class="py-20 bg-[#222222]">
+      <div class="container mx-auto px-4">
+        <h2
+          class="text-3xl md:text-4xl font-bold mb-16 text-center section-title cinzel"
+        >
+          ゲームプレイ
+        </h2>
+        <div class="flex flex-col md:flex-row-reverse items-center gap-10">
+          <div class="w-full md:w-1/2">
+            <img
+              src="https://readdy.ai/api/search-image?query=3D%20tactical%20grid-based%20battle%2C%20dark%20fantasy%20game%2C%20isometric%20view%2C%20werewolf%20characters%2C%20strategic%20combat%2C%20high%20quality%20game%20screenshot&width=800&height=600&seq=gameplay1&orientation=landscape"
+              alt="戦術的な戦闘画面"
+              class="w-full h-auto rounded-lg shadow-2xl"
+            />
+          </div>
+          <div class="w-full md:w-1/2 space-y-6">
+            <p class="text-lg leading-relaxed">
+              <span class="text-primary font-bold">戦術的な戦闘システム。</span>
+              プレイヤーは10×10の3Dグリッド上で母狼とその子たちを操作し、敵を倒すかステージ目標を達成することでゲームを進めていきます。
+            </p>
+            <p class="text-lg leading-relaxed">
+              各キャラクターは固有のスキルと能力を持ち、地形や位置関係を活かした戦略的な戦闘が求められます。敵を倒すと、母狼はその敵を喰らい、その特性を持った子を産むことができます。
+            </p>
+            <p class="text-lg leading-relaxed">
+              <span class="text-primary font-bold">子育てシステム。</span>
+              ステージ間で子を訓練し、継承した特性を強化できます。特定のステージでは、子たちが独り立ちし、彼女が見守る中での成長が描かれます。
+            </p>
+            <p class="text-lg leading-relaxed">
+              各ステージは異なる目標と挑戦を提供し、プレイヤーは限られたリソースを管理しながら最適な戦略を練る必要があります。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="py-20 bg-[#1a1a1a]">
+      <div class="container mx-auto px-4">
+        <h2
+          class="text-3xl md:text-4xl font-bold mb-16 text-center section-title cinzel"
+        >
+          ゲームの特徴
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div
+            class="feature-card bg-[#2a2a2a] p-6 rounded-lg border border-gray-700"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 bg-primary bg-opacity-10 rounded-full mx-auto"
+            >
+              <i class="ri-sword-line ri-2x text-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">戦術的な戦闘</h3>
+            <p class="text-gray-300">
+              10×10の3Dグリッド上での戦略的な戦闘。地形や位置関係を活かした奥深い戦術性。各キャラクターの特性を活かした多様な戦闘スタイル。
+            </p>
+          </div>
+          <div
+            class="feature-card bg-[#2a2a2a] p-6 rounded-lg border border-gray-700"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 bg-primary bg-opacity-10 rounded-full mx-auto"
+            >
+              <i class="ri-heart-line ri-2x text-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">子育てシステム</h3>
+            <p class="text-gray-300">
+              敵を喰らって得た特性を持つ子を産み育てるシステム。子の成長と訓練を通じて能力を強化。独自の絆システムで母と子の関係が物語に影響。
+            </p>
+          </div>
+          <div
+            class="feature-card bg-[#2a2a2a] p-6 rounded-lg border border-gray-700"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 bg-primary bg-opacity-10 rounded-full mx-auto"
+            >
+              <i class="ri-book-open-line ri-2x text-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">深いストーリー</h3>
+            <p class="text-gray-300">
+              呪いと母性愛が交錯する重厚なダークファンタジー。プレイヤーの選択が物語に影響するマルチエンディング。感情移入できるキャラクター達の葛藤と成長。
+            </p>
+          </div>
+          <div
+            class="feature-card bg-[#2a2a2a] p-6 rounded-lg border border-gray-700"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 bg-primary bg-opacity-10 rounded-full mx-auto"
+            >
+              <i class="ri-landscape-line ri-2x text-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">多様なステージ</h3>
+            <p class="text-gray-300">
+              暗い森や血に染まった祭壇など、ダークファンタジーの世界観を表現した12の多様なステージ。各ステージ固有の目標と挑戦。変化する天候や時間帯が戦略に影響。
+            </p>
+          </div>
+          <div
+            class="feature-card bg-[#2a2a2a] p-6 rounded-lg border border-gray-700"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 bg-primary bg-opacity-10 rounded-full mx-auto"
+            >
+              <i class="ri-gamepad-line ri-2x text-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">
+              進化するゲームプレイ
+            </h3>
+            <p class="text-gray-300">
+              ゲームが進むにつれて解放される新たな能力と挑戦。プレイヤーの戦略に応じて適応する敵のAI。リプレイ性を高める多様な攻略ルート。
+            </p>
+          </div>
+          <div
+            class="feature-card bg-[#2a2a2a] p-6 rounded-lg border border-gray-700"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 bg-primary bg-opacity-10 rounded-full mx-auto"
+            >
+              <i class="ri-music-line ri-2x text-primary"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">没入感ある演出</h3>
+            <p class="text-gray-300">
+              Godot
+              4.xで構築された美しいビジュアルと効果。緊張感を高める雰囲気のあるサウンドトラック。重要な場面での劇的な演出とカットシーン。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screenshots" class="py-20 bg-[#222222]">
+      <div class="container mx-auto px-4">
+        <h2
+          class="text-3xl md:text-4xl font-bold mb-16 text-center section-title cinzel"
+        >
+          スクリーンショット
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="screenshot overflow-hidden rounded-lg shadow-lg">
+            <img
+              src="https://readdy.ai/api/search-image?query=3D%20tactical%20RPG%20game%2C%20dark%20fantasy%20style%2C%20werewolf%20mother%20with%20cubs%2C%20isometric%20view%2C%20grid-based%20combat%2C%20high%20quality%20game%20screenshot&width=600&height=400&seq=screen1&orientation=landscape"
+              alt="戦闘シーン"
+              class="w-full h-auto object-cover"
+            />
+          </div>
+          <div class="screenshot overflow-hidden rounded-lg shadow-lg">
+            <img
+              src="https://readdy.ai/api/search-image?query=dark%20fantasy%20game%20cutscene%2C%20werewolf%20mother%20with%20children%2C%20emotional%20moment%2C%20cinematic%20lighting%2C%20high%20quality%20game%20screenshot&width=600&height=400&seq=screen2&orientation=landscape"
+              alt="カットシーン"
+              class="w-full h-auto object-cover"
+            />
+          </div>
+          <div class="screenshot overflow-hidden rounded-lg shadow-lg">
+            <img
+              src="https://readdy.ai/api/search-image?query=3D%20tactical%20game%20character%20menu%2C%20dark%20fantasy%20UI%2C%20werewolf%20character%20stats%20and%20abilities%2C%20high%20quality%20game%20screenshot&width=600&height=400&seq=screen3&orientation=landscape"
+              alt="キャラクターメニュー"
+              class="w-full h-auto object-cover"
+            />
+          </div>
+          <div class="screenshot overflow-hidden rounded-lg shadow-lg">
+            <img
+              src="https://readdy.ai/api/search-image?query=dark%20fantasy%20game%20world%20map%2C%20blood%20moon%2C%20gothic%20horror%20atmosphere%2C%20werewolf%20territory%2C%20high%20quality%20game%20screenshot&width=600&height=400&seq=screen4&orientation=landscape"
+              alt="ワールドマップ"
+              class="w-full h-auto object-cover"
+            />
+          </div>
+          <div class="screenshot overflow-hidden rounded-lg shadow-lg">
+            <img
+              src="https://readdy.ai/api/search-image?query=tactical%20RPG%20battle%20scene%2C%20werewolf%20mother%20protecting%20cubs%2C%20enemies%20surrounding%2C%20dark%20fantasy%20style%2C%20high%20quality%20game%20screenshot&width=600&height=400&seq=screen5&orientation=landscape"
+              alt="戦闘シーン2"
+              class="w-full h-auto object-cover"
+            />
+          </div>
+          <div class="screenshot overflow-hidden rounded-lg shadow-lg">
+            <img
+              src="https://readdy.ai/api/search-image?query=dark%20fantasy%20game%20child%20raising%20system%20UI%2C%20werewolf%20cubs%20training%20screen%2C%20skill%20tree%2C%20gothic%20interface%2C%20high%20quality%20game%20screenshot&width=600&height=400&seq=screen6&orientation=landscape"
+              alt="子育てシステム"
+              class="w-full h-auto object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="py-20 bg-[#1a1a1a] bg-opacity-95"
+      style="background-image: url('https://readdy.ai/api/search-image?query=dark%20fantasy%20texture%2C%20subtle%20pattern%2C%20gothic%20horror%20atmosphere%2C%20dark%20grunge%2C%20very%20subtle%20background%2C%20almost%20black&width=1920&height=1080&seq=bg1&orientation=landscape'); background-blend-mode: overlay; background-size: cover;"
+    >
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6 cinzel text-primary">
+          今すぐ体験しよう
+        </h2>
+        <p class="text-xl max-w-3xl mx-auto mb-10">
+          『The Hunger
+          Within』の世界で、戦略的な戦闘と感動的なストーリーを体験してください。
+          母狼の運命を導き、子たちとともに呪いを解く旅に出ましょう。
+        </p>
+        <div
+          class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6"
+        >
+          <button
+            class="cta-button px-8 py-4 text-lg font-bold text-gray-900 rounded-button whitespace-nowrap"
+          >
+            デモをプレイ
+          </button>
+          <button
+            class="px-8 py-4 text-lg font-bold border-2 border-primary text-primary bg-transparent rounded-button hover:bg-primary hover:bg-opacity-10 transition-all whitespace-nowrap"
+          >
+            ウィッシュリストに追加
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-10 bg-[#121212]">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div>
+            <h3 class="text-2xl font-bold cinzel text-primary mb-2">
+              The Hunger Within
+            </h3>
+            <p class="text-gray-400">by Haus Tacorari</p>
+          </div>
+          <div class="mt-6 md:mt-0">
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+              >
+                <i class="ri-twitter-x-line ri-lg text-gray-300"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+              >
+                <i class="ri-discord-line ri-lg text-gray-300"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+              >
+                <i class="ri-youtube-line ri-lg text-gray-300"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+              >
+                <i class="ri-steam-line ri-lg text-gray-300"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <hr class="border-gray-800 my-8" />
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-500 text-sm">
+            © 2025 Haus Tacorari. All rights reserved.
+          </p>
+          <div class="flex space-x-6 mt-4 md:mt-0">
+            <a href="#" class="text-gray-400 hover:text-gray-300 text-sm"
+              >プライバシーポリシー</a
+            >
+            <a href="#" class="text-gray-400 hover:text-gray-300 text-sm"
+              >利用規約</a
+            >
+            <a href="#" class="text-gray-400 hover:text-gray-300 text-sm"
+              >お問い合わせ</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script id="languageSwitcher">
+      document.addEventListener("DOMContentLoaded", function () {
+        const languageButtons = document.querySelectorAll(".language-btn");
+
+        languageButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            languageButtons.forEach((btn) => btn.classList.remove("active"));
+            this.classList.add("active");
+
+            // ここで言語切り替えの処理を実装
+            // 現在はデモなので実際の切り替え処理は含まれていません
+          });
+        });
+      });
+    </script>
+
+    <script id="mobileNavigation">
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuButton = document.querySelector(".ri-menu-line").parentElement;
+        // モバイルメニューの実装
+        // 現在はデモなので実際の処理は含まれていません
+      });
+    </script>
+
+    <script id="scrollAnimation">
+      document.addEventListener("DOMContentLoaded", function () {
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("href");
+            const targetElement = document.querySelector(targetId);
+
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: "smooth",
+            });
+          });
+        });
+      });
+    </script>
+  </body>
 </html>
