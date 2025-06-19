@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Haus Tacorari is a creative label focusing on independent game development, Japanese design aesthetics, fashion, and creative web services. It is a solo project by a Japanese creator based in Germany.">
+    <meta name="description" content="Haus Tacorari is a creative label focusing on independent game development, Japanese design aesthetics, fashion, and creative web services. A solo project by a Japanese creator based in Germany.">
     <meta name="keywords" content="Independent games, Japanese design, fashion, creative tools, web services, game development, indie games, minimalist design, digital art, creative innovation">
     <meta name="author" content="Haus Tacorari">
-    <title>Haus Tacorari - Independent Games, Japanese Design & Creative Web Services</title>
+    <title>Haus Tacorari - Indie Games, Japanese Design & Creative Web</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f9fafb;
-            color: #1f2937;
-        }
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff9ff3, #54a0ff, #00d2d3);
+            color: #2d3436;
+            cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAEKADAAQAAAABAAAAEAAAAAAi/m0xAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAvklEQVQ4jY2SMQ6CQBBFX4qGlNAJaCGEaBQ0hY72B+gIHaQdNH6AVPoDqQQVPUCLTs0Q2eQ7zMT7zsww3+xN6eQ+1N/9K4AiYARQAAxWkwygkARQRi/0g7rJrbQA3q7j0gK4u47r/Qc9gLe3g/5YAK+7jvsXwOvuw/4N8LrruH8DvO46+78BXnc99z8Ar7uO+w/A6+7j/gPwuvu4/wG87j7u3wCvu4/7N8Dr7uP+BfC6+7j/AbzuPu5fAK+7j/sXwOvu4/4F8LrruP8B2s8+7l8Ar7uP+xewL/dz/wL4zX3cvwBedx/3L4DX3cf9C+B193H/Avi3f9y/AF53H/cvgNfdx/0L4HX3cf8CeN193L8AXncf9y+A193H/Qvgdffy/gJ43X3cvwBedx/3L4DX3cf9C+B193H/Avi3f9y/AF53H/cvgNfdx/0L4HX3cf8CeN193L8AXncf9y+A193H/Qvgdffy/gJ43X3cvwBedx/3L4DX3cf9C+B193H/Avi3f9y/AF53H/cvgNfdx/0L4HX3cf8CeN193L8AXncf9y+A193H/Qvgdffy/gJ43X3cvwBedx/3L4DX3cf9C+B193H/Avi3f9y/AF53H/cvgNfdx/0L4HX3cf8CeN193L8AXncf9y+A193H/Qvgdffy/gJ43X3cvwBedx/3L4DX3cf9C+B193H/Avi3f9y/AF53H/cvgNfdx/0L4HX3cf8CeN193L8AXncf9y+A193H/Qvgdffy/gJ43X3cvwBedx/3L4DX3cf9C+B193H/Avi3f9y/AF53H/cvgNfdx/0L4HX3cf8CeN193L8AXncf9y+A193H/Qvgdffy/gJ43X3cvwBedx/3L4DX3cf9C+B193H/Avi3f9y/AF53H/cvgNfdx/0L4HX3cf8CeN193L8AXncf9y+A193H/Qvgdffy/gJ43X3cvwBedx/3L4DX3 пользователей
         .fade-in {
             opacity: 0;
             animation: fadeIn 1s ease-in forwards;
@@ -22,8 +23,65 @@
             to { opacity: 1; }
         }
         .hover-scale:hover {
-            transform: scale(1.05);
+            transform: scale(1.05) rotate(2deg);
             transition: transform 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 107, 249, 0.7);
+        }
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .neon-button {
+            background: linear-gradient(45deg, #ff6bd9, #54a0ff);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .neon-button:hover {
+            box-shadow: 0 0 20px rgba(255, 107, 249, 0.8);
+            transform: translateY(-2px);
+        }
+        .neon-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.5s;
+        }
+        .neon-button:hover::after {
+            left: 100%;
+        }
+        .pixel-text {
+            font-family: 'Press Start 2P', cursive;
+        }
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8), transparent);
+            border-radius: 50%;
+            animation: sparkle 2s infinite;
+            pointer-events: none;
+        }
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        @media (max-width: 640px) {
+            .pixel-text {
+                font-size: 0.9rem;
+            }
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
         }
     </style>
 </head>
@@ -32,13 +90,13 @@
     <header class="bg-white shadow-md py-4 sticky top-0 z-10">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <a href="/" class="flex items-center">
-                <img src="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png" alt="Haus Tacorari Logo" class="h-12 fade-in">
-                <h1 class="ml-4 text-2xl font-bold text-gray-800">Haus Tacorari</h1>
+                <img src="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png" alt="Haus Tacorari Logo" class="h-12 bounce">
+                <h1 class="ml-4 text-2xl font-bold text-gray-800 pixel-text">Haus Tacorari</h1>
             </a>
             <nav class="space-x-6">
-                <a href="#services" class="text-gray-600 hover:text-gray-900">Services</a>
-                <a href="#about" class="text-gray-600 hover:text-gray-900">About</a>
-                <a href="#contact" class="text-gray-600 hover:text-gray-900">Contact</a>
+                <a href="#services" class="text-gray-600 hover:text-pink-500">Services</a>
+                <a href="#about" class="text-gray-600 hover:text-pink-500">About</a>
+                <a href="#contact" class="text-gray-600 hover:text-pink-500">Contact</a>
                 <select class="border-none bg-transparent text-gray-600" onchange="window.location.href=this.value">
                     <option value="">English</option>
                     <option value="/ja">日本語</option>
@@ -48,13 +106,13 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="bg-gray-100 py-20 text-center">
+    <section class="py-20 text-center relative overflow-hidden">
         <div class="container mx-auto px-4 fade-in">
-            <h2 class="text-4xl font-bold text-gray-800 mb-4">Haus Tacorari</h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Independent Games, Japanese Design & Creative Web Services. A solo project bridging Japanese aesthetics with German precision.</p>
+            <h2 class="text-4xl md:text-5xl font-bold text-white pixel-text mb-4">Haus Tacorari</h2>
+            <p class="text-lg text-white max-w-2xl mx-auto">Indie Games, Japanese Design & Creative Web Services. A solo project blending Japanese aesthetics with German precision.</p>
             <div class="mt-8 space-x-4">
-                <a href="#services" class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700">Explore Services</a>
-                <a href="#contact" class="border border-gray-800 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-800 hover:text-white">Get in Touch</a>
+                <a href="#services" class="neon-button text-white px-6 py-3 rounded-md">Explore Services</a>
+                <a href="#contact" class="neon-button text-white px-6 py-3 rounded-md">Get in Touch</a>
             </div>
         </div>
     </section>
@@ -62,51 +120,51 @@
     <!-- Services Section -->
     <section id="services" class="py-16">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 fade-in">Our Services</h2>
+            <h2 class="text-3xl font-bold text-center text-white pixel-text mb-12 fade-in">Our Services</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="bg-white p-6 rounded-lg shadow-md hover-scale fade-in">
-                    <h3 class="text-xl font-semibold mb-4">Games Development</h3>
-                    <p class="text-gray-600 mb-4">Explore independent games offering quiet and thoughtful experiences. Each game brings deep emotion and discovery through unique narratives and playful interactions.</p>
-                    <a href="https://www.tacorari.eu/games.html" class="text-gray-800 font-semibold hover:underline">Learn More</a>
+                    <h3 class="text-xl font-semibold mb-4 pixel-text">Games Development</h3>
+                    <p class="text-gray-600 mb-4">Dive into indie games with heartfelt stories and playful mechanics, crafted for deep emotional adventures.</p>
+                    <a href="https://www.tacorari.eu/gamehome.html" class="text-pink-500 font-semibold hover:underline">Play Now!</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md hover-scale fade-in">
-                    <h3 class="text-xl font-semibold mb-4">Mappon Project</h3>
-                    <p class="text-gray-600 mb-4">A creative mapping and design tool engineered for artists, designers, and creators. Visualize your ideas and bring them to life in the real world.</p>
-                    <a href="https://www.tacorari.eu/mappon.html" class="text-gray-800 font-semibold hover:underline">Learn More</a>
+                    <h3 class="text-xl font-semibold mb-4 pixel-text">Mappon Project</h3>
+                    <p class="text-gray-600 mb-4">A creative tool for artists to map and design, turning your ideas into vibrant realities.</p>
+                    <a href="https://www.tacorari.eu/mappon.html" class="text-pink-500 font-semibold hover:underline">Discover More</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md hover-scale fade-in">
-                    <h3 class="text-xl font-semibold mb-4">Mode/Fashion</h3>
-                    <p class="text-gray-600 mb-4">Creating clothing that functions seamlessly in urban environments, merging contemporary aesthetics with practical functionality.</p>
-                    <a href="https://www.tacorari.eu/mode.html" class="text-gray-800 font-semibold hover:underline">Learn More</a>
+                    <h3 class="text-xl font-semibold mb-4 pixel-text">Mode/Fashion</h3>
+                    <p class="text-gray-600 mb-4">Urban-inspired clothing blending modern style with practical, everyday functionality.</p>
+                    <a href="https://www.tacorari.eu/mode.html" class="text-pink-500 font-semibold hover:underline">Shop Now</a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md hover-scale fade-in">
-                    <h3 class="text-xl font-semibold mb-4">Wolf Project</h3>
-                    <p class="text-gray-600 mb-4">Creative web services and digital solutions with a focus on innovative user experiences.</p>
-                    <a href="https://www.tacorari.eu/wolf.html" class="text-gray-800 font-semibold hover:underline">Learn More</a>
+                    <h3 class="text-xl font-semibold mb-4 pixel-text">Wolf Project</h3>
+                    <p class="text-gray-600 mb-4">Innovative web services with a focus on unique, user-centric digital experiences.</p>
+                    <a href="https://www.tacorari.eu/wolf.html" class="text-pink-500 font-semibold hover:underline">Explore</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="bg-gray-50 py-16">
+    <section id="about" class="py-16">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 fade-in">About Haus Tacorari</h2>
+            <h2 class="text-3xl font-bold text-center text-white pixel-text mb-12 fade-in">About Haus Tacorari</h2>
             <div class="max-w-3xl mx-auto text-center">
-                <p class="text-gray-600 mb-6">Founded in 2024, Haus Tacorari represents the creative vision of a solo Japanese creator based in Germany. We combine games, Japanese design aesthetics, and fashion into unique digital experiences.</p>
-                <p class="text-gray-600 mb-6">Our approach explores the intersection of technology and traditional Japanese design principles, creating meaningful experiences that bridge cultural boundaries. Each project is a carefully crafted journey that invites others to explore new possibilities in digital creativity.</p>
+                <p class="text-white mb-6">Founded in 2024, Haus Tacorari is the vision of a solo Japanese creator in Germany, blending games, Japanese aesthetics, and fashion into unique digital experiences.</p>
+                <p class="text-white mb-6">We fuse tech with traditional Japanese design, crafting meaningful journeys that cross cultural boundaries and spark creativity.</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
                     <div class="fade-in">
-                        <h4 class="font-semibold">Founded</h4>
-                        <p class="text-gray-600">2024</p>
+                        <h4 class="font-semibold text-white">Founded</h4>
+                        <p class="text-white">2024</p>
                     </div>
                     <div class="fade-in">
-                        <h4 class="font-semibold">Based in</h4>
-                        <p class="text-gray-600">Germany</p>
+                        <h4 class="font-semibold text-white">Based in</h4>
+                        <p class="text-white">Germany</p>
                     </div>
                     <div class="fade-in">
-                        <h4 class="font-semibold">Creator</h4>
-                        <p class="text-gray-600">Solo</p>
+                        <h4 class="font-semibold text-white">Creator</h4>
+                        <p class="text-white">Solo</p>
                     </div>
                 </div>
             </div>
@@ -114,29 +172,29 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="bg-gray-100 py-16">
+    <section id="contact" class="py-16">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 fade-in">Get in Touch</h2>
+            <h2 class="text-3xl font-bold text-center text-white pixel-text mb-12 fade-in">Get in Touch</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div>
-                    <h3 class="text-xl font-semibold mb-4">Contact Information</h3>
-                    <p class="text-gray-600 mb-4">Based in Germany with global collaborations.</p>
-                    <p class="text-gray-600 mb-4">Email: <a href="mailto:rarika100@protonmail.com" class="text-gray-800 hover:underline">rarika100@protonmail.com</a></p>
-                    <p class="text-gray-600 mb-4">Follow us on <a href="#" class="text-gray-800 hover:underline">Instagram</a> for updates and behind-the-scenes.</p>
-                    <p class="text-gray-600">Support our creative endeavors on <a href="#" class="text-gray-800 hover:underline">Buy Me a Coffee</a>.</p>
+                    <h3 class="text-xl font-semibold text-white pixel-text mb-4">Contact Information</h3>
+                    <p class="text-white mb-4">Based in Germany, collaborating globally.</p>
+                    <p class="text-white mb-4">Email: <a href="mailto:rarika100@protonmail.com" class="text-pink-500 hover:underline">rarika100@protonmail.com</a></p>
+                    <p class="text-white mb-4">Follow us on <a href="https://instagram.com/haustacorari" class="text-pink-500 hover:underline">Instagram</a> for updates.</p>
+                    <p class="text-white">Support us on <a href="https://buymeacoffee.com/haustacorari" class="text-pink-500 hover:underline">Buy Me a Coffee</a>.</p>
                 </div>
                 <div>
-                    <h3 class="text-xl font-semibold mb-4">Send a Message</h3>
+                    <h3 class="text-xl font-semibold text-white pixel-text mb-4">Send a Message</h3>
                     <div>
-                        <input type="text" placeholder="Name" class="w-full p-3 mb-4 border rounded-md">
-                        <input type="email" placeholder="Email" class="w-full p-3 mb-4 border rounded-md">
-                        <input type="text" placeholder="Subject" class="w-full p-3 mb-4 border rounded-md">
-                        <textarea placeholder="Message" class="w-full p-3 mb-4 border rounded-md h-32"></textarea>
+                        <input type="text" placeholder="Name" class="w-full p-3 mb-4 border rounded-md bg-white text-gray-800">
+                        <input type="email" placeholder="Email" class="w-full p-3 mb-4 border rounded-md bg-white text-gray-800">
+                        <input type="text" placeholder="Subject" class="w-full p-3 mb-4 border rounded-md bg-white text-gray-800">
+                        <textarea placeholder="Message" class="w-full p-3 mb-4 border rounded-md h-32 bg-white text-gray-800"></textarea>
                         <label class="flex items-center mb-4">
                             <input type="checkbox" class="mr-2">
-                            <span class="text-gray-600 text-sm">I consent to having this website store my submitted information so they can respond to my inquiry.</span>
+                            <span class="text-white text-sm">I consent to having this website store my submitted information.</span>
                         </label>
-                        <button class="bg-gray-800 text-white px-6 py-3 rounded-md hover:bg-gray-700">Send Message</button>
+                        <button class="neon-button text-white px-6 py-3 rounded-md" onclick="showConfetti()">Send Message</button>
                     </div>
                 </div>
             </div>
@@ -144,48 +202,65 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-8">
+    <footer class="bg-gray-900 text-white py-8">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Haus Tacorari</h4>
-                    <p class="text-gray-400">Independent Games, Japanese Design & Creative Web Services. A solo project bridging Japanese aesthetics with German precision.</p>
+                    <h4 class="text-lg font-semibold pixel-text mb-4">Haus Tacorari</h4>
+                    <p class="text-gray-300">Indie Games, Japanese Design & Creative Web Services. A solo project blending Japanese aesthetics with German precision.</p>
                 </div>
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Services</h4>
+                    <h4 class="text-lg font-semibold pixel-text mb-4">Services</h4>
                     <ul class="space-y-2">
-                        <li><a href="https://www.tacorari.eu/games.html" class="text-gray-400 hover:text-white">Games</a></li>
-                        <li><a href="https://www.tacorari.eu/mappon.html" class="text-gray-400 hover:text-white">Mappon</a></li>
-                        <li><a href="https://www.tacorari.eu/mode.html" class="text-gray-400 hover:text-white">Mode/Fashion</a></li>
-                        <li><a href="https://www.tacorari.eu/wolf.html" class="text-gray-400 hover:text-white">Wolf Project</a></li>
+                        <li><a href="https://www.tacorari.eu/gamehome.html" class="text-gray-300 hover:text-pink-500">Games</a></li>
+                        <li><a href="https://www.tacorari.eu/mappon.html" class="text-gray-300 hover:text-pink-500">Mappon</a></li>
+                        <li><a href="https://www.tacorari.eu/mode.html" class="text-gray-300 hover:text-pink-500">Mode/Fashion</a></li>
+                        <li><a href="https://www.tacorari.eu/wolf.html" class="text-gray-300 hover:text-pink-500">Wolf Project</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Company</h4>
+                    <h4 class="text-lg font-semibold pixel-text mb-4">Company</h4>
                     <ul class="space-y-2">
-                        <li><a href="#about" class="text-gray-400 hover:text-white">About</a></li>
-                        <li><a href="#contact" class="text-gray-400 hover:text-white">Contact</a></li>
+                        <li><a href="#about" class="text-gray-300 hover:text-pink-500">About</a></li>
+                        <li><a href="#contact" class="text-gray-300 hover:text-pink-500">Contact</a></li>
                     </ul>
                 </div>
             </div>
             <div class="mt-8 border-t border-gray-700 pt-4 text-center">
-                <p class="text-gray-400">© 2025 Haus Tacorari. All rights reserved.</p>
+                <p class="text-gray-300">© 2025 Haus Tacorari. All rights reserved.</p>
                 <div class="space-x-4 mt-2">
-                    <a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a>
-                    <a href="#" class="text-gray-400 hover:text-white">Terms of Service</a>
-                    <a href="#" class="text-gray-400 hover:text-white">Cookie Policy</a>
+                    <a href="#" class="text-gray-300 hover:text-pink-500">Privacy Policy</a>
+                    <a href="#" class="text-gray-300 hover:text-pink-500">Terms of Service</a>
+                    <a href="#" class="text-gray-300 hover:text-pink-500">Cookie Policy</a>
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // Simple JavaScript for form submission placeholder
-        document.querySelectorAll('button').forEach(button => {
-            button.addEventListener('click', () => {
-                alert('This is a static demo. Form submission is not implemented.');
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
         });
+
+        // Confetti effect on button click
+        function showConfetti() {
+            alert('This is a static demo. Form submission is not implemented.');
+            for (let i = 0; i < 50; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                sparkle.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 2000);
+            }
+        }
     </script>
 </body>
 </html>
