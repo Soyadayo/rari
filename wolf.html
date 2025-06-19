@@ -171,6 +171,7 @@
             border-radius: 10px;
             border: 2px solid rgba(138, 43, 226, 0.3);
             backdrop-filter: blur(5px);
+            overflow-x: hidden; /* Prevent horizontal overflow within the panel */
         }
 
         .stat-group {
@@ -255,6 +256,7 @@
             align-items: center;
             color: #fff;
             font-size: 1.1em;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
         }
 
         .control-selection button {
@@ -267,6 +269,61 @@
             background: #8a2be2;
             border-color: #00ffff;
             box-shadow: 0 0 8px #00ffff;
+        }
+
+        .language-selection {
+            grid-column: span 3;
+            display: flex;
+            justify-content: flex-end;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .language-selection button {
+            padding: 5px 10px;
+            font-size: 12px;
+            background: #333;
+            border: 1px solid #666;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .language-selection button.active {
+            background: #8a2be2;
+            border-color: #00ffff;
+        }
+
+        .music-controls-container {
+            grid-column: span 3;
+            display: flex;
+            flex-direction: column; /* Stack label and controls vertically */
+            align-items: center;
+            gap: 5px; /* Space between label and buttons */
+            margin-top: 10px;
+        }
+
+        .music-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            width: 100%; /* Ensure buttons span available width */
+        }
+
+        .music-controls button {
+            background: linear-gradient(135deg, #4CAF50, #2E8B57);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .music-controls button:hover {
+            background: linear-gradient(135deg, #2E8B57, #4CAF50);
         }
 
         /* Message area */
@@ -286,6 +343,7 @@
             padding: 5px 10px;
             border-radius: 4px;
             background: rgba(255, 255, 255, 0.05);
+            word-break: break-word; /* Ensure long words break */
         }
 
         .message.hunt {
@@ -317,6 +375,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            word-break: break-word; /* Ensure long words break within the badge */
         }
 
         .trait-count {
@@ -407,14 +466,26 @@
                 height: 35px;
                 font-size: 14px;
             }
+
+            .ui-panel {
+                width: 100%; /* Ensure full width on small screens */
+                max-width: 100%; /* Ensure full width on small screens */
+            }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1>🐺 Wolf Pack Evolution 🐺</h1>
+        <h1 id="gameTitle">🐺 Wolf Pack Evolution 🐺</h1>
 
-        <div class="stage-info">Stage <span id="stage">1</span> / 50</div>
+        <div class="language-selection">
+            <button id="langJaBtn" class="control-btn active" onclick="setLanguage('ja')">日本語</button>
+            <button id="langEnBtn" class="control-btn" onclick="setLanguage('en')">English</button>
+        </div>
+
+        <div class="stage-info">
+            <span id="stageLabel">ステージ</span> <span id="stage">1</span> / 50
+        </div>
 
         <div class="game-area">
             <div class="game-board">
@@ -422,91 +493,321 @@
 
                 <div class="controls">
                     <div class="control-selection">
-                        <span>現在操作中: <span id="controlledWolfDisplay">母ウルフ</span></span>
+                        <span id="controlledWolfLabel">現在操作中:</span> <span id="controlledWolfDisplay">母ウルフ</span>
                         <button id="controlMotherBtn" class="control-btn active" onclick="switchControlledWolf('mother')">母ウルフを操作</button>
                         <button id="controlPackBtn" class="control-btn" onclick="switchControlledWolf('pack')">群れを操作</button>
                     </div>
-                    <!-- Swapped North and West buttons -->
-                    <button class="control-btn" onclick="move(0, -1)">⬅️ 西</button>
-                    <button class="control-btn" onclick="move(-1, 0)">⬆️ 北</button>
-                    <button class="control-btn" onclick="move(0, 1)">➡️ 東</button>
+                    <button class="control-btn" onclick="move(0, -1)" id="moveWestBtn">⬅️ 西</button>
+                    <button class="control-btn" onclick="move(-1, 0)" id="moveNorthBtn">⬆️ 北</button>
+                    <button class="control-btn" onclick="move(0, 1)" id="moveEastBtn">➡️ 東</button>
                     <button class="control-btn"></button>
-                    <button class="control-btn" onclick="move(1, 0)">⬇️ 南</button>
+                    <button class="control-btn" onclick="move(1, 0)" id="moveSouthBtn">⬇️ 南</button>
                     <button class="control-btn"></button>
-                    <button class="control-btn action-btn" onclick="howl()">🌙 遠吠え</button>
-                    <button class="control-btn action-btn" onclick="destroyObstacle()">💥 破壊</button>
-                    <button class="control-btn action-btn" onclick="resetGame()">🔄 リセット</button>
+                    <button class="control-btn action-btn" onclick="howl()" id="howlBtn">🌙 遠吠え</button>
+                    <button class="control-btn action-btn" onclick="destroyObstacle()" id="destroyBtn">💥 破壊</button>
+                    <button class="control-btn action-btn" onclick="resetGame()" id="resetBtn">🔄 リセット</button>
+
+                    <div class="music-controls-container">
+                        <span id="musicControllerLabel">音楽コントローラー</span>
+                        <div class="music-controls">
+                            <button id="prevMusicBtn" onclick="prevSong()">⏮️</button>
+                            <button id="playPauseBtn" onclick="togglePlayPause()">▶️</button>
+                            <button id="nextMusicBtn" onclick="nextSong()">⏭️</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="ui-panel">
                 <div class="stat-group">
-                    <h3>🐺 母ウルフ</h3>
-                    <div>レベル: <span id="level">1</span></div>
-                    <div>HP: <span id="health">100</span>/<span id="maxHealth">100</span></div>
+                    <h3 id="motherWolfStatsTitle">🐺 母ウルフ</h3>
+                    <div><span id="levelLabel">レベル</span>: <span id="level">1</span></div>
+                    <div><span id="hpLabel">HP</span>: <span id="health">100</span>/<span id="maxHealth">100</span></div>
                     <div class="stat-bar">
                         <div class="stat-fill" id="healthBar" style="width: 100%"></div>
                     </div>
-                    <div>満腹度: <span id="hunger">100</span>/100</div>
+                    <div><span id="hungerLabel">満腹度</span>: <span id="hunger">100</span>/100</div>
                     <div class="stat-bar">
                         <div class="stat-fill hunger" id="hungerBar" style="width: 100%"></div>
                     </div>
-                    <div>経験値: <span id="exp">0</span>/100</div>
+                    <div><span id="expLabel">経験値</span>: <span id="exp">0</span>/100</div>
                     <div class="stat-bar">
                         <div class="stat-fill exp" id="expBar" style="width: 0%"></div>
                     </div>
-                    <div>攻撃力: <span id="attack">20</span></div>
+                    <div><span id="attackLabel">攻撃力</span>: <span id="attack">20</span></div>
                 </div>
 
                 <div class="stat-group">
-                    <h3>🐺 群れ情報</h3>
-                    <div>総頭数: <span id="packCount">0</span></div>
-                    <div>群れHP: <span id="packHealth">0</span>/<span id="packMaxHealth">0</span></div>
+                    <h3 id="packInfoTitle">🐺 群れ情報</h3>
+                    <div><span id="totalWolvesLabel">総頭数</span>: <span id="packCount">0</span></div>
+                    <div><span id="packHpLabel">群れHP</span>: <span id="packHealth">0</span>/<span id="packMaxHealth">0</span></div>
                     <div class="stat-bar">
                         <div class="stat-fill pack-hp" id="packHealthBar" style="width: 0%"></div>
                     </div>
-                    <div>群れ総攻撃力: <span id="packPower">0</span></div>
+                    <div><span id="totalPackAttackLabel">群れ総攻撃力</span>: <span id="packPower">0</span></div>
                     <div class="pack-traits" id="packTraits"></div>
                 </div>
 
                 <div class="stat-group">
-                    <h3>📜 メッセージ</h3>
+                    <h3 id="messagesTitle">📜 メッセージ</h3>
                     <div class="message-area" id="messages"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Game Over Modal -->
     <div id="gameOverModal" class="modal">
         <div class="modal-content">
-            <h2>ゲームオーバー！</h2>
+            <h2 id="gameOverHeading">ゲームオーバー！</h2>
             <p id="gameOverMessage">母ウルフは倒れました。あなたの旅はここで終わります。</p>
-            <button onclick="resetGame()">もう一度プレイ</button>
+            <button onclick="resetGame()" id="tryAgainBtn">もう一度プレイ</button>
         </div>
     </div>
 
+    <audio id="gameMusic" preload="auto" loop></audio>
+
     <script>
-        // ゲームの状態
+        // Game state
         let gameState = {
             player: { x: 0, y: 0, health: 100, maxHealth: 100, hunger: 100, maxHunger: 100, level: 1, exp: 0, attack: 20 },
-            pack: null, // 群れの代表位置
-            packMembers: [], // 各群れのメンバー（体力、攻撃力、特性）
-            packHealth: 0, // 群れの総体力
-            packMaxHealth: 0, // 群れの最大総体力
-            enemies: [], // 敵のリスト
-            grid: [], // ゲームボードの地形
-            stage: 1, // 現在のステージ
-            playerMoveCount: 0, // プレイヤーの移動回数（自動行動のトリガー用）
-            controlledWolf: 'mother' // 現在操作しているウルフ ('mother' または 'pack')
+            pack: null, // Representative position of the pack
+            packMembers: [], // Individual members of the pack (health, attack, trait)
+            packHealth: 0, // Total pack health
+            packMaxHealth: 0, // Max total pack health
+            enemies: [], // List of enemies
+            grid: [], // Game board terrain
+            stage: 1, // Current stage
+            playerMoveCount: 0, // Player move count (for triggering auto-moves)
+            controlledWolf: 'mother', // Currently controlled wolf ('mother' or 'pack')
+            currentLanguage: 'ja', // Current language: 'ja' for Japanese, 'en' for English
+            currentSongIndex: 0, // Current song index in the playlist
+            musicPlaying: false // Track if music is playing
         };
 
-        // ゲーム定数
+        // Music playlist (placeholder URLs - replace with actual music files)
+        const playlist = [
+            "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav", // Placeholder
+            "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav", // Placeholder
+            "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav", // Placeholder
+        ];
+
+        let audioPlayer; // Declared globally to be accessible
+
+        // Translations object
+        const translations = {
+            ja: {
+                title: "🐺 ウルフパック進化RPG 🐺",
+                stage: "ステージ",
+                controlledBy: "現在操作中:",
+                motherWolfControl: "母ウルフを操作",
+                packControl: "群れを操作",
+                west: "⬅️ 西",
+                north: "⬆️ 北",
+                east: "➡️ 東",
+                south: "⬇️ 南",
+                howl: "🌙 遠吠え",
+                destroy: "💥 破壊",
+                reset: "🔄 リセット",
+                musicController: "音楽コントローラー",
+                motherWolf: "🐺 母ウルフ",
+                level: "レベル",
+                hp: "HP",
+                hunger: "満腹度",
+                exp: "経験値",
+                attack: "攻撃力",
+                packInfo: "🐺 群れ情報",
+                totalWolves: "総頭数",
+                packHp: "群れHP",
+                totalPackAttack: "群れ総攻撃力",
+                messages: "📜 メッセージ",
+                gameOver: "ゲームオーバー！",
+                gameOverMessage1: "母ウルフは倒れました。あなたの旅はここで終わります。",
+                gameOverMessage2: "おめでとうございます！あなたは群れを率いて最強の地に君臨しました！",
+                tryAgain: "もう一度プレイ",
+                victory: "勝利！",
+                cannotPassWaterMountain: "🚫 {terrainType}を通過できません！破壊ボタンでクリアしてください。",
+                boardEdge: "🚫 ボードの端です！",
+                motherCannotMoveOnPack: "🚫 母ウルフは群れの上に移動できません。",
+                packCannotMoveOnMother: "🚫 群れは母ウルフの上に移動できません。",
+                noPackToControl: "🐺 群れがいないため、移動できません！母ウルフに切り替えてください。",
+                controlledWolfSwitched: "操作対象を{unitType}に切り替えました。",
+                hungerDamage: "🍖 満腹度不足でダメージを受けました！",
+                motherStarved: "母ウルフは飢え死にしました！",
+                dealtDamage: "🦷 あなたは{enemyName}に{damage}ダメージを与えました！",
+                ateEnemy: "🍖 あなたは{enemyName}を食べました！満腹度が回復し、{exp}経験値を獲得！",
+                newPupBorn: "✨ '{traitName}'の特性を持つ新しい子狼が生まれました！",
+                defeatedBoss: "🏆 恐るべき{enemyName}を倒しました！",
+                enemyCounterattacked: "💥 {enemyName}が反撃！{damage}ダメージを受けました。",
+                motherDefeated: "母ウルフは敵に倒されました！",
+                packDealtDamage: "🐺 あなたの群れ（{packCount}頭）は{enemyName}に{damage}ダメージを与えました！",
+                packDefeatedEnemy: "🐺 あなたの群れは{enemyName}を倒しました！母は{exp}経験値を獲得。",
+                packMemberLost: "💀 {lostWolves}頭の群れのメンバーが戦闘で倒れました...",
+                packDisbanded: "🐾 あなたの群れは解散しました！",
+                howled: "🌙 あなたは遠吠えをしました！母と{healedCount}頭の群れのメンバーが{healAmount}HP回復！",
+                tooHungryToHowl: "🚫 空腹すぎて遠吠えできません！",
+                level3Required: "🚫 障害物を破壊するにはレベル3以上が必要です！",
+                motherOnlySkill: "🚫 このスキルは母ウルフのみが使用できます！",
+                obstacleDestroyed: "💥 障害物を破壊しました！",
+                noObstaclesNearby: "🚫 周囲に破壊可能な障害物はありません！",
+                levelUp: "🌟 レベルアップ！あなたはレベル{level}になりました！",
+                destroyAbilityUnlocked: "💪 これで障害物破壊スキルが使えるようになりました！",
+                gameClear: "🎉 全てのステージを制覇しました！ゲームクリア！",
+                advancingStage: "🎉 ステージ{stage}へ進行！",
+                hpHungerRestored: "💪 体力と満腹度が完全に回復しました！",
+                initialMessage1: "🌙 母ウルフとして、群れを形成しましょう！獲物から特性を継承し、最強の群れを築きましょう！",
+                initialMessage2: "🎯 ゴール（金色タイル）へ向かいましょう！",
+                // Trait names for display
+                speed: "敏捷性",
+                health: "生命力",
+                attack: "力",
+                defense: "防御",
+                vision: "視力",
+                leadership: "統率力",
+                ferocity: "獰猛さ",
+                draconic: "竜の力",
+                goliath: "巨人の力",
+                elemental: "元素の力",
+                // Terrain types for messages
+                water: "水",
+                mountain: "山"
+            },
+            en: {
+                title: "🐺 Wolf Pack Evolution RPG 🐺",
+                stage: "Stage",
+                controlledBy: "Currently Controlling:",
+                motherWolfControl: "Control Mother Wolf",
+                packControl: "Control Pack",
+                west: "⬅️ West",
+                north: "⬆️ North",
+                east: "➡️ East",
+                south: "⬇️ South",
+                howl: "🌙 Howl",
+                destroy: "💥 Destroy",
+                reset: "🔄 Reset",
+                musicController: "Music Controller",
+                motherWolf: "🐺 Mother Wolf",
+                level: "Level",
+                hp: "HP",
+                hunger: "Hunger",
+                exp: "EXP",
+                attack: "Attack",
+                packInfo: "🐺 Pack Info",
+                totalWolves: "Total Wolves",
+                packHp: "Pack HP",
+                totalPackAttack: "Total Pack Attack",
+                messages: "📜 Messages",
+                gameOver: "Game Over!",
+                gameOverMessage1: "The Mother Wolf has fallen. Your journey ends here.",
+                gameOverMessage2: "Congratulations! You have led your pack to become the strongest in the land!",
+                tryAgain: "Try Again",
+                victory: "Victory!",
+                cannotPassWaterMountain: "🚫 Cannot pass through {terrainType}! Use the Destroy button to clear.",
+                boardEdge: "🚫 Board edge!",
+                motherCannotMoveOnPack: "🚫 Mother Wolf cannot move onto Pack's position.",
+                packCannotMoveOnMother: "🚫 Pack cannot move onto Mother Wolf's position.",
+                noPackToControl: "🐺 No pack members! Cannot control pack. Switching to Mother Wolf.",
+                controlledWolfSwitched: "Control switched to {unitType}.",
+                hungerDamage: "🍖 You took damage from hunger!",
+                motherStarved: "The Mother Wolf starved to death!",
+                dealtDamage: "🦷 You dealt {damage} damage to {enemyName}!",
+                ateEnemy: "🍖 You ate the {enemyName}! Hunger restored +{exp} EXP",
+                newPupBorn: "✨ A new pup with the '{traitName}' trait was born!",
+                defeatedBoss: "🏆 You defeated the mighty {enemyName}!",
+                enemyCounterattacked: "💥 {enemyName} counter-attacked! Took {damage} damage.",
+                motherDefeated: "The Mother Wolf was defeated by an enemy!",
+                packDealtDamage: "🐺 Your pack ({packCount} wolves) dealt {damage} damage to {enemyName}!",
+                packDefeatedEnemy: "🐺 Your pack defeated {enemyName}! Mother gained {exp} EXP.",
+                packMemberLost: "💀 {lostWolves} pack members fell in battle...",
+                packDisbanded: "🐾 Your pack has been disbanded!",
+                howled: "🌙 You howled! Mother and {healedCount} pack members healed for {healAmount} HP!",
+                tooHungryToHowl: "🚫 Too hungry to howl!",
+                level3Required: "🚫 You need to be Level 3 or higher to destroy obstacles!",
+                motherOnlySkill: "🚫 This skill can only be used by the Mother Wolf!",
+                obstacleDestroyed: "💥 Obstacle destroyed!",
+                noObstaclesNearby: "🚫 No destroyable obstacles nearby!",
+                levelUp: "🌟 Level Up! You are now Level {level}!",
+                destroyAbilityUnlocked: "💪 You can now use the Destroy Obstacle ability!",
+                gameClear: "🎉 You have conquered all stages! Game Clear!",
+                advancingStage: "🎉 Advancing to Stage {stage}!",
+                hpHungerRestored: "💪 Health and Hunger fully restored!",
+                initialMessage1: "🌙 As the Mother Wolf, form your pack! Inherit traits from prey and build the strongest pack!",
+                initialMessage2: "🎯 Head to the Goal (golden tile)!",
+                // Trait names for display
+                speed: "Speed",
+                health: "Vitality",
+                attack: "Strength",
+                defense: "Defense",
+                vision: "Vision",
+                leadership: "Leadership",
+                ferocity: "Ferocity",
+                draconic: "Draconic Might",
+                goliath: "Goliath Strength",
+                elemental: "Elemental Power",
+                // Terrain types for messages
+                water: "Water",
+                mountain: "Mountain"
+            }
+        };
+
+        // Helper to get translated text
+        function getTranslation(key, params = {}) {
+            let text = translations[gameState.currentLanguage][key] || key; // Fallback to key if not found
+            for (const [paramKey, value] of Object.entries(params)) {
+                text = text.replace(`{${paramKey}}`, value);
+            }
+            return text;
+        }
+
+        // Set language and update all UI text
+        function setLanguage(lang) {
+            gameState.currentLanguage = lang;
+            
+            // Update language buttons
+            document.getElementById('langJaBtn').classList.remove('active');
+            document.getElementById('langEnBtn').classList.remove('active');
+            document.getElementById(`lang${lang === 'ja' ? 'Ja' : 'En'}Btn`).classList.add('active');
+            
+            // Update all text elements
+            document.getElementById('gameTitle').textContent = getTranslation('title');
+            document.getElementById('stageLabel').textContent = getTranslation('stage');
+            document.getElementById('controlledWolfLabel').textContent = getTranslation('controlledBy');
+            document.getElementById('controlMotherBtn').textContent = getTranslation('motherWolfControl');
+            document.getElementById('controlPackBtn').textContent = getTranslation('packControl');
+            document.getElementById('moveWestBtn').textContent = getTranslation('west');
+            document.getElementById('moveNorthBtn').textContent = getTranslation('north');
+            document.getElementById('moveEastBtn').textContent = getTranslation('east');
+            document.getElementById('moveSouthBtn').textContent = getTranslation('south');
+            document.getElementById('howlBtn').textContent = getTranslation('howl');
+            document.getElementById('destroyBtn').textContent = getTranslation('destroy');
+            document.getElementById('resetBtn').textContent = getTranslation('reset');
+            document.getElementById('musicControllerLabel').textContent = getTranslation('musicController');
+            document.getElementById('motherWolfStatsTitle').textContent = getTranslation('motherWolf');
+            document.getElementById('levelLabel').textContent = getTranslation('level');
+            document.getElementById('hpLabel').textContent = getTranslation('hp');
+            document.getElementById('hungerLabel').textContent = getTranslation('hunger');
+            document.getElementById('expLabel').textContent = getTranslation('exp');
+            document.getElementById('attackLabel').textContent = getTranslation('attack');
+            document.getElementById('packInfoTitle').textContent = getTranslation('packInfo');
+            document.getElementById('totalWolvesLabel').textContent = getTranslation('totalWolves');
+            document.getElementById('packHpLabel').textContent = getTranslation('packHp');
+            document.getElementById('totalPackAttackLabel').textContent = getTranslation('totalPackAttack');
+            document.getElementById('messagesTitle').textContent = getTranslation('messages');
+            document.getElementById('gameOverHeading').textContent = getTranslation('gameOver');
+            document.getElementById('tryAgainBtn').textContent = getTranslation('tryAgain');
+            
+            // Update controlled wolf display
+            const unitType = gameState.controlledWolf === 'mother' ? 
+                (lang === 'ja' ? '母ウルフ' : 'Mother Wolf') : 
+                (lang === 'ja' ? '群れ' : 'Pack');
+            document.getElementById('controlledWolfDisplay').textContent = unitType;
+        }
+
+        // Game constants
         const GAME_BOARD_SIZE = 12;
         const MAX_STAGE = 50;
         const BOSS_STAGE_INTERVAL = 10;
 
-        // 地形タイプ
+        // Terrain types
         const TERRAIN = {
             GRASS: 'grass',
             FOREST: 'forest',
@@ -515,36 +816,109 @@
             GOAL: 'goal'
         };
 
-        // 敵タイプ（特性付き）
+        // Enemy types with traits
         const ENEMY_TYPES = [
-            { icon: '🐰', name: 'ウサギ', baseHealth: 30, baseAttack: 5, exp: 15, speed: 2, trait: 'speed', traitName: '敏捷性' },
-            { icon: '🦌', name: 'シカ', baseHealth: 50, baseAttack: 10, exp: 25, speed: 1, trait: 'health', traitName: '生命力' },
-            { icon: '🐗', name: 'イノシシ', baseHealth: 70, baseAttack: 15, exp: 35, speed: 1, trait: 'attack', traitName: '力' },
-            { icon: '🐻', name: 'クマ', baseHealth: 100, baseAttack: 20, exp: 50, speed: 1, trait: 'defense', traitName: '防御' },
-            { icon: '🦅', name: 'ワシ', baseHealth: 40, baseAttack: 25, exp: 40, speed: 2, trait: 'vision', traitName: '視力' }
+            { icon: '🐰', name: 'Rabbit', baseHealth: 30, baseAttack: 5, exp: 15, speed: 2, trait: 'speed' },
+            { icon: '🦌', name: 'Deer', baseHealth: 50, baseAttack: 10, exp: 25, speed: 1, trait: 'health' },
+            { icon: '🐗', name: 'Boar', baseHealth: 70, baseAttack: 15, exp: 35, speed: 1, trait: 'attack' },
+            { icon: '🐻', name: 'Bear', baseHealth: 100, baseAttack: 20, exp: 50, speed: 1, trait: 'defense' },
+            { icon: '🦅', name: 'Eagle', baseHealth: 40, baseAttack: 25, exp: 40, speed: 2, trait: 'vision' }
         ];
 
-        // ボス敵タイプ
+        // Boss Enemy types
         const BOSS_TYPES = [
-            { icon: '🐺', name: 'アルファウルフ', baseHealth: 300, baseAttack: 40, exp: 200, speed: 1, trait: 'leadership', traitName: '統率力' }, // Stage 10
-            { icon: '🐅', name: 'サーベルタイガー', baseHealth: 500, baseAttack: 60, exp: 300, speed: 2, trait: 'ferocity', traitName: '獰猛さ' }, // Stage 20
-            { icon: '🐉', name: '古代ドラゴン', baseHealth: 800, baseAttack: 80, exp: 500, speed: 1, trait: 'draconic', traitName: '竜の力' }, // Stage 30
-            { icon: '🦍', name: 'キングコング', baseHealth: 1200, baseAttack: 100, exp: 800, speed: 1, trait: 'goliath', traitName: '巨人の力' }, // Stage 40
-            { icon: '🔥', name: 'エレメンタルロード', baseHealth: 1500, baseAttack: 120, exp: 1000, speed: 2, trait: 'elemental', traitName: '元素の力' } // Stage 50
+            { icon: '🐺', name: 'Alpha Wolf', baseHealth: 300, baseAttack: 40, exp: 200, speed: 1, trait: 'leadership' },
+            { icon: '🐅', name: 'Saber-tooth Tiger', baseHealth: 500, baseAttack: 60, exp: 300, speed: 2, trait: 'ferocity' },
+            { icon: '🐉', name: 'Ancient Dragon', baseHealth: 800, baseAttack: 80, exp: 500, speed: 1, trait: 'draconic' },
+            { icon: '🦍', name: 'King Kong', baseHealth: 1200, baseAttack: 100, exp: 800, speed: 1, trait: 'goliath' },
+            { icon: '🔥', name: 'Elemental Lord', baseHealth: 1500, baseAttack: 120, exp: 1000, speed: 2, trait: 'elemental' }
         ];
 
-        // ゲームの初期化
+        // Initialize game
         function initGame() {
             generateTerrain();
             generateEnemies();
+            setupAudioPlayer(); // Setup audio player
+            setLanguage(gameState.currentLanguage); // Set initial language and update all texts
+            updatePackHealth(); // Initialize pack health
+            addMessage(getTranslation("initialMessage1"), "level");
+            addMessage(getTranslation("initialMessage2"), "level");
+            updateControlButtons(); // Update control button state
             renderGame();
-            updatePackHealth(); // 群れの体力を初期化
-            addMessage("🌙 母ウルフとして、群れを形成しましょう！獲物から特性を継承し、最強の群れを築きましょう！", "level");
-            addMessage("🎯 ゴール（金色タイル）へ向かいましょう！", "level");
-            updateControlButtons(); // 制御ボタンの初期状態を更新
         }
 
-        // 地形をランダムに生成
+        // Setup audio player
+        function setupAudioPlayer() {
+            audioPlayer = document.getElementById('gameMusic');
+            audioPlayer.volume = 0.3; // Default volume
+            
+            if (playlist.length > 0) {
+                audioPlayer.src = playlist[gameState.currentSongIndex];
+                audioPlayer.load();
+            }
+
+            // Event listener for when the current song ends
+            audioPlayer.addEventListener('ended', () => {
+                nextSong(); // Play next song automatically
+            });
+            
+            // Handle audio loading errors
+            audioPlayer.addEventListener('error', () => {
+                console.log("Audio file could not be loaded.");
+                document.getElementById('playPauseBtn').textContent = '❌';
+            });
+        }
+
+        // Toggle play/pause
+        function togglePlayPause() {
+            if (!audioPlayer || playlist.length === 0) return;
+            
+            if (gameState.musicPlaying) {
+                audioPlayer.pause();
+                gameState.musicPlaying = false;
+                document.getElementById('playPauseBtn').textContent = '▶️';
+            } else {
+                audioPlayer.play().then(() => {
+                    gameState.musicPlaying = true;
+                    document.getElementById('playPauseBtn').textContent = '⏸️';
+                }).catch(error => {
+                    console.log("Could not play audio:", error);
+                    document.getElementById('playPauseBtn').textContent = '❌';
+                });
+            }
+        }
+
+        // Next song
+        function nextSong() {
+            if (playlist.length === 0) return;
+            
+            gameState.currentSongIndex = (gameState.currentSongIndex + 1) % playlist.length;
+            audioPlayer.src = playlist[gameState.currentSongIndex];
+            audioPlayer.load();
+            
+            if (gameState.musicPlaying) {
+                audioPlayer.play().catch(error => {
+                    console.log("Could not play next song:", error);
+                });
+            }
+        }
+
+        // Previous song
+        function prevSong() {
+            if (playlist.length === 0) return;
+            
+            gameState.currentSongIndex = (gameState.currentSongIndex - 1 + playlist.length) % playlist.length;
+            audioPlayer.src = playlist[gameState.currentSongIndex];
+            audioPlayer.load();
+            
+            if (gameState.musicPlaying) {
+                audioPlayer.play().catch(error => {
+                    console.log("Could not play previous song:", error);
+                });
+            }
+        }
+
+        // Generate random terrain
         function generateTerrain() {
             gameState.grid = [];
             const terrainTypes = [TERRAIN.GRASS, TERRAIN.FOREST, TERRAIN.MOUNTAIN, TERRAIN.WATER];
@@ -553,12 +927,12 @@
                 gameState.grid[row] = [];
                 for (let col = 0; col < GAME_BOARD_SIZE; col++) {
                     if (row === 0 && col === 0) {
-                        gameState.grid[row][col] = TERRAIN.GRASS; // プレイヤーの開始位置
+                        gameState.grid[row][col] = TERRAIN.GRASS; // Player starting position
                     } else if (row === GAME_BOARD_SIZE - 1 && col === GAME_BOARD_SIZE - 1) {
-                        gameState.grid[row][col] = TERRAIN.GOAL; // ゴール
+                        gameState.grid[row][col] = TERRAIN.GOAL; // Goal
                     } else {
-                        // 重み付けされたランダムな地形生成
-                        const weights = [40, 30, 20, 10]; // 草、森、山、水
+                        // Weighted random terrain generation
+                        const weights = [40, 30, 20, 10]; // grass, forest, mountain, water
                         const random = Math.random() * 100;
                         let cumulative = 0;
                         for (let i = 0; i < terrainTypes.length; i++) {
@@ -575,7 +949,7 @@
             ensurePathExists();
         }
 
-        // シンプルな貪欲法で常にゴールへのパスが存在するようにする
+        // Simple greedy approach to ensure a path always exists to the goal
         function ensurePathExists() {
             let x = 0, y = 0;
             while (x < GAME_BOARD_SIZE - 1 || y < GAME_BOARD_SIZE - 1) {
@@ -584,19 +958,19 @@
                 } else if (y < GAME_BOARD_SIZE - 1) {
                     y++;
                 }
-                // パス上の通行不能な地形を草地に変更
+                // Change impassable terrain on the path to grass
                 if (gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN) {
                     gameState.grid[x][y] = TERRAIN.GRASS;
                 }
             }
         }
 
-        // 敵を生成
+        // Generate enemies
         function generateEnemies() {
             gameState.enemies = [];
-            let enemyCount = 8 + Math.floor(gameState.stage / 2); // 敵の数はステージとともにスケール
+            let enemyCount = 8 + Math.floor(gameState.stage / 2); // Enemy count scales with stage
 
-            // ボスステージの確認
+            // Check for boss stage
             if (gameState.stage % BOSS_STAGE_INTERVAL === 0 && gameState.stage <= MAX_STAGE) {
                 const bossIndex = (gameState.stage / BOSS_STAGE_INTERVAL) - 1;
                 const bossType = BOSS_TYPES[bossIndex];
@@ -605,55 +979,54 @@
                 do {
                     x = Math.floor(Math.random() * GAME_BOARD_SIZE);
                     y = Math.floor(Math.random() * GAME_BOARD_SIZE);
-                } while ((x === gameState.player.x && y === gameState.player.y) || // プレイヤー位置を避ける
-                         (gameState.pack && x === gameState.pack.x && y === gameState.pack.y) || // 群れの位置を避ける
+                } while ((x === gameState.player.x && y === gameState.player.y) || // Avoid player position
+                         (gameState.pack && x === gameState.pack.x && y === gameState.pack.y) || // Avoid pack position
                          gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN);
 
                 gameState.enemies.push({
                     x, y,
                     icon: bossType.icon,
                     name: bossType.name,
-                    health: bossType.baseHealth + (gameState.stage * 10), // ボスの体力はスケール
+                    health: bossType.baseHealth + (gameState.stage * 10), // Boss health scales
                     maxHealth: bossType.baseHealth + (gameState.stage * 10),
-                    attack: bossType.baseAttack + (gameState.stage * 3), // ボスの攻撃力はスケール
+                    attack: bossType.baseAttack + (gameState.stage * 3), // Boss attack scales
                     exp: bossType.exp + (gameState.stage * 5),
                     speed: bossType.speed,
                     trait: bossType.trait,
-                    traitName: bossType.traitName,
+                    traitName: getTranslation(bossType.trait),
                     id: Date.now() + Math.random(),
                     moveCounter: 0,
                     isBoss: true
                 });
-                enemyCount = 0; // ボスステージではボスのみ
+                enemyCount = 0; // Boss stage has only boss
             }
-
 
             for (let i = 0; i < enemyCount; i++) {
                 let x, y;
                 do {
                     x = Math.floor(Math.random() * GAME_BOARD_SIZE);
                     y = Math.floor(Math.random() * GAME_BOARD_SIZE);
-                } while ((x === gameState.player.x && y === gameState.player.y) || // プレイヤー位置を避ける
-                         (gameState.pack && x === gameState.pack.x && y === gameState.pack.y) || // 群れの位置を避ける
-                         gameState.enemies.some(e => e.x === x && e.y === y) || // 他の敵の位置を避ける
+                } while ((x === gameState.player.x && y === gameState.player.y) || // Avoid player position
+                         (gameState.pack && x === gameState.pack.x && y === gameState.pack.y) || // Avoid pack position
+                         gameState.enemies.some(e => e.x === x && e.y === y) || // Avoid other enemies
                          gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN);
 
-                // 敵の強さはステージとともにスケール
+                // Enemy strength scales with stage
                 const typeIndex = Math.min(Math.floor(Math.random() * ENEMY_TYPES.length),
-                                          Math.floor(gameState.stage / 5)); // 進んだ敵は後で出現
+                                          Math.floor(gameState.stage / 5)); // Advanced enemies appear later
                 const enemyType = ENEMY_TYPES[typeIndex];
 
                 gameState.enemies.push({
                     x, y,
                     icon: enemyType.icon,
                     name: enemyType.name,
-                    health: enemyType.baseHealth + (gameState.stage * 2), // 体力はスケール
+                    health: enemyType.baseHealth + (gameState.stage * 2), // Health scales
                     maxHealth: enemyType.baseHealth + (gameState.stage * 2),
-                    attack: enemyType.baseAttack + Math.floor(gameState.stage / 3), // 攻撃力はスケール
+                    attack: enemyType.baseAttack + Math.floor(gameState.stage / 3), // Attack scales
                     exp: enemyType.exp + Math.floor(gameState.stage / 2),
                     speed: enemyType.speed,
                     trait: enemyType.trait,
-                    traitName: enemyType.traitName,
+                    traitName: getTranslation(enemyType.trait),
                     id: Date.now() + Math.random(),
                     moveCounter: 0,
                     isBoss: false
@@ -661,7 +1034,7 @@
             }
         }
 
-        // ゲームボードの描画
+        // Render the game board
         function renderGame() {
             const grid = document.getElementById('gameGrid');
             grid.innerHTML = '';
@@ -673,17 +1046,17 @@
 
                     let content = '';
 
-                    // 母ウルフ
+                    // Mother Wolf
                     if (gameState.player.x === row && gameState.player.y === col) {
                         const controlledClass = gameState.controlledWolf === 'mother' ? ' controlled' : '';
                         content = `<span class="player${controlledClass}">🐺</span>`;
                     }
-                    // 群れ
+                    // Pack
                     else if (gameState.pack && gameState.pack.x === row && gameState.pack.y === col) {
                         const controlledClass = gameState.controlledWolf === 'pack' ? ' controlled' : '';
                         content = `<span class="pack-icon${controlledClass}">🐺<span class="pack-size">${gameState.packMembers.length}</span></span>`;
                     }
-                    // 敵（HPバー付き）
+                    // Enemy (with HP bar)
                     else if (gameState.enemies.some(e => e.x === row && e.y === col)) {
                         const enemy = gameState.enemies.find(e => e.x === row && e.y === col);
                         const hpPercent = (enemy.health / enemy.maxHealth) * 100;
@@ -694,7 +1067,7 @@
                             </div>
                         `;
                     }
-                    // 地形
+                    // Terrain
                     else {
                         switch (gameState.grid[row][col]) {
                             case TERRAIN.GRASS: content = '🌾'; break;
@@ -713,11 +1086,11 @@
             updateUI();
         }
 
-        // UI要素の更新
+        // Update UI elements
         function updateUI() {
             document.getElementById('stage').textContent = gameState.stage;
             document.getElementById('level').textContent = gameState.player.level;
-            document.getElementById('health').textContent = Math.max(0, Math.floor(gameState.player.health)); // HPが負にならないようにする
+            document.getElementById('health').textContent = Math.max(0, Math.floor(gameState.player.health));
             document.getElementById('maxHealth').textContent = gameState.player.maxHealth;
             document.getElementById('hunger').textContent = Math.floor(gameState.player.hunger);
             document.getElementById('exp').textContent = gameState.player.exp;
@@ -726,26 +1099,25 @@
             document.getElementById('packHealth').textContent = Math.floor(gameState.packHealth);
             document.getElementById('packMaxHealth').textContent = gameState.packMaxHealth;
 
-            // 群れの総攻撃力を計算
+            // Calculate total pack attack power
             let packPower = 0;
             gameState.packMembers.forEach(member => {
                 packPower += member.attack;
             });
             document.getElementById('packPower').textContent = packPower;
 
-            // バーを更新
+            // Update bars
             const healthPercent = (gameState.player.health / gameState.player.maxHealth) * 100;
             const hungerPercent = (gameState.player.hunger / gameState.player.maxHunger) * 100;
             const expPercent = (gameState.player.exp / (gameState.player.level * 100)) * 100;
             const packHealthPercent = (gameState.packMembers.length > 0) ? (gameState.packHealth / gameState.packMaxHealth) * 100 : 0;
-
 
             document.getElementById('healthBar').style.width = healthPercent + '%';
             document.getElementById('hungerBar').style.width = hungerPercent + '%';
             document.getElementById('expBar').style.width = expPercent + '%';
             document.getElementById('packHealthBar').style.width = packHealthPercent + '%';
 
-            // 群れの特性を更新
+            // Update pack traits
             const traitsDiv = document.getElementById('packTraits');
             traitsDiv.innerHTML = '';
 
@@ -756,28 +1128,31 @@
                 }
             });
 
-            // 通常の敵とボスの特性を組み合わせて表示
+            // Combine normal enemy and boss traits for display
             const allEnemyTypes = [...ENEMY_TYPES, ...BOSS_TYPES];
 
             Object.entries(traits).forEach(([trait, count]) => {
                 const traitBadge = document.createElement('div');
                 traitBadge.className = 'trait-badge';
-                const traitInfo = allEnemyTypes.find(e => e.trait === trait); // 結合リストから特性情報を検索
+                const traitInfo = allEnemyTypes.find(e => e.trait === trait);
                 if (traitInfo) {
                     traitBadge.innerHTML = `
                         <span>${traitInfo.icon}</span>
-                        <span>${traitInfo.traitName}</span>
+                        <span>${getTranslation(traitInfo.trait)}</span>
                         <span class="trait-count">×${count}</span>
                     `;
                     traitsDiv.appendChild(traitBadge);
                 }
             });
 
-            // 制御中のウルフ表示を更新
-            document.getElementById('controlledWolfDisplay').textContent = gameState.controlledWolf === 'mother' ? '母ウルフ' : '群れ';
+            // Update controlled wolf display
+            const unitType = gameState.controlledWolf === 'mother' ? 
+                (gameState.currentLanguage === 'ja' ? '母ウルフ' : 'Mother Wolf') : 
+                (gameState.currentLanguage === 'ja' ? '群れ' : 'Pack');
+            document.getElementById('controlledWolfDisplay').textContent = unitType;
         }
 
-        // 群れのメンバーに基づいて群れの総体力を更新
+        // Update pack health based on pack members
         function updatePackHealth() {
             let totalPackHealth = 0;
             let totalPackMaxHealth = 0;
@@ -789,19 +1164,22 @@
             gameState.packMaxHealth = totalPackMaxHealth;
         }
 
-        // 制御するウルフを切り替える
+        // Switch controlled wolf
         function switchControlledWolf(target) {
             if (gameState.packMembers.length === 0 && target === 'pack') {
-                addMessage("🐺 群れがいないため、群れを操作できません！", "hunt");
+                addMessage(getTranslation("noPackToControl"), "hunt");
                 return;
             }
             gameState.controlledWolf = target;
-            addMessage(`操作対象を${target === 'mother' ? '母ウルフ' : '群れ'}に切り替えました。`, "level");
+            const unitType = target === 'mother' ? 
+                (gameState.currentLanguage === 'ja' ? '母ウルフ' : 'Mother Wolf') : 
+                (gameState.currentLanguage === 'ja' ? '群れ' : 'Pack');
+            addMessage(getTranslation("controlledWolfSwitched", {unitType}), "level");
             updateControlButtons();
-            renderGame(); // 再描画して強調表示を更新
+            renderGame(); // Re-render to update highlighting
         }
 
-        // 制御ボタンのスタイルを更新
+        // Update control button styles
         function updateControlButtons() {
             document.getElementById('controlMotherBtn').classList.remove('active');
             document.getElementById('controlPackBtn').classList.remove('active');
@@ -812,18 +1190,17 @@
             }
         }
 
-
-        // プレイヤーの移動
+        // Player movement
         function move(dx, dy) {
-            let activeUnit; // 現在操作中のユニット
+            let activeUnit; // Currently controlled unit
             let isMotherControlled = (gameState.controlledWolf === 'mother');
 
             if (isMotherControlled) {
                 activeUnit = gameState.player;
             } else { // 'pack' is controlled
                 if (!gameState.pack || gameState.packMembers.length === 0) {
-                    addMessage("🐺 群れがいないため、移動できません！母ウルフに切り替えてください。", "hunt");
-                    switchControlledWolf('mother'); // 群れがいない場合は母ウルフに強制切り替え
+                    addMessage(getTranslation("noPackToControl"), "hunt");
+                    switchControlledWolf('mother'); // Force switch to mother wolf if no pack
                     return;
                 }
                 activeUnit = gameState.pack;
@@ -832,73 +1209,73 @@
             const newX = activeUnit.x + dx;
             const newY = activeUnit.y + dy;
 
-            // ボードの境界線チェック
+            // Board boundary check
             if (newX < 0 || newX >= GAME_BOARD_SIZE || newY < 0 || newY >= GAME_BOARD_SIZE) {
-                addMessage("🚫 ボードの端です！", "hunt");
+                addMessage(getTranslation("boardEdge"), "hunt");
                 return;
             }
 
             const terrain = gameState.grid[newX][newY];
             if (terrain === TERRAIN.WATER || terrain === TERRAIN.MOUNTAIN) {
-                addMessage(`🚫 ${terrain === TERRAIN.WATER ? '水' : '山'}を通過できません！破壊ボタンでクリアしてください。`, "hunt");
+                const terrainType = getTranslation(terrain === TERRAIN.WATER ? 'water' : 'mountain');
+                addMessage(getTranslation("cannotPassWaterMountain", {terrainType}), "hunt");
                 return;
             }
 
-            // 操作中のユニット同士が重なるのを防ぐ
+            // Prevent controlled units from overlapping
             if (isMotherControlled && gameState.pack && newX === gameState.pack.x && newY === gameState.pack.y) {
-                addMessage("🚫 母ウルフは群れの上に移動できません。", "hunt");
+                addMessage(getTranslation("motherCannotMoveOnPack"), "hunt");
                 return;
             } else if (!isMotherControlled && newX === gameState.player.x && newY === gameState.player.y) {
-                addMessage("🚫 群れは母ウルフの上に移動できません。", "hunt");
+                addMessage(getTranslation("packCannotMoveOnMother"), "hunt");
                 return;
             }
-
 
             activeUnit.x = newX;
             activeUnit.y = newY;
             gameState.playerMoveCount++;
 
-            // 敵のチェック（操作中のユニットが移動した場所）
+            // Check for enemy (at the position the controlled unit moved to)
             const enemy = gameState.enemies.find(e => e.x === newX && e.y === newY);
             if (enemy) {
                 if (isMotherControlled) {
-                    hunt(enemy); // 母ウルフが直接狩る
+                    hunt(enemy); // Mother wolf hunts directly
                 } else {
-                    packAttack(enemy); // 群れが直接攻撃する
+                    packAttack(enemy); // Pack attacks directly
                 }
             }
 
-            // ゴールに到達したかチェック（母ウルフのみ）
+            // Check if goal reached (Mother Wolf only)
             if (gameState.player.x === GAME_BOARD_SIZE - 1 && gameState.player.y === GAME_BOARD_SIZE - 1) {
                 nextStage();
-                return; // ステージが進行した場合はここで終了
+                return; // End here if stage progressed
             }
 
-            // 母ウルフの満腹度減少とダメージ（常に母ウルフの満腹度が影響）
+            // Mother Wolf hunger decrease and damage (always affects Mother Wolf)
             gameState.player.hunger = Math.max(0, gameState.player.hunger - 2);
             if (gameState.player.hunger === 0) {
                 gameState.player.health -= 5;
-                addMessage("🍖 満腹度不足でダメージを受けました！", "hunt");
+                addMessage(getTranslation("hungerDamage"), "hunt");
                 if (gameState.player.health <= 0) {
-                    gameOver("母ウルフは飢え死にしました！");
+                    gameOver(getTranslation("motherStarved"));
                     return;
                 }
             }
 
-            // 自動行動する味方ユニットの移動
-            if (gameState.playerMoveCount % 2 === 0) { // プレイヤーの2行動ごとに1回
+            // Auto-move friendly units
+            if (gameState.playerMoveCount % 2 === 0) { // Every 2 player actions
                 autoMoveFriendly();
             }
 
-            // 敵の移動
+            // Enemy movement
             moveEnemies();
             renderGame();
         }
 
-        // 自動行動する味方ユニットのAI
+        // Auto-move friendly units AI
         function autoMoveFriendly() {
-            let autoUnit; // 自動行動するユニット
-            let controlledUnit; // プレイヤーが操作しているユニット
+            let autoUnit; // Auto-moving unit
+            let controlledUnit; // Player-controlled unit
 
             if (gameState.controlledWolf === 'mother') {
                 autoUnit = gameState.pack;
@@ -909,14 +1286,14 @@
             }
 
             if (!autoUnit || (autoUnit === gameState.pack && gameState.packMembers.length === 0)) {
-                return; // 自動行動するユニットが存在しない場合は何もしない
+                return; // No auto unit exists
             }
 
             let targetX = autoUnit.x;
             let targetY = autoUnit.y;
             let foundTarget = false;
 
-            // 1. 最も近い敵をターゲット
+            // 1. Target nearest enemy
             let nearestEnemy = null;
             let minDistance = Infinity;
             gameState.enemies.forEach(enemy => {
@@ -927,25 +1304,25 @@
                 }
             });
 
-            if (nearestEnemy && minDistance <= 5) { // 視界範囲内の敵がいれば
+            if (nearestEnemy && minDistance <= 5) { // Enemy within vision range
                 targetX = nearestEnemy.x;
                 targetY = nearestEnemy.y;
                 foundTarget = true;
             }
-            // 2. ゴールをターゲット（母ウルフが自動行動の場合のみ）
+            // 2. Target goal (Mother Wolf auto-move only)
             else if (autoUnit === gameState.player && (autoUnit.x !== GAME_BOARD_SIZE - 1 || autoUnit.y !== GAME_BOARD_SIZE - 1)) {
                 targetX = GAME_BOARD_SIZE - 1;
                 targetY = GAME_BOARD_SIZE - 1;
                 foundTarget = true;
             }
-            // 3. 操作中のユニットに追従
+            // 3. Follow controlled unit
             else {
                 targetX = controlledUnit.x;
                 targetY = controlledUnit.y;
                 foundTarget = true;
             }
 
-            if (!foundTarget) return; // ターゲットが見つからなければ何もしない
+            if (!foundTarget) return; // No target found
 
             const dx = Math.sign(targetX - autoUnit.x);
             const dy = Math.sign(targetY - autoUnit.y);
@@ -953,8 +1330,8 @@
             let newX = autoUnit.x;
             let newY = autoUnit.y;
 
-            // 移動ロジック：ターゲットに近づくように動く
-            // 縦横移動を優先し、障害物があれば斜めも試す
+            // Movement logic: move towards target
+            // Prioritize vertical/horizontal movement, try diagonal if blocked
             let moved = false;
             if (dx !== 0 && isValidAutoMove(autoUnit, autoUnit.x + dx, autoUnit.y, controlledUnit)) {
                 newX += dx;
@@ -963,7 +1340,7 @@
                 newY += dy;
                 moved = true;
             } else if (dx !== 0 && dy !== 0 && isValidAutoMove(autoUnit, autoUnit.x + dx, autoUnit.y + dy, controlledUnit)) {
-                // 縦横がブロックされた場合、斜め移動を試す
+                // Try diagonal if vertical/horizontal is blocked
                 newX += dx;
                 newY += dy;
                 moved = true;
@@ -973,79 +1350,79 @@
                 autoUnit.x = newX;
                 autoUnit.y = newY;
 
-                // 敵と接触した場合
+                // Check for enemy contact
                 const encounteredEnemy = gameState.enemies.find(e => e.x === newX && e.y === newY);
                 if (encounteredEnemy) {
                     if (autoUnit === gameState.player) {
-                        hunt(encounteredEnemy); // 母ウルフが自動で狩る
+                        hunt(encounteredEnemy); // Mother Wolf auto-hunts
                     } else {
-                        packAttack(encounteredEnemy); // 群れが自動で攻撃する
+                        packAttack(encounteredEnemy); // Pack auto-attacks
                     }
                 }
             }
         }
 
-        // 自動行動ユニットの移動が有効かチェック
+        // Check if auto unit move is valid
         function isValidAutoMove(autoUnit, x, y, controlledUnit) {
-            if (x < 0 || x >= GAME_BOARD_SIZE || y < 0 || y >= GAME_BOARD_SIZE) return false; // ボード外
+            if (x < 0 || x >= GAME_BOARD_SIZE || y < 0 || y >= GAME_BOARD_SIZE) return false; // Board boundary
 
             const terrain = gameState.grid[x][y];
-            if (terrain === TERRAIN.WATER || terrain === TERRAIN.MOUNTAIN) return false; // 通行不能な地形
+            if (terrain === TERRAIN.WATER || terrain === TERRAIN.MOUNTAIN) return false; // Impassable terrain
 
-            // 操作中のユニットの上に移動しない
+            // Don't move onto controlled unit
             if (x === controlledUnit.x && y === controlledUnit.y) return false;
 
-            // 他の敵の上に移動しない
+            // Don't move onto other enemies
             if (gameState.enemies.some(e => e.x === x && e.y === y)) return false;
 
             return true;
         }
 
-        // 敵を狩る（母ウルフの行動）
+        // Hunt enemy (Mother Wolf action)
         function hunt(enemy) {
-            const playerDamage = gameState.player.attack + Math.floor(Math.random() * (10 + gameState.player.level)); // プレイヤーのダメージはレベルとともにスケール
+            const playerDamage = gameState.player.attack + Math.floor(Math.random() * (10 + gameState.player.level)); // Damage scales with level
             enemy.health -= playerDamage;
 
-            addMessage(`🦷 あなたは${enemy.name}に${playerDamage}ダメージを与えました！`, "hunt");
+            addMessage(getTranslation("dealtDamage", {enemyName: enemy.name, damage: playerDamage}), "hunt");
 
             if (enemy.health <= 0) {
-                // 敵を食べる
+                // Eat enemy
                 gameState.player.hunger = Math.min(gameState.player.maxHunger, gameState.player.hunger + 40);
                 gameState.player.exp += enemy.exp;
 
-                addMessage(`🍖 あなたは${enemy.name}を食べました！満腹度が回復し、${enemy.exp}経験値を獲得！`, "pack");
+                addMessage(getTranslation("ateEnemy", {enemyName: enemy.name, exp: enemy.exp}), "pack");
 
-                // ボスでなければ、特性を持つ新しいウルフを生成
+                // If not boss, generate new wolf with trait
                 if (!enemy.isBoss) {
-                    addMessage(`✨ '${enemy.traitName}'の特性を持つ新しい子狼が生まれました！`, "pack");
+                    addMessage(getTranslation("newPupBorn", {traitName: enemy.traitName}), "pack");
                     createWolfWithTrait(enemy);
                 } else {
-                    addMessage(`🏆 恐るべき${enemy.name}を倒しました！`, "level");
+                    addMessage(getTranslation("defeatedBoss", {enemyName: enemy.name}), "level");
                 }
 
-                // 敵を削除
+                // Remove enemy
                 gameState.enemies = gameState.enemies.filter(e => e !== enemy);
 
-                // レベルアップをチェック
+                // Check level up
                 checkLevelUp();
             } else {
-                // 敵の反撃
+                // Enemy counterattack
                 const enemyDamage = enemy.attack + Math.floor(Math.random() * 10);
                 gameState.player.health -= enemyDamage;
-                addMessage(`💥 ${enemy.name}が反撃！${enemyDamage}ダメージを受けました。`, "hunt");
+                addMessage(getTranslation("enemyCounterattacked", {enemyName: enemy.name, damage: enemyDamage}), "hunt");
 
                 if (gameState.player.health <= 0) {
-                    gameOver("母ウルフは敵に倒されました！");
-                    return; // さらなるゲームアクションを停止
+                    gameOver(getTranslation("motherDefeated"));
+                    return; // Stop further game actions
                 }
             }
-            renderGame(); // HPバーの即時更新のために狩猟後に再描画
+            renderGame(); // Re-render for immediate HP bar updates after hunting
         }
 
-        // 継承された特性を持つウルフを生成
+        // Create wolf with inherited trait
         function createWolfWithTrait(enemy) {
-            const baseHealth = 50 + gameState.player.level * 5; // 基本体力はスケール
-            const baseAttack = 15 + gameState.player.level * 2; // 基本攻撃力はスケール
+            const baseHealth = 50 + gameState.player.level * 5; // Base health scales
+            const baseAttack = 15 + gameState.player.level * 2; // Base attack scales
 
             const newWolf = {
                 health: baseHealth,
@@ -1056,10 +1433,10 @@
                 id: Date.now() + Math.random()
             };
 
-            // 特性ボーナスを適用
+            // Apply trait bonuses
             switch (enemy.trait) {
                 case 'speed':
-                    newWolf.attack += 5; // 敏捷性ウルフはわずかな攻撃力ボーナス
+                    newWolf.attack += 5; // Speed wolves get slight attack bonus
                     break;
                 case 'health':
                     newWolf.health += 20;
@@ -1071,30 +1448,30 @@
                 case 'defense':
                     newWolf.health += 10;
                     newWolf.maxHealth += 10;
-                    newWolf.attack += 2; // 防御用にはわずかな攻撃力
+                    newWolf.attack += 2; // Slight attack for defense
                     break;
                 case 'vision':
-                    // 視力は受動的なボーナスや群れの行動範囲を拡大するかもしれない（今のところ直接的なステータスなし）
+                    // Vision is passive bonus or pack action range expansion (no direct stats for now)
                     break;
             }
 
             gameState.packMembers.push(newWolf);
 
-            // 群れオブジェクトが存在しない場合は作成
+            // Create pack object if it doesn't exist
             if (!gameState.pack) {
-                // 群れの初期位置は母ウルフの隣に設定（存在しない場合）
-                // たとえば、母ウルフが(0,0)なら群れは(0,1)
+                // Set pack initial position next to Mother Wolf (if possible)
+                // E.g., if Mother Wolf is at (0,0) then pack goes to (0,1)
                 const px = gameState.player.x;
                 const py = gameState.player.y;
                 let packX = px;
                 let packY = py + 1;
 
-                // もし(0,1)がボード外なら(1,0)を試す
+                // If (0,1) is off board, try (1,0)
                 if (packY >= GAME_BOARD_SIZE) {
                     packX = px + 1;
                     packY = py;
                 }
-                // それもボード外なら母ウルフと同じ位置に一時的に設定し、次でずらす
+                // If that's also off board, temporarily set same position as mother, will move next turn
                 if (packX >= GAME_BOARD_SIZE) {
                     packX = px;
                     packY = py;
@@ -1105,182 +1482,101 @@
                     y: packY
                 };
             }
-            updatePackHealth(); // 群れの総体力を更新
+            updatePackHealth(); // Update total pack health
         }
 
-        // 群れの移動 (現在使われていないが、将来的な拡張のために残すか削除する)
-        // 今回の変更でこの関数はautoMoveFriendlyに統合されます
-        /*
-        function movePack() {
-            if (!gameState.pack || gameState.packMembers.length === 0) return;
-
-            // Find nearest enemy within vision range
-            let nearestEnemy = null;
-            let minDistance = Infinity;
-
-            // Pack vision range - influenced by 'vision' trait
-            const visionWolves = gameState.packMembers.filter(m => m.trait === 'vision').length;
-            const visionRange = 4 + (visionWolves > 0 ? visionWolves : 0); // 1 extra range per vision wolf
-
-            gameState.enemies.forEach(enemy => {
-                const distance = Math.abs(enemy.x - gameState.pack.x) + Math.abs(enemy.y - gameState.pack.y);
-                if (distance <= visionRange && distance < minDistance) {
-                    minDistance = distance;
-                    nearestEnemy = enemy;
-                }
-            });
-
-            let targetX, targetY;
-            let targetType = null;
-
-            if (nearestEnemy) {
-                targetX = nearestEnemy.x;
-                targetY = nearestEnemy.y;
-                targetType = 'enemy';
-            } else {
-                // If no enemy in sight, follow player
-                targetX = gameState.player.x;
-                targetY = gameState.player.y;
-                targetType = 'player';
-            }
-
-            // Determine move direction towards target
-            const dx = Math.sign(targetX - gameState.pack.x);
-            const dy = Math.sign(targetY - gameState.pack.y);
-
-            let newX = gameState.pack.x;
-            let newY = gameState.pack.y;
-
-            // Prefer moving towards the target's row/column
-            if (dx !== 0 && isValidPackMove(gameState.pack.x + dx, gameState.pack.y)) {
-                newX += dx;
-            } else if (dy !== 0 && isValidPackMove(gameState.pack.x, gameState.pack.y + dy)) {
-                newY += dy;
-            } else if (dx !== 0 && isValidPackMove(gameState.pack.x + dx, gameState.pack.y + dy)) { // Diagonal if straight is blocked
-                 newX += dx;
-                 newY += dy;
-            } else if (dy !== 0 && isValidPackMove(gameState.pack.x + dx, gameState.pack.y + dy)) { // Diagonal if straight is blocked
-                 newX += dx;
-                 newY += dy;
-            }
-
-
-            if (newX !== gameState.pack.x || newY !== gameState.pack.y) {
-                gameState.pack.x = newX;
-                gameState.pack.y = newY;
-
-                // Attack if adjacent or on the same tile as enemy after move
-                if (targetType === 'enemy' && nearestEnemy &&
-                    ((gameState.pack.x === nearestEnemy.x && Math.abs(gameState.pack.y - nearestEnemy.y) <= 1) ||
-                     (gameState.pack.y === nearestEnemy.y && Math.abs(gameState.pack.x - nearestEnemy.x) <= 1)))
-                {
-                    packAttack(nearestEnemy);
-                }
-            }
-        }
-        */
-        // 群れの移動が有効かチェック（プレイヤーや通行不能な地形の上には移動できない）
-        function isValidPackMove(x, y) {
-            return x >= 0 && x < GAME_BOARD_SIZE && y >= 0 && y < GAME_BOARD_SIZE &&
-                   gameState.grid[x][y] !== TERRAIN.WATER &&
-                   gameState.grid[x][y] !== TERRAIN.MOUNTAIN &&
-                   !(gameState.player.x === x && gameState.player.y === y); // 群れは母ウルフの上には移動できない
-        }
-
-        // 群れが敵を攻撃
+        // Pack attacks enemy
         function packAttack(enemy) {
             if (gameState.packMembers.length === 0) return;
 
             let totalDamage = 0;
-            let defenseBonus = 0; // 現在未使用だが、特性によって追加可能
+            let defenseBonus = 0; // Currently unused but could be added for traits
 
             gameState.packMembers.forEach(member => {
                 totalDamage += member.attack;
                 if (member.trait === 'defense') {
-                    defenseBonus += 1; // 各防御ウルフは被ダメージを減少させる
+                    defenseBonus += 1; // Each defense wolf reduces incoming damage
                 }
             });
 
-            // 群れの数に応じたダメージボーナス
+            // Pack size damage bonus
             totalDamage += Math.floor(gameState.packMembers.length * 2);
 
-            // 敵の防御（もしあれば）や特殊特性を適用
-            if (enemy.trait === 'defense') { // 例：クマは「防御」特性を持つ
-                totalDamage = Math.max(1, totalDamage - (enemy.attack / 2)); // 敵の攻撃力の半分でダメージを減少
+            // Apply enemy defense (if any) or special traits
+            if (enemy.trait === 'defense') { // E.g., Bears have "defense" trait
+                totalDamage = Math.max(1, totalDamage - (enemy.attack / 2)); // Reduce damage by half enemy attack
             }
-            // ボスの場合、ダメージ減少をスケール
+            // Boss damage reduction scaling
             if (enemy.isBoss) {
-                totalDamage = Math.max(1, totalDamage - (enemy.maxHealth / 20)); // ボスはより高い基本防御力を持つ
+                totalDamage = Math.max(1, totalDamage - (enemy.maxHealth / 20)); // Bosses have higher base defense
             }
-
 
             enemy.health -= totalDamage;
-            addMessage(`🐺 あなたの群れ（${gameState.packMembers.length}頭）は${enemy.name}に${totalDamage}ダメージを与えました！`, "pack");
+            addMessage(getTranslation("packDealtDamage", {packCount: gameState.packMembers.length, enemyName: enemy.name, damage: totalDamage}), "pack");
 
             if (enemy.health <= 0) {
-                // 母に経験値を与える
+                // Give experience to mother
                 gameState.player.exp += Math.floor(enemy.exp * 0.8);
                 gameState.enemies = gameState.enemies.filter(e => e !== enemy);
-                addMessage(`🐺 あなたの群れは${enemy.name}を倒しました！母は${Math.floor(enemy.exp * 0.8)}経験値を獲得。`, "pack");
+                addMessage(getTranslation("packDefeatedEnemy", {enemyName: enemy.name, exp: Math.floor(enemy.exp * 0.8)}), "pack");
 
-                // レベルアップをチェック
+                // Check level up
                 checkLevelUp();
 
-                // 食事から群れがいくらか体力を回復 - 生存しているメンバーに分配
+                // Pack recovers some health from feeding - distribute to surviving members
                 const healAmount = 5 + Math.floor(enemy.exp / 10);
                 gameState.packMembers.forEach(member => {
                     member.health = Math.min(member.maxHealth, member.health + healAmount);
                 });
-                updatePackHealth(); // 回復後に群れの総体力を再計算
+                updatePackHealth(); // Recalculate total pack health after healing
             } else {
-                // 個々のウルフにダメージの一部を分配し、消耗を反映
-                const individualDamage = Math.ceil(totalDamage / gameState.packMembers.length); // 攻撃で受けたダメージに応じて
+                // Distribute some damage to individual wolves to reflect attrition
+                const individualDamage = Math.ceil(totalDamage / gameState.packMembers.length); // Damage per attack effort
                 gameState.packMembers.forEach(member => {
-                    member.health = Math.max(0, member.health - individualDamage); // 個々のメンバーの体力を減らす
+                    member.health = Math.max(0, member.health - individualDamage); // Reduce individual member health
                 });
-                updatePackHealth(); // ダメージ後に群れの総体力を更新
+                updatePackHealth(); // Update total pack health after damage
 
-                // 体力が0以下のメンバーを削除
+                // Remove members with 0 or less health
                 let initialPackCount = gameState.packMembers.length;
                 gameState.packMembers = gameState.packMembers.filter(member => member.health > 0);
                 let lostWolves = initialPackCount - gameState.packMembers.length;
 
                 if (lostWolves > 0) {
-                    addMessage(`💀 ${lostWolves}頭の群れのメンバーが戦闘で倒れました...`, "hunt");
+                    addMessage(getTranslation("packMemberLost", {lostWolves}), "hunt");
                 }
 
-                // メンバーがいなくなったら群れを解散
+                // Disband pack if no members left
                 if (gameState.packMembers.length === 0) {
                     gameState.pack = null;
-                    addMessage("🐾 あなたの群れは解散しました！", "hunt");
+                    addMessage(getTranslation("packDisbanded"), "hunt");
                     if (gameState.controlledWolf === 'pack') {
-                        switchControlledWolf('mother'); // 操作中の群れがなくなったら母ウルフに切り替え
+                        switchControlledWolf('mother'); // Switch to mother if controlled pack is gone
                     }
                 }
             }
         }
 
-
-        // 敵の移動
+        // Enemy movement
         function moveEnemies() {
             gameState.enemies.forEach(enemy => {
                 enemy.moveCounter++;
 
-                // スピードに基づいて移動（スピード2は毎ターン移動、スピード1は隔ターン移動）
+                // Move based on speed (speed 2 moves every turn, speed 1 moves every other turn)
                 const moveFrequency = enemy.speed === 2 ? 1 : 2;
                 if (enemy.moveCounter % moveFrequency !== 0) return;
 
-                // ターゲット（プレイヤーまたは群れ）を見つける
+                // Find target (player or pack)
                 let targetX = gameState.player.x;
                 let targetY = gameState.player.y;
                 let targetType = 'player';
 
-                // 群れが存在し、プレイヤーより近いかチェック
+                // Check if pack exists and is closer than player
                 if (gameState.pack && gameState.packMembers.length > 0) {
                     const packDistance = Math.abs(gameState.pack.x - enemy.x) + Math.abs(gameState.pack.y - enemy.y);
                     const playerDistance = Math.abs(gameState.player.x - enemy.x) + Math.abs(gameState.player.y - enemy.y);
 
-                    if (packDistance <= playerDistance) { // 群れが近いか同じ距離であれば、群れを攻撃優先
+                    if (packDistance <= playerDistance) { // Target pack if closer or same distance
                         targetX = gameState.pack.x;
                         targetY = gameState.pack.y;
                         targetType = 'pack';
@@ -1289,20 +1585,20 @@
 
                 const distance = Math.abs(targetX - enemy.x) + Math.abs(targetY - enemy.y);
 
-                // ターゲットが攻撃範囲内にある場合のみ移動（または隣接していない場合は追跡）
-                if (distance <= (enemy.isBoss ? 8 : 5)) { // ボスはより広いターゲット範囲を持つ
+                // Only move if target is within range (or not adjacent yet for pursuit)
+                if (distance <= (enemy.isBoss ? 8 : 5)) { // Bosses have wider target range
                     const dx = Math.sign(targetX - enemy.x);
                     const dy = Math.sign(targetY - enemy.y);
 
                     let newX = enemy.x;
                     let newY = enemy.y;
 
-                    // ターゲットに向かって縦横に移動を優先
+                    // Prefer vertical/horizontal movement towards target
                     if (dx !== 0 && isValidEnemyMove(enemy.x + dx, enemy.y, enemy)) {
                         newX += dx;
                     } else if (dy !== 0 && isValidEnemyMove(enemy.x, enemy.y + dy, enemy)) {
                         newY += dy;
-                    } else if (isValidEnemyMove(enemy.x + dx, enemy.y + dy, enemy)) { // 直進がブロックされた場合、斜めを試す
+                    } else if (isValidEnemyMove(enemy.x + dx, enemy.y + dy, enemy)) { // Try diagonal if straight is blocked
                         newX += dx;
                         newY += dy;
                     }
@@ -1312,7 +1608,7 @@
                         enemy.y = newY;
                     }
 
-                    // 移動後にターゲットに隣接している場合（または同じタイルに移動した場合）攻撃
+                    // Attack if adjacent to target after movement (or moved onto same tile)
                     if ((enemy.x === targetX && Math.abs(enemy.y - targetY) <= 1) ||
                         (enemy.y === targetY && Math.abs(enemy.x - targetX) <= 1))
                     {
@@ -1326,81 +1622,81 @@
             });
         }
 
-        // 敵の移動が有効かチェック
+        // Check if enemy move is valid
         function isValidEnemyMove(x, y, currentEnemy) {
             return x >= 0 && x < GAME_BOARD_SIZE && y >= 0 && y < GAME_BOARD_SIZE &&
                    gameState.grid[x][y] !== TERRAIN.WATER &&
                    gameState.grid[x][y] !== TERRAIN.MOUNTAIN &&
-                   !(gameState.player.x === x && gameState.player.y === y) && // 敵はプレイヤーの上に移動できない
-                   !(gameState.pack && gameState.pack.x === x && gameState.pack.y === y) && // 敵は群れの上に移動できない
-                   !gameState.enemies.some(e => e !== currentEnemy && e.x === x && e.y === y); // 敵は他の敵の上に移動できない
+                   !(gameState.player.x === x && gameState.player.y === y) && // Enemies can't move onto player
+                   !(gameState.pack && gameState.pack.x === x && gameState.pack.y === y) && // Enemies can't move onto pack
+                   !gameState.enemies.some(e => e !== currentEnemy && e.x === x && e.y === y); // Enemies can't move onto other enemies
         }
 
-        // 敵がプレイヤーを攻撃
+        // Enemy attacks player
         function enemyAttackPlayer(enemy) {
             const damage = enemy.attack + Math.floor(Math.random() * 10);
             gameState.player.health -= damage;
-            addMessage(`💥 ${enemy.name}があなたを攻撃！${damage}ダメージを受けました。`, "hunt");
+            addMessage(getTranslation("enemyCounterattacked", {enemyName: enemy.name, damage}), "hunt");
 
             if (gameState.player.health <= 0) {
-                gameOver("母ウルフは敵に倒されました！");
-                return; // さらなるゲームアクションを停止
+                gameOver(getTranslation("motherDefeated"));
+                return; // Stop further game actions
             }
         }
 
-        // 敵が群れを攻撃
+        // Enemy attacks pack
         function enemyAttackPack(enemy) {
             if (gameState.packMembers.length === 0) return;
 
             const damage = enemy.attack;
             let actualDamage = damage;
 
-            // 群れメンバーからの防御計算
+            // Pack defense calculation
             const defenseWolves = gameState.packMembers.filter(m => m.trait === 'defense').length;
             if (defenseWolves > 0) {
-                actualDamage = Math.max(1, damage - (defenseWolves * 5)); // 各防御ウルフは受けるダメージを減少させる
+                actualDamage = Math.max(1, damage - (defenseWolves * 5)); // Each defense wolf reduces incoming damage
             }
 
-            gameState.packHealth -= actualDamage; // 群れの総体力にダメージ
-            addMessage(`💥 ${enemy.name}があなたの群れを攻撃！${actualDamage}ダメージを与えました。`, "hunt");
+            gameState.packHealth -= actualDamage; // Damage to total pack health
+            addMessage(getTranslation("enemyCounterattacked", {enemyName: enemy.name, damage: actualDamage}), "hunt");
 
-            // 群れの体力が閾値を下回ると、一部のウルフが失われる可能性
+            // If pack health drops below threshold, some wolves may be lost
             if (gameState.packHealth <= 0) {
                 let initialPackCount = gameState.packMembers.length;
                 let lostWolves = 0;
 
-                // 体力が正になるか、ウルフがいなくなるまで最も弱いウルフから削除
-                gameState.packMembers.sort((a, b) => (a.health + a.attack) - (b.health + b.attack)); // 全体的な弱さでソート
+                // Remove weakest wolves until pack health is positive or no wolves remain
+                gameState.packMembers.sort((a, b) => (a.health + a.attack) - (b.health + b.attack)); // Sort by overall weakness
                 while (gameState.packHealth <= 0 && gameState.packMembers.length > 0) {
-                    gameState.packMembers.pop(); // ウルフを削除
+                    gameState.packMembers.pop(); // Remove wolf
                     lostWolves++;
-                    // ウルフを削除することで、そのウルフの最大体力貢献がなくなるため、群れの体力が効果的に「回復」される
+                    // Removing wolf effectively "heals" pack by removing its max health contribution
                     updatePackHealth();
                 }
 
                 if (lostWolves > 0) {
-                    addMessage(`💀 ${lostWolves}頭の群れのメンバーが戦闘で倒れました...`, "hunt");
+                    addMessage(getTranslation("packMemberLost", {lostWolves}), "hunt");
                 }
 
-                // メンバーがいなくなったら群れを解散
+                // Disband pack if no members left
                 if (gameState.packMembers.length === 0) {
                     gameState.pack = null;
-                    addMessage("🐾 あなたの群れは解散しました！", "hunt");
+                    addMessage(getTranslation("packDisbanded"), "hunt");
                     if (gameState.controlledWolf === 'pack') {
-                        switchControlledWolf('mother'); // 操作中の群れがなくなったら母ウルフに切り替え
+                        switchControlledWolf('mother'); // Switch to mother if controlled pack is gone
                     }
                 }
             } else {
-                // 個々のウルフにダメージの一部を分配し、消耗を反映
+                // Distribute some damage to individual wolves to reflect attrition
                 const individualDamage = Math.ceil(actualDamage / gameState.packMembers.length);
                 gameState.packMembers.forEach(member => {
                     member.health = Math.max(0, member.health - individualDamage);
                 });
             }
-            updatePackHealth(); // 変更後に常に群れの体力を更新
+            updatePackHealth(); // Always update pack health after changes
         }
 
-        // 遠吠え - プレイヤーと群れを回復
+        // Howl - heal player and pack
         function howl() {
             if (gameState.player.hunger >= 20) {
                 gameState.player.hunger -= 20;
@@ -1408,7 +1704,7 @@
                 const healAmount = 20 + gameState.player.level * 5;
                 gameState.player.health = Math.min(gameState.player.maxHealth, gameState.player.health + healAmount);
 
-                // 全ての群れのメンバーを回復
+                // Heal all pack members
                 let healedCount = 0;
                 gameState.packMembers.forEach(member => {
                     if (member.health < member.maxHealth) {
@@ -1417,27 +1713,26 @@
                     }
                 });
 
-                updatePackHealth(); // 回復後に群れの総体力を再計算
+                updatePackHealth(); // Recalculate total pack health after healing
 
-                addMessage(`🌙 あなたは遠吠えをしました！母と${healedCount}頭の群れのメンバーが${healAmount}HP回復！`, "pack");
+                addMessage(getTranslation("howled", {healedCount, healAmount}), "pack");
                 renderGame();
             } else {
-                addMessage("🚫 空腹すぎて遠吠えできません！", "hunt");
+                addMessage(getTranslation("tooHungryToHowl"), "hunt");
             }
         }
 
-        // 障害物を破壊
+        // Destroy obstacle
         function destroyObstacle() {
             if (gameState.player.level < 3) {
-                addMessage("🚫 障害物を破壊するにはレベル3以上が必要です！", "hunt");
+                addMessage(getTranslation("level3Required"), "hunt");
                 return;
             }
-            // 母ウルフが現在操作しているユニットではない場合、スキルを使用できない
+            // Mother Wolf only skill
             if (gameState.controlledWolf !== 'mother') {
-                addMessage("🚫 このスキルは母ウルフのみが使用できます！", "hunt");
+                addMessage(getTranslation("motherOnlySkill"), "hunt");
                 return;
             }
-
 
             const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
             let destroyed = false;
@@ -1455,51 +1750,51 @@
             });
 
             if (destroyed) {
-                addMessage("💥 障害物を破壊しました！", "level");
+                addMessage(getTranslation("obstacleDestroyed"), "level");
                 gameState.player.hunger -= 10;
                 renderGame();
             } else {
-                addMessage("🚫 周囲に破壊可能な障害物はありません！", "hunt");
+                addMessage(getTranslation("noObstaclesNearby"), "hunt");
             }
         }
 
-        // レベルアップをチェック
+        // Check level up
         function checkLevelUp() {
             const requiredExp = gameState.player.level * 100;
             if (gameState.player.exp >= requiredExp) {
                 gameState.player.level++;
-                gameState.player.exp = gameState.player.exp - requiredExp; // 余剰経験値を繰り越し
+                gameState.player.exp = gameState.player.exp - requiredExp; // Carry over excess experience
                 gameState.player.maxHealth += 20;
                 gameState.player.health = gameState.player.maxHealth;
                 gameState.player.maxHunger += 20;
                 gameState.player.hunger = gameState.player.maxHunger;
                 gameState.player.attack += 10;
 
-                addMessage(`🌟 レベルアップ！あなたはレベル${gameState.player.level}になりました！`, "level");
+                addMessage(getTranslation("levelUp", {level: gameState.player.level}), "level");
 
                 if (gameState.player.level === 3) {
-                    addMessage("💪 これで障害物破壊スキルが使えるようになりました！", "level");
+                    addMessage(getTranslation("destroyAbilityUnlocked"), "level");
                 }
             }
         }
 
-        // ゲームオーバー
+        // Game over
         function gameOver(message) {
-            gameState.player.health = 0; // HPがゼロであることを確認
-            addMessage(`💀 ${message} ゲームオーバー！`, "hunt");
+            gameState.player.health = 0; // Ensure HP is zero
+            addMessage(`💀 ${message} ${getTranslation("gameOver")}`, "hunt");
             document.getElementById('gameOverMessage').textContent = message;
-            document.getElementById('gameOverModal').style.display = 'flex'; // モーダルを表示
+            document.getElementById('gameOverModal').style.display = 'flex'; // Show modal
         }
 
-        // 次のステージへ
+        // Next stage
         function nextStage() {
             if (gameState.stage >= MAX_STAGE) {
-                // ゲームクリア！
-                addMessage("🎉 全てのステージを制覇しました！ゲームクリア！", "level");
-                document.getElementById('gameOverMessage').textContent = "おめでとうございます！あなたは群れを率いて最強の地に君臨しました！";
+                // Game clear!
+                addMessage(getTranslation("gameClear"), "level");
+                document.getElementById('gameOverMessage').textContent = getTranslation("gameOverMessage2");
                 document.getElementById('gameOverModal').style.display = 'flex';
-                document.getElementById('gameOverModal').querySelector('h2').textContent = "勝利！";
-                document.getElementById('gameOverModal').querySelector('button').textContent = "もう一度プレイ";
+                document.getElementById('gameOverHeading').textContent = getTranslation("victory");
+                document.getElementById('tryAgainBtn').textContent = getTranslation("tryAgain");
                 return;
             }
 
@@ -1508,46 +1803,46 @@
             gameState.player.y = 0;
             gameState.player.health = gameState.player.maxHealth;
             gameState.player.hunger = gameState.player.maxHunger;
-            gameState.playerMoveCount = 0; // 移動カウントをリセット
+            gameState.playerMoveCount = 0; // Reset move count
 
-            addMessage(`🎉 ステージ${gameState.stage}へ進行！`, "level");
-            addMessage("💪 体力と満腹度が完全に回復しました！", "pack");
+            addMessage(getTranslation("advancingStage", {stage: gameState.stage}), "level");
+            addMessage(getTranslation("hpHungerRestored"), "pack");
 
-            // 群れを開始位置へ移動させ、回復
+            // Move pack to starting position and heal
             if (gameState.pack) {
                 gameState.pack.x = 1;
                 gameState.pack.y = 1;
 
-                // 全ての群れメンバーを全回復
+                // Fully heal all pack members
                 gameState.packMembers.forEach(member => {
                     member.health = member.maxHealth;
                 });
-                updatePackHealth(); // 回復後に群れの総体力を再計算
+                updatePackHealth(); // Recalculate total pack health after healing
             }
 
             generateTerrain();
-            generateEnemies(); // 新しいステージのために新しい敵を生成
+            generateEnemies(); // Generate new enemies for new stage
             renderGame();
         }
 
-        // メッセージをログに追加
+        // Add message to log
         function addMessage(text, type = "") {
             const messages = document.getElementById('messages');
             const message = document.createElement('div');
             message.className = `message ${type}`;
             message.textContent = text;
             messages.appendChild(message);
-            messages.scrollTop = messages.scrollHeight; // 自動的に下へスクロール
+            messages.scrollTop = messages.scrollHeight; // Auto-scroll to bottom
 
-            // 最新の10件のメッセージのみを保持
+            // Keep only latest 10 messages
             while (messages.children.length > 10) {
                 messages.removeChild(messages.firstChild);
             }
         }
 
-        // ゲームをリセット
+        // Reset game
         function resetGame() {
-            // ゲームオーバーモーダルを非表示にする
+            // Hide game over modal
             document.getElementById('gameOverModal').style.display = 'none';
 
             gameState = {
@@ -1560,17 +1855,20 @@
                 grid: [],
                 stage: 1,
                 playerMoveCount: 0,
-                controlledWolf: 'mother' // リセット時に母ウルフを操作に設定
+                controlledWolf: 'mother', // Reset to control mother wolf
+                currentLanguage: gameState.currentLanguage, // Preserve language setting
+                currentSongIndex: gameState.currentSongIndex, // Preserve music settings
+                musicPlaying: gameState.musicPlaying
             };
 
-            document.getElementById('messages').innerHTML = ''; // メッセージをクリア
+            document.getElementById('messages').innerHTML = ''; // Clear messages
             initGame();
         }
 
-        // キーボード操作
+        // Keyboard controls
         document.addEventListener('keydown', (e) => {
             if (document.getElementById('gameOverModal').style.display === 'flex') {
-                // ゲームオーバーモーダルが開いている場合、操作を無効化
+                // Disable controls when game over modal is open
                 return;
             }
             switch(e.key) {
@@ -1578,23 +1876,23 @@
                 case 'ArrowDown': case 's': case 'S': move(1, 0); break;
                 case 'ArrowLeft': case 'a': case 'A': move(0, -1); break;
                 case 'ArrowRight': case 'd': case 'D': move(0, 1); break;
-                case ' ': howl(); break; // スペースキーで遠吠え
-                case 'x': case 'X': destroyObstacle(); break; // 'x'キーで破壊
-                // 新しいキーバインド: 'q'で母ウルフ、'e'で群れを操作
+                case ' ': howl(); break; // Spacebar for howl
+                case 'x': case 'X': destroyObstacle(); break; // 'x' key for destroy
+                // New keybinds: 'q' for mother wolf, 'e' for pack
                 case 'q': case 'Q': switchControlledWolf('mother'); break;
                 case 'e': case 'E': switchControlledWolf('pack'); break;
             }
         });
 
-        // 満腹度をゆっくり自動回復
+        // Slowly auto-recover hunger
         setInterval(() => {
-            if (gameState.player.hunger < gameState.player.maxHunger && gameState.player.health > 0) { // 生存している場合のみ回復
+            if (gameState.player.hunger < gameState.player.maxHunger && gameState.player.health > 0) { // Only recover if alive
                 gameState.player.hunger = Math.min(gameState.player.maxHunger, gameState.player.hunger + 0.5);
                 updateUI();
             }
-        }, 3000); // 3秒ごとに満腹度を回復
+        }, 3000); // Recover hunger every 3 seconds
 
-        // ロード時にゲームを初期化
+        // Initialize game on load
         window.onload = initGame;
     </script>
 </body>
