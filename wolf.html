@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wolf Pack RPG - 進化する狼の群れ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0e27, #1a1a2e, #16213e);
+            min-height: 100vh;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            max-width: 1300px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #8a2be2;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 45px);
+            grid-template-rows: repeat(12, 45px);
+            gap: 2px;
+            background: #111;
+            padding: 10px;
+            border-radius: 10px;
+            border: 3px solid #8a2be2;
+            box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.3);
+        }
+
+        .tile {
+            width: 45px;
+            height: 45px;
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tile:hover {
+            border-color: #8a2be2;
+            transform: scale(1.05);
+        }
+
+        .grass { background: linear-gradient(135deg, #2d5016, #3e6b1f); }
+        .forest { background: linear-gradient(135deg, #1a3a1a, #2d5a2d); }
+        .mountain { background: linear-gradient(135deg, #4a4a4a, #6a6a6a); }
+        .water { background: linear-gradient(135deg, #1e3a5f, #2e5a8f); }
+        .goal { 
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            animation: goalPulse 2s infinite;
+        }
+
+        @keyframes goalPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        }
+
+        .player {
+            color: #ff1493;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-size: 24px;
+            animation: motherWolfGlow 2s infinite;
+        }
+
+        @keyframes motherWolfGlow {
+            0%, 100% { filter: drop-shadow(0 0 3px #ff1493); }
+            50% { filter: drop-shadow(0 0 8px #ff1493); }
+        }
+
+        .pack-icon {
+            color: #9370db;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-size: 22px;
+            position: relative;
+            animation: packPulse 3s infinite;
+        }
+
+        @keyframes packPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pack-size {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff4444;
+            color: white;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .enemy {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-size: 22px;
+            position: relative;
+        }
+
+        .hp-bar {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .hp-fill {
+            height: 100%;
+            background: #ff4444;
+            transition: width 0.3s ease;
+        }
+
+        .ui-panel {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            border-left: 4px solid #8a2be2;
+        }
+
+        .stat-bar {
+            background: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+            height: 22px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+            position: relative;
+        }
+
+        .stat-fill.hunger {
+            background: linear-gradient(90deg, #f39c12, #f1c40f);
+        }
+
+        .stat-fill.exp {
+            background: linear-gradient(90deg, #8a2be2, #9370db);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #8a2be2, #6a1b9a);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #6a1b9a, #8a2be2);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        .message-area {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+            height: 150px;
+            overflow-y: auto;
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .message.hunt {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .message.pack {
+            border-left: 4px solid #9370db;
+        }
+
+        .message.level {
+            border-left: 4px solid #f39c12;
+            font-weight: bold;
+        }
+
+        .pack-traits {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .trait-badge {
+            background: rgba(147, 112, 219, 0.2);
+            border: 1px solid #9370db;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trait-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .stage-info {
+            text-align: center;
+            font-size: 18px;
+            color: #f39c12;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .game-area {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .game-grid {
+                grid-template-columns: repeat(12, 35px);
+                grid-template-rows: repeat(12, 35px);
+            }
+            
+            .tile {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🐺 Wolf Pack Evolution 🐺</h1>
+        
+        <div class="stage-info">ステージ <span id="stage">1</span></div>
+        
+        <div class="game-area">
+            <div class="game-board">
+                <div class="game-grid" id="gameGrid"></div>
+                
+                <div class="controls">
+                    <button class="control-btn" onclick="move(-1, 0)">⬆️ 北</button>
+                    <button class="control-btn" onclick="move(0, -1)">⬅️ 西</button>
+                    <button class="control-btn" onclick="move(0, 1)">➡️ 東</button>
+                    <button class="control-btn"></button>
+                    <button class="control-btn" onclick="move(1, 0)">⬇️ 南</button>
+                    <button class="control-btn"></button>
+                    <button class="control-btn action-btn" onclick="howl()">🌙 遠吠え</button>
+                    <button class="control-btn action-btn" onclick="destroyObstacle()">💥 破壊</button>
+                    <button class="control-btn action-btn" onclick="resetGame()">🔄 リセット</button>
+                </div>
+            </div>
+            
+            <div class="ui-panel">
+                <div class="stat-group">
+                    <h3>🐺 マザーウルフ</h3>
+                    <div>レベル: <span id="level">1</span></div>
+                    <div>体力: <span id="health">100</span>/<span id="maxHealth">100</span></div>
+                    <div class="stat-bar">
+                        <div class="stat-fill" id="healthBar" style="width: 100%"></div>
+                    </div>
+                    <div>空腹度: <span id="hunger">100</span>/100</div>
+                    <div class="stat-bar">
+                        <div class="stat-fill hunger" id="hungerBar" style="width: 100%"></div>
+                    </div>
+                    <div>経験値: <span id="exp">0</span>/100</div>
+                    <div class="stat-bar">
+                        <div class="stat-fill exp" id="expBar" style="width: 0%"></div>
+                    </div>
+                    <div>攻撃力: <span id="attack">20</span></div>
+                </div>
+                
+                <div class="stat-group">
+                    <h3>🐺 群れの情報</h3>
+                    <div>群れの総数: <span id="packCount">0</span>匹</div>
+                    <div>群れの総攻撃力: <span id="packPower">0</span></div>
+                    <div class="pack-traits" id="packTraits"></div>
+                </div>
+                
+                <div class="stat-group">
+                    <h3>📜 メッセージ</h3>
+                    <div class="message-area" id="messages"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            player: { x: 0, y: 0, health: 100, maxHealth: 100, hunger: 100, maxHunger: 100, level: 1, exp: 0, attack: 20 },
+            pack: null,
+            packMembers: [],
+            enemies: [],
+            grid: [],
+            stage: 1,
+            playerMoveCount: 0
+        };
+
+        // Terrain types
+        const TERRAIN = {
+            GRASS: 'grass',
+            FOREST: 'forest',
+            MOUNTAIN: 'mountain',
+            WATER: 'water',
+            GOAL: 'goal'
+        };
+
+        // Enemy types with traits
+        const ENEMY_TYPES = [
+            { icon: '🐰', name: 'ウサギ', health: 30, maxHealth: 30, attack: 5, exp: 15, speed: 2, trait: 'speed', traitName: '素早さ' },
+            { icon: '🦌', name: 'シカ', health: 50, maxHealth: 50, attack: 10, exp: 25, speed: 1, trait: 'health', traitName: '生命力' },
+            { icon: '🐗', name: 'イノシシ', health: 70, maxHealth: 70, attack: 15, exp: 35, speed: 1, trait: 'attack', traitName: '攻撃力' },
+            { icon: '🐻', name: 'クマ', health: 100, maxHealth: 100, attack: 20, exp: 50, speed: 1, trait: 'defense', traitName: '防御力' },
+            { icon: '🦅', name: 'ワシ', health: 40, maxHealth: 40, attack: 25, exp: 40, speed: 2, trait: 'vision', traitName: '視界' }
+        ];
+
+        // Initialize game
+        function initGame() {
+            generateTerrain();
+            generateEnemies();
+            renderGame();
+            addMessage("🌙 マザーウルフとして群れを作れ！獲物の特性を引き継ぎ、最強の群れを築け！", "level");
+            addMessage("🎯 ゴール（金色のタイル）を目指せ！", "level");
+        }
+
+        // Generate random terrain
+        function generateTerrain() {
+            gameState.grid = [];
+            const terrainTypes = [TERRAIN.GRASS, TERRAIN.FOREST, TERRAIN.MOUNTAIN, TERRAIN.WATER];
+            
+            for (let row = 0; row < 12; row++) {
+                gameState.grid[row] = [];
+                for (let col = 0; col < 12; col++) {
+                    if (row === 0 && col === 0) {
+                        gameState.grid[row][col] = TERRAIN.GRASS;
+                    } else if (row === 11 && col === 11) {
+                        gameState.grid[row][col] = TERRAIN.GOAL;
+                    } else {
+                        const weights = [40, 30, 20, 10];
+                        const random = Math.random() * 100;
+                        let cumulative = 0;
+                        for (let i = 0; i < terrainTypes.length; i++) {
+                            cumulative += weights[i];
+                            if (random < cumulative) {
+                                gameState.grid[row][col] = terrainTypes[i];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            ensurePathExists();
+        }
+
+        // Ensure there's always a path to the goal
+        function ensurePathExists() {
+            let x = 0, y = 0;
+            while (x < 11 || y < 11) {
+                if (Math.random() < 0.5 && x < 11) {
+                    x++;
+                } else if (y < 11) {
+                    y++;
+                }
+                if (gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN) {
+                    gameState.grid[x][y] = TERRAIN.GRASS;
+                }
+            }
+        }
+
+        // Generate enemies
+        function generateEnemies() {
+            gameState.enemies = [];
+            const enemyCount = 8 + gameState.stage * 2;
+            
+            for (let i = 0; i < enemyCount; i++) {
+                let x, y;
+                do {
+                    x = Math.floor(Math.random() * 12);
+                    y = Math.floor(Math.random() * 12);
+                } while ((x === 0 && y === 0) || (x === 11 && y === 11) || 
+                         gameState.grid[x][y] === TERRAIN.WATER ||
+                         gameState.enemies.some(e => e.x === x && e.y === y));
+                
+                const typeIndex = Math.min(Math.floor(Math.random() * ENEMY_TYPES.length), 
+                                          Math.floor(gameState.stage / 2));
+                const enemyType = {...ENEMY_TYPES[typeIndex]};
+                
+                gameState.enemies.push({
+                    x, y,
+                    ...enemyType,
+                    id: Date.now() + Math.random(),
+                    moveCounter: 0
+                });
+            }
+        }
+
+        // Render the game
+        function renderGame() {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
+
+            for (let row = 0; row < 12; row++) {
+                for (let col = 0; col < 12; col++) {
+                    const tile = document.createElement('div');
+                    tile.className = `tile ${gameState.grid[row][col]}`;
+                    
+                    let content = '';
+                    
+                    // Player (Mother Wolf)
+                    if (gameState.player.x === row && gameState.player.y === col) {
+                        content = '<span class="player">🐺</span>';
+                    }
+                    // Pack
+                    else if (gameState.pack && gameState.pack.x === row && gameState.pack.y === col) {
+                        content = `<span class="pack-icon">🐺<span class="pack-size">${gameState.packMembers.length}</span></span>`;
+                    }
+                    // Enemies with HP bars
+                    else if (gameState.enemies.some(e => e.x === row && e.y === col)) {
+                        const enemy = gameState.enemies.find(e => e.x === row && e.y === col);
+                        const hpPercent = (enemy.health / enemy.maxHealth) * 100;
+                        content = `
+                            <span class="enemy">${enemy.icon}</span>
+                            <div class="hp-bar">
+                                <div class="hp-fill" style="width: ${hpPercent}%"></div>
+                            </div>
+                        `;
+                    }
+                    // Terrain
+                    else {
+                        switch (gameState.grid[row][col]) {
+                            case TERRAIN.GRASS: content = '🌾'; break;
+                            case TERRAIN.FOREST: content = '🌲'; break;
+                            case TERRAIN.MOUNTAIN: content = '⛰️'; break;
+                            case TERRAIN.WATER: content = '💧'; break;
+                            case TERRAIN.GOAL: content = '🏁'; break;
+                        }
+                    }
+                    
+                    tile.innerHTML = content;
+                    grid.appendChild(tile);
+                }
+            }
+
+            updateUI();
+        }
+
+        // Update UI elements
+        function updateUI() {
+            document.getElementById('stage').textContent = gameState.stage;
+            document.getElementById('level').textContent = gameState.player.level;
+            document.getElementById('health').textContent = gameState.player.health;
+            document.getElementById('maxHealth').textContent = gameState.player.maxHealth;
+            document.getElementById('hunger').textContent = Math.floor(gameState.player.hunger);
+            document.getElementById('exp').textContent = gameState.player.exp;
+            document.getElementById('attack').textContent = gameState.player.attack;
+            document.getElementById('packCount').textContent = gameState.packMembers.length;
+
+            // Calculate pack power
+            let packPower = 0;
+            gameState.packMembers.forEach(member => {
+                packPower += member.attack;
+            });
+            document.getElementById('packPower').textContent = packPower;
+
+            // Update bars
+            const healthPercent = (gameState.player.health / gameState.player.maxHealth) * 100;
+            const hungerPercent = (gameState.player.hunger / gameState.player.maxHunger) * 100;
+            const expPercent = (gameState.player.exp / (gameState.player.level * 100)) * 100;
+
+            document.getElementById('healthBar').style.width = healthPercent + '%';
+            document.getElementById('hungerBar').style.width = hungerPercent + '%';
+            document.getElementById('expBar').style.width = expPercent + '%';
+
+            // Update pack traits
+            const traitsDiv = document.getElementById('packTraits');
+            traitsDiv.innerHTML = '';
+            
+            const traits = {};
+            gameState.packMembers.forEach(member => {
+                if (member.trait) {
+                    traits[member.trait] = (traits[member.trait] || 0) + 1;
+                }
+            });
+            
+            Object.entries(traits).forEach(([trait, count]) => {
+                const traitBadge = document.createElement('div');
+                traitBadge.className = 'trait-badge';
+                const traitInfo = ENEMY_TYPES.find(e => e.trait === trait);
+                traitBadge.innerHTML = `
+                    <span>${traitInfo.icon}</span>
+                    <span>${traitInfo.traitName}</span>
+                    <span class="trait-count">×${count}</span>
+                `;
+                traitsDiv.appendChild(traitBadge);
+            });
+        }
+
+        // Move player
+        function move(dx, dy) {
+            const newX = gameState.player.x + dx;
+            const newY = gameState.player.y + dy;
+
+            if (newX >= 0 && newX < 12 && newY >= 0 && newY < 12) {
+                const terrain = gameState.grid[newX][newY];
+                if (terrain === TERRAIN.WATER || terrain === TERRAIN.MOUNTAIN) {
+                    addMessage(`🚫 ${terrain === TERRAIN.WATER ? '水' : '山'}は通れない！破壊ボタンで除去できる`, "hunt");
+                    return;
+                }
+
+                gameState.player.x = newX;
+                gameState.player.y = newY;
+                gameState.playerMoveCount++;
+
+                // Check for enemy
+                const enemy = gameState.enemies.find(e => e.x === newX && e.y === newY);
+                if (enemy) {
+                    hunt(enemy);
+                }
+
+                // Check if reached goal
+                if (newX === 11 && newY === 11) {
+                    nextStage();
+                }
+
+                // Move pack and enemies
+                if (gameState.playerMoveCount % 3 === 0 && gameState.pack) {
+                    movePack();
+                }
+                moveEnemies();
+
+                // Decrease hunger
+                gameState.player.hunger = Math.max(0, gameState.player.hunger - 2);
+                if (gameState.player.hunger === 0) {
+                    gameState.player.health -= 5;
+                    addMessage("🍖 空腹でダメージを受けた！", "hunt");
+                    if (gameState.player.health <= 0) {
+                        gameOver();
+                    }
+                }
+
+                renderGame();
+            }
+        }
+
+        // Hunt and eat enemy
+        function hunt(enemy) {
+            const playerDamage = gameState.player.attack + Math.floor(Math.random() * 15);
+            enemy.health -= playerDamage;
+            
+            addMessage(`🦷 ${enemy.name}に${playerDamage}ダメージ！`, "hunt");
+
+            if (enemy.health <= 0) {
+                // Eat the enemy
+                gameState.player.hunger = Math.min(gameState.player.maxHunger, gameState.player.hunger + 40);
+                gameState.player.exp += enemy.exp;
+                
+                addMessage(`🍖 ${enemy.name}を食べた！空腹度回復 +${enemy.exp} EXP`, "pack");
+                addMessage(`✨ ${enemy.traitName}の特性を引き継いだ子が生まれた！`, "pack");
+                
+                // Create new wolf with trait
+                createWolfWithTrait(enemy);
+                
+                // Remove enemy
+                gameState.enemies = gameState.enemies.filter(e => e !== enemy);
+                
+                // Check level up
+                checkLevelUp();
+            } else {
+                // Enemy counter attack
+                const enemyDamage = enemy.attack + Math.floor(Math.random() * 10);
+                gameState.player.health -= enemyDamage;
+                addMessage(`💥 ${enemy.name}の反撃！${enemyDamage}ダメージ`, "hunt");
+                
+                if (gameState.player.health <= 0) {
+                    gameOver();
+                }
+            }
+        }
+
+        // Create wolf with inherited trait
+        function createWolfWithTrait(enemy) {
+            const newWolf = {
+                health: 50 + gameState.player.level * 10,
+                attack: 15 + gameState.player.level * 3,
+                trait: enemy.trait,
+                icon: enemy.icon,
+                id: Date.now() + Math.random()
+            };
+            
+            // Apply trait bonuses
+            switch (enemy.trait) {
+                case 'speed':
+                    newWolf.speed = 2;
+                    break;
+                case 'health':
+                    newWolf.health += 30;
+                    break;
+                case 'attack':
+                    newWolf.attack += 10;
+                    break;
+                case 'defense':
+                    newWolf.defense = 5;
+                    break;
+                case 'vision':
+                    newWolf.vision = 5;
+                    break;
+            }
+            
+            gameState.packMembers.push(newWolf);
+            
+            // Create pack if it doesn't exist
+            if (!gameState.pack) {
+                gameState.pack = {
+                    x: gameState.player.x,
+                    y: gameState.player.y
+                };
+            }
+        }
+
+        // Move pack
+        function movePack() {
+            if (!gameState.pack || gameState.packMembers.length === 0) return;
+            
+            // Find nearest enemy
+            let nearestEnemy = null;
+            let minDistance = Infinity;
+            
+            // Check vision range based on members
+            const visionRange = gameState.packMembers.some(m => m.trait === 'vision') ? 6 : 4;
+            
+            gameState.enemies.forEach(enemy => {
+                const distance = Math.abs(enemy.x - gameState.pack.x) + Math.abs(enemy.y - gameState.pack.y);
+                if (distance <= visionRange && distance < minDistance) {
+                    minDistance = distance;
+                    nearestEnemy = enemy;
+                }
+            });
+            
+            if (nearestEnemy) {
+                // Move towards enemy
+                const dx = Math.sign(nearestEnemy.x - gameState.pack.x);
+                const dy = Math.sign(nearestEnemy.y - gameState.pack.y);
+                
+                const newX = gameState.pack.x + (dx !== 0 ? dx : 0);
+                const newY = gameState.pack.y + (dy !== 0 ? dy : 0);
+                
+                if (isValidMove(newX, newY)) {
+                    gameState.pack.x = newX;
+                    gameState.pack.y = newY;
+                    
+                    // Attack if adjacent
+                    if (nearestEnemy.x === newX && nearestEnemy.y === newY) {
+                        packAttack(nearestEnemy);
+                    }
+                }
+            } else {
+                // Follow player
+                const dx = Math.sign(gameState.player.x - gameState.pack.x);
+                const dy = Math.sign(gameState.player.y - gameState.pack.y);
+                
+                const newX = gameState.pack.x + dx;
+                const newY = gameState.pack.y + dy;
+                
+                if (isValidMove(newX, newY)) {
+                    gameState.pack.x = newX;
+                    gameState.pack.y = newY;
+                }
+            }
+        }
+
+        // Check if move is valid
+        function isValidMove(x, y) {
+            return x >= 0 && x < 12 && y >= 0 && y < 12 &&
+                   gameState.grid[x][y] !== TERRAIN.WATER &&
+                   gameState.grid[x][y] !== TERRAIN.MOUNTAIN &&
+                   !(gameState.player.x === x && gameState.player.y === y);
+        }
+
+        // Pack attacks enemy
+        function packAttack(enemy) {
+            if (gameState.packMembers.length === 0) return;
+            
+            // Calculate total damage based on pack size and traits
+            let totalDamage = 0;
+            let hasAttackBonus = 0;
+            
+            gameState.packMembers.forEach(member => {
+                totalDamage += member.attack;
+                if (member.trait === 'attack') hasAttackBonus++;
+            });
+            
+            // Bonus damage for pack size
+            totalDamage += Math.floor(gameState.packMembers.length * 2);
+            
+            // Apply defense if enemy is bear
+            if (enemy.trait === 'defense') {
+                totalDamage = Math.max(1, totalDamage - 10);
+            }
+            
+            enemy.health -= totalDamage;
+            addMessage(`🐺 群れ(${gameState.packMembers.length}匹)が${enemy.name}に${totalDamage}ダメージ！`, "pack");
+            
+            if (enemy.health <= 0) {
+                // Give exp to mother
+                gameState.player.exp += Math.floor(enemy.exp * 0.8);
+                gameState.enemies = gameState.enemies.filter(e => e !== enemy);
+                addMessage(`🐺 群れが${enemy.name}を倒した！母に${Math.floor(enemy.exp * 0.8)}EXP`, "pack");
+                
+                // Check level up
+                checkLevelUp();
+                
+                // Pack gains some health from eating
+                gameState.packMembers.forEach(member => {
+                    member.health = Math.min(member.health + 5, 100);
+                });
+            }
+        }
+
+        // Move enemies
+        function moveEnemies() {
+            gameState.enemies.forEach(enemy => {
+                enemy.moveCounter++;
+                
+                // Move based on speed
+                const moveFrequency = enemy.speed === 2 ? 1 : 2;
+                if (enemy.moveCounter % moveFrequency !== 0) return;
+                
+                // Find target (player or pack)
+                let targetX = gameState.player.x;
+                let targetY = gameState.player.y;
+                let targetType = 'player';
+                
+                // Check if pack is closer
+                if (gameState.pack) {
+                    const packDistance = Math.abs(gameState.pack.x - enemy.x) + Math.abs(gameState.pack.y - enemy.y);
+                    const playerDistance = Math.abs(gameState.player.x - enemy.x) + Math.abs(gameState.player.y - enemy.y);
+                    
+                    if (packDistance < playerDistance) {
+                        targetX = gameState.pack.x;
+                        targetY = gameState.pack.y;
+                        targetType = 'pack';
+                    }
+                }
+                
+                const distance = Math.abs(targetX - enemy.x) + Math.abs(targetY - enemy.y);
+                
+                // Only move if target is within range
+                if (distance <= 5) {
+                    const dx = Math.sign(targetX - enemy.x);
+                    const dy = Math.sign(targetY - enemy.y);
+                    
+                    const newX = enemy.x + (Math.random() < 0.5 ? dx : 0);
+                    const newY = enemy.y + (Math.random() < 0.5 ? dy : 0);
+                    
+                    if (isValidEnemyMove(newX, newY, enemy)) {
+                        enemy.x = newX;
+                        enemy.y = newY;
+                        
+                        // Attack if adjacent to target
+                        if (newX === targetX && newY === targetY) {
+                            if (targetType === 'player') {
+                                enemyAttackPlayer(enemy);
+                            } else {
+                                enemyAttackPack(enemy);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Check if enemy move is valid
+        function isValidEnemyMove(x, y, enemy) {
+            return x >= 0 && x < 12 && y >= 0 && y < 12 &&
+                   gameState.grid[x][y] !== TERRAIN.WATER &&
+                   gameState.grid[x][y] !== TERRAIN.MOUNTAIN &&
+                   !gameState.enemies.some(e => e !== enemy && e.x === x && e.y === y);
+        }
+
+        // Enemy attacks player
+        function enemyAttackPlayer(enemy) {
+            const damage = enemy.attack + Math.floor(Math.random() * 10);
+            gameState.player.health -= damage;
+            addMessage(`💥 ${enemy.name}があなたを攻撃！${damage}ダメージ`, "hunt");
+            
+            if (gameState.player.health <= 0) {
+                gameOver();
+            }
+        }
+
+        // Enemy attacks pack
+        function enemyAttackPack(enemy) {
+            if (gameState.packMembers.length === 0) return;
+            
+            const damage = enemy.attack;
+            
+            // Defense calculation
+            const defenseCount = gameState.packMembers.filter(m => m.trait === 'defense').length;
+            const damageReduction = Math.min(defenseCount * 3, damage * 0.5);
+            const actualDamage = Math.max(1, damage - damageReduction);
+            
+            // Damage distributed among pack
+            const damagePerWolf = Math.ceil(actualDamage / Math.max(1, gameState.packMembers.length / 2));
+            
+            let deadWolves = 0;
+            gameState.packMembers = gameState.packMembers.filter(member => {
+                member.health -= damagePerWolf;
+                if (member.health <= 0) {
+                    deadWolves++;
+                    return false;
+                }
+                return true;
+            });
+            
+            addMessage(`💥 ${enemy.name}が群れを攻撃！${actualDamage}ダメージ`, "hunt");
+            
+            if (deadWolves > 0) {
+                addMessage(`💀 ${deadWolves}匹の仲間が倒れた...`, "hunt");
+            }
+            
+            // Remove pack if no members left
+            if (gameState.packMembers.length === 0) {
+                gameState.pack = null;
+            }
+        }
+
+        // Howl - heal player and pack
+        function howl() {
+            if (gameState.player.hunger >= 20) {
+                gameState.player.hunger -= 20;
+                
+                const healAmount = 20 + gameState.player.level * 5;
+                gameState.player.health = Math.min(gameState.player.maxHealth, gameState.player.health + healAmount);
+                
+                // Heal all pack members
+                let healedCount = 0;
+                gameState.packMembers.forEach(member => {
+                    if (member.health < 100) {
+                        member.health = Math.min(100, member.health + healAmount);
+                        healedCount++;
+                    }
+                });
+                
+                addMessage(`🌙 遠吠え！母と${healedCount}匹の仲間が${healAmount}回復した！`, "pack");
+                renderGame();
+            } else {
+                addMessage("🚫 空腹すぎて遠吠えできない！", "hunt");
+            }
+        }
+
+        // Destroy obstacle
+        function destroyObstacle() {
+            if (gameState.player.level < 3) {
+                addMessage("🚫 レベル3以上で障害物を破壊できる！", "hunt");
+                return;
+            }
+            
+            const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+            let destroyed = false;
+            
+            directions.forEach(([dx, dy]) => {
+                const x = gameState.player.x + dx;
+                const y = gameState.player.y + dy;
+                
+                if (x >= 0 && x < 12 && y >= 0 && y < 12) {
+                    if (gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN) {
+                        gameState.grid[x][y] = TERRAIN.GRASS;
+                        destroyed = true;
+                    }
+                }
+            });
+            
+            if (destroyed) {
+                addMessage("💥 障害物を破壊した！", "level");
+                gameState.player.hunger -= 10;
+                renderGame();
+            } else {
+                addMessage("🚫 周囲に破壊できる障害物がない！", "hunt");
+            }
+        }
+
+        // Check for level up
+        function checkLevelUp() {
+            const requiredExp = gameState.player.level * 100;
+            if (gameState.player.exp >= requiredExp) {
+                gameState.player.level++;
+                gameState.player.exp = 0;
+                gameState.player.maxHealth += 20;
+                gameState.player.health = gameState.player.maxHealth;
+                gameState.player.maxHunger += 20;
+                gameState.player.hunger = gameState.player.maxHunger;
+                gameState.player.attack += 10;
+                
+                addMessage(`🌟 レベルアップ！レベル${gameState.player.level}になった！`, "level");
+                
+                if (gameState.player.level === 3) {
+                    addMessage("💪 障害物破壊が使えるようになった！", "level");
+                }
+            }
+        }
+
+        // Game over
+        function gameOver() {
+            gameState.player.health = 0;
+            addMessage("💀 マザーウルフが倒れた... ゲームオーバー！", "hunt");
+            setTimeout(() => {
+                alert("ゲームオーバー！リセットボタンで再挑戦");
+            }, 1000);
+        }
+
+        // Next stage
+        function nextStage() {
+            gameState.stage++;
+            gameState.player.x = 0;
+            gameState.player.y = 0;
+            gameState.player.health = gameState.player.maxHealth;
+            gameState.player.hunger = gameState.player.maxHunger;
+            gameState.playerMoveCount = 0;
+            
+            addMessage(`🎉 ステージ${gameState.stage}へ進んだ！`, "level");
+            addMessage("💪 体力と空腹度が全回復した！", "pack");
+            
+            // Move pack to start
+            if (gameState.pack) {
+                gameState.pack.x = 1;
+                gameState.pack.y = 1;
+                
+                // Heal all pack members
+                gameState.packMembers.forEach(member => {
+                    member.health = 50 + gameState.player.level * 10;
+                });
+            }
+            
+            generateTerrain();
+            generateEnemies();
+            renderGame();
+        }
+
+        // Add message to log
+        function addMessage(text, type = "") {
+            const messages = document.getElementById('messages');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            messages.appendChild(message);
+            messages.scrollTop = messages.scrollHeight;
+            
+            while (messages.children.length > 10) {
+                messages.removeChild(messages.firstChild);
+            }
+        }
+
+        // Reset game
+        function resetGame() {
+            gameState = {
+                player: { x: 0, y: 0, health: 100, maxHealth: 100, hunger: 100, maxHunger: 100, level: 1, exp: 0, attack: 20 },
+                pack: null,
+                packMembers: [],
+                enemies: [],
+                grid: [],
+                stage: 1,
+                playerMoveCount: 0
+            };
+            
+            document.getElementById('messages').innerHTML = '';
+            initGame();
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp': case 'w': case 'W': move(-1, 0); break;
+                case 'ArrowDown': case 's': case 'S': move(1, 0); break;
+                case 'ArrowLeft': case 'a': case 'A': move(0, -1); break;
+                case 'ArrowRight': case 'd': case 'D': move(0, 1); break;
+                case ' ': howl(); break;
+                case 'x': case 'X': destroyObstacle(); break;
+            }
+        });
+
+        // Auto-regenerate hunger slowly
+        setInterval(() => {
+            if (gameState.player.hunger < gameState.player.maxHunger) {
+                gameState.player.hunger = Math.min(gameState.player.maxHunger, gameState.player.hunger + 0.5);
+                updateUI();
+            }
+        }, 3000);
+
+        // Initialize game on load
+        initGame();
+    </script>
+</body>
+</html>
