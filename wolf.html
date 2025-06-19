@@ -97,10 +97,8 @@
 
         /* Character styles */
         .player {
-            color: #ff1493;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            font-size: 24px;
-            animation: motherWolfGlow 2s infinite;
+            width: 45px;
+            height: 45px;
             background-image: url('https://github.com/Soyadayo/Mappon/raw/main/mother_wolf.png');
             background-size: contain;
             background-repeat: no-repeat;
@@ -108,10 +106,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            animation: motherWolfGlow 2s infinite;
+            position: relative;
         }
         .player.controlled {
-            border: 3px solid #00ffff; /* Cyan border for controlled Mother Wolf */
+            border: 3px solid #00ffff !important; /* Cyan border for controlled Mother Wolf */
             border-radius: 6px;
+            box-sizing: border-box;
         }
 
         @keyframes motherWolfGlow {
@@ -120,11 +121,8 @@
         }
 
         .pack-icon {
-            color: #9370db;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            font-size: 22px;
-            position: relative;
-            animation: packPulse 3s infinite;
+            width: 45px;
+            height: 45px;
             background-image: url('https://github.com/Soyadayo/Mappon/raw/main/pack_wolf.png');
             background-size: contain;
             background-repeat: no-repeat;
@@ -132,10 +130,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            animation: packPulse 3s infinite;
         }
         .pack-icon.controlled {
-            border: 3px solid #00ffff; /* Cyan border for controlled Pack */
+            border: 3px solid #00ffff !important; /* Cyan border for controlled Pack */
             border-radius: 6px;
+            box-sizing: border-box;
         }
 
         @keyframes packPulse {
@@ -597,8 +598,53 @@
             controlledWolf: 'mother', // Currently controlled wolf ('mother' or 'pack')
             currentLanguage: 'ja', // Current language: 'ja' for Japanese, 'en' for English
             currentSongIndex: 0, // Current song index in the playlist
-            musicPlaying: false // Track if music is playing
+            musicPlaying: false, // Track if music is playing
+            imagesLoaded: {
+                motherWolf: false,
+                packWolf: false
+            }
         };
+
+        // Preload images and check if they load successfully
+        function preloadImages() {
+            const motherWolfImg = new Image();
+            const packWolfImg = new Image();
+            
+            motherWolfImg.onload = function() {
+                gameState.imagesLoaded.motherWolf = true;
+                console.log("Mother wolf image loaded successfully");
+                updateImageDisplay();
+            };
+            
+            motherWolfImg.onerror = function() {
+                gameState.imagesLoaded.motherWolf = false;
+                console.log("Mother wolf image failed to load");
+                updateImageDisplay();
+            };
+            
+            packWolfImg.onload = function() {
+                gameState.imagesLoaded.packWolf = true;
+                console.log("Pack wolf image loaded successfully");
+                updateImageDisplay();
+            };
+            
+            packWolfImg.onerror = function() {
+                gameState.imagesLoaded.packWolf = false;
+                console.log("Pack wolf image failed to load");
+                updateImageDisplay();
+            };
+            
+            motherWolfImg.src = 'https://github.com/Soyadayo/Mappon/raw/main/mother_wolf.png';
+            packWolfImg.src = 'https://github.com/Soyadayo/Mappon/raw/main/pack_wolf.png';
+        }
+
+        // Update image display based on load status
+        function updateImageDisplay() {
+            // This will trigger a re-render if needed
+            if (typeof renderGame === 'function') {
+                renderGame();
+            }
+        }
 
         // Music playlist - GitHub hosted music files
         const playlist = [
@@ -861,6 +907,7 @@
             generateTerrain();
             generateEnemies();
             setupAudioPlayer(); // Setup audio player
+            preloadImages(); // Preload character images
             setLanguage(gameState.currentLanguage); // Set initial language and update all texts
             updatePackHealth(); // Initialize pack health
             addMessage(getTranslation("initialMessage1"), "level");
@@ -1167,12 +1214,20 @@
                     // Mother Wolf
                     if (gameState.player.x === row && gameState.player.y === col) {
                         const controlledClass = gameState.controlledWolf === 'mother' ? ' controlled' : '';
-                        content = `<span class="player${controlledClass}"></span>`;
+                        if (gameState.imagesLoaded.motherWolf) {
+                            content = `<span class="player${controlledClass}"></span>`;
+                        } else {
+                            content = `<span class="player${controlledClass}" style="background-image: none; color: #ff1493; font-size: 24px;">🐺</span>`;
+                        }
                     }
                     // Pack
                     else if (gameState.pack && gameState.pack.x === row && gameState.pack.y === col) {
                         const controlledClass = gameState.controlledWolf === 'pack' ? ' controlled' : '';
-                        content = `<span class="pack-icon${controlledClass}"><span class="pack-size">${gameState.packMembers.length}</span></span>`;
+                        if (gameState.imagesLoaded.packWolf) {
+                            content = `<span class="pack-icon${controlledClass}"><span class="pack-size">${gameState.packMembers.length}</span></span>`;
+                        } else {
+                            content = `<span class="pack-icon${controlledClass}" style="background-image: none; color: #9370db; font-size: 22px;">🐺<span class="pack-size">${gameState.packMembers.length}</span></span>`;
+                        }
                     }
                     // Enemy (with HP bar)
                     else if (gameState.enemies.some(e => e.x === row && e.y === col)) {
