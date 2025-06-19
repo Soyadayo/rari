@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wolf Pack Evolution RPG - The Matriarch and the Pack</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Yu Gothic UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            line-height: 1.6;
+            color: #fff;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(138, 43, 226, 0.4);
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #8a2be2;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-family: 'Courier New', monospace;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ff1493;
+            margin-bottom: 20px;
+        }
+
+        .game-description {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #8a2be2;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .play-button, .support-button {
+            display: inline-block;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .play-button {
+            background: linear-gradient(135deg, #8a2be2, #6a1b9a);
+            color: white;
+            box-shadow: 0 8px 16px rgba(138, 43, 226, 0.3);
+        }
+
+        .play-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(138, 43, 226, 0.5);
+            background: linear-gradient(135deg, #6a1b9a, #8a2be2);
+        }
+
+        .support-button {
+            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            color: white;
+            box-shadow: 0 8px 16px rgba(255, 107, 53, 0.3);
+        }
+
+        .support-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(255, 107, 53, 0.5);
+            background: linear-gradient(135deg, #ff8e53, #ff6b35);
+        }
+
+        .section {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(138, 43, 226, 0.3);
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #ff1493;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #8a2be2;
+            font-family: 'Courier New', monospace;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #9370db;
+            margin: 20px 0 15px 0;
+            padding-left: 15px;
+            border-left: 4px solid #ff1493;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .grid-item {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(255, 20, 147, 0.1));
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(147, 112, 219, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover {
+            border-color: #8a2be2;
+            transform: scale(1.02);
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(255, 20, 147, 0.2));
+        }
+
+        .key {
+            background: linear-gradient(135deg, #ff1493, #8a2be2);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 10px;
+            box-shadow: 0 4px 8px rgba(255, 20, 147, 0.3);
+            font-family: 'Courier New', monospace;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.8), rgba(106, 27, 154, 0.8));
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 8px rgba(138, 43, 226, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: scale(1.05);
+        }
+
+        .tips {
+            background: linear-gradient(135deg, rgba(255, 20, 147, 0.1), rgba(138, 43, 226, 0.1));
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 2px solid #ff1493;
+        }
+
+        .tips h4 {
+            color: #ff1493;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .tips ul {
+            color: #e0e0e0;
+            padding-left: 20px;
+        }
+
+        .tips li {
+            margin-bottom: 8px;
+        }
+
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .language-toggle button {
+            background: linear-gradient(135deg, #8a2be2, #6a1b9a);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(138, 43, 226, 0.5);
+        }
+
+        .language-toggle button.active {
+            background: linear-gradient(135deg, #ff1493, #8a2be2);
+        }
+
+        .character-showcase {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .character-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #8a2be2;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            min-width: 200px;
+            transition: transform 0.3s ease;
+        }
+
+        .character-card:hover {
+            transform: scale(1.05);
+            border-color: #ff1493;
+        }
+
+        .character-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px #8a2be2);
+        }
+
+        .wolf-glow {
+            animation: wolfGlow 2s infinite;
+        }
+
+        @keyframes wolfGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px #ff1493); }
+            50% { filter: drop-shadow(0 0 20px #8a2be2); }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            header, .section {
+                padding: 20px;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .character-showcase {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            color: #9370db;
+        }
+
+        .emoji-wolf {
+            font-size: 1.5em;
+            vertical-align: middle;
+        }
+
+        /* Language specific content */
+        .lang-content {
+            display: none;
+        }
+
+        .lang-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-toggle">
+        <button id="langJa" class="active" onclick="setLanguage('ja')">日本語</button>
+        <button id="langEn" onclick="setLanguage('en')">English</button>
+        <button id="langZh" onclick="setLanguage('zh')">中文</button>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1><span class="emoji-wolf">🐺</span> Wolf Pack Evolution RPG <span class="emoji-wolf">🐺</span></h1>
+            
+            <!-- Japanese Content -->
+            <div class="lang-content active" id="content-ja">
+                <p class="subtitle">母ウルフとして群れを率い、最強の捕食者へと進化せよ</p>
+                <div class="game-description">
+                    <p>母ウルフとなって野生の世界を駆け抜け、獲物を狩って群れを拡大し、50のステージを制覇する壮大なサバイバルRPG。戦略的な移動と狩猟、群れの管理がゲームの鍵となります。</p>
+                </div>
+                <div class="button-group">
+                    <a href="https://www.tacorari.eu/wolf.html" class="play-button">🌐 オンラインでプレイ</a>
+                    <a href="https://buymeacoffee.com/tacorari" class="support-button">☕ 開発者を支援</a>
+                </div>
+            </div>
+
+            <!-- English Content -->
+            <div class="lang-content" id="content-en">
+                <p class="subtitle">Lead your pack as the Matriarch and evolve into the ultimate predator</p>
+                <div class="game-description">
+                    <p>Become the Mother Wolf and traverse the wild world, hunt prey to expand your pack, and conquer 50 stages in this epic survival RPG. Strategic movement, hunting, and pack management are the keys to the game.</p>
+                </div>
+                <div class="button-group">
+                    <a href="https://www.tacorari.eu/wolf.html" class="play-button">🌐 Play Online</a>
+                    <a href="https://buymeacoffee.com/tacorari" class="support-button">☕ Support Developer</a>
+                </div>
+            </div>
+
+            <!-- Chinese Content -->
+            <div class="lang-content" id="content-zh">
+                <p class="subtitle">作为母狼率领狼群，进化成最强的捕食者</p>
+                <div class="game-description">
+                    <p>成为母狼，穿越野生世界，狩猎猎物扩大狼群，征服50个关卡的史诗生存RPG。战略性移动、狩猎和狼群管理是游戏的关键。</p>
+                </div>
+                <div class="button-group">
+                    <a href="https://www.tacorari.eu/wolf.html" class="play-button">🌐 在线游戏</a>
+                    <a href="https://buymeacoffee.com/tacorari" class="support-button">☕ 支持开发者</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="character-showcase">
+            <div class="character-card">
+                <div class="character-icon wolf-glow">🐺</div>
+                <div class="lang-content active" id="mother-ja">
+                    <h3>母ウルフ</h3>
+                    <p>群れのリーダー。強力な攻撃力と特殊能力を持つ</p>
+                </div>
+                <div class="lang-content" id="mother-en">
+                    <h3>Mother Wolf</h3>
+                    <p>Leader of the pack. Possesses powerful attack and special abilities</p>
+                </div>
+                <div class="lang-content" id="mother-zh">
+                    <h3>母狼</h3>
+                    <p>狼群的领袖。拥有强大的攻击力和特殊能力</p>
+                </div>
+            </div>
+            <div class="character-card">
+                <div class="character-icon">🐺</div>
+                <div class="lang-content active" id="pack-ja">
+                    <h3>群れ</h3>
+                    <p>母ウルフが狩った獲物から生まれる。特性を継承する</p>
+                </div>
+                <div class="lang-content" id="pack-en">
+                    <h3>Wolf Pack</h3>
+                    <p>Born from prey hunted by the Mother Wolf. Inherits traits</p>
+                </div>
+                <div class="lang-content" id="pack-zh">
+                    <h3>狼群</h3>
+                    <p>由母狼狩猎的猎物诞生。继承特性</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Overview Section -->
+        <div class="section">
+            <!-- Japanese Content -->
+            <div class="lang-content active" id="overview-ja">
+                <h2>🎯 ゲーム概要</h2>
+                <h3>目標</h3>
+                <p>母ウルフとして野生の世界を生き抜き、50のステージを制覇することが最終目標です。各ステージでゴール（🏁）に到達すると次のステージに進めます。</p>
+                
+                <h3>進行システム</h3>
+                <div class="feature-list">
+                    <div class="feature-item">🌟 経験値とレベルアップ</div>
+                    <div class="feature-item">🐺 群れの拡大と強化</div>
+                    <div class="feature-item">🏆 ボス戦（10ステージごと）</div>
+                    <div class="feature-item">🎵 動的BGMシステム</div>
+                </div>
+
+                <h3>🌍 ゲーム世界</h3>
+                <div class="grid">
+    <script>
+        let currentLanguage = 'ja';
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update language buttons
+            document.querySelectorAll('.language-toggle button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`lang${lang === 'ja' ? 'Ja' : lang === 'en' ? 'En' : 'Zh'}`).classList.add('active');
+            
+            // Hide all language content
+            document.querySelectorAll('.lang-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected language content
+            document.querySelectorAll(`[id$="-${lang}"]`).forEach(content => {
+                content.classList.add('active');
+            });
+        }
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            setLanguage('ja'); // Set default language
+        });
+    </script>">
+                        <h4>🌾 草原</h4>
+                        <p>安全な移動エリア。基本的な地形です。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🌲 森林</h4>
+                        <p>通行可能だが敵が潜んでいることが多い。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>⛰️ 山岳</h4>
+                        <p>通行不可。レベル3以上で破壊可能。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>💧 水域</h4>
+                        <p>通行不可。レベル3以上で破壊可能。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- English Content -->
+            <div class="lang-content" id="overview-en">
+                <h2>🎯 Game Overview</h2>
+                <h3>Objective</h3>
+                <p>Survive as the Mother Wolf in the wild world and conquer all 50 stages as your ultimate goal. Reach the Goal (🏁) in each stage to advance to the next.</p>
+                
+                <h3>Progression System</h3>
+                <div class="feature-list">
+                    <div class="feature-item">🌟 Experience & Level Up</div>
+                    <div class="feature-item">🐺 Pack Expansion & Enhancement</div>
+                    <div class="feature-item">🏆 Boss Battles (Every 10 stages)</div>
+                    <div class="feature-item">🎵 Dynamic BGM System</div>
+                </div>
+
+                <h3>🌍 Game World</h3>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h4>🌾 Grassland</h4>
+                        <p>Safe movement area. Basic terrain type.</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🌲 Forest</h4>
+                        <p>Passable but enemies often lurk here.</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>⛰️ Mountain</h4>
+                        <p>Impassable. Can be destroyed at Level 3+.</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>💧 Water</h4>
+                        <p>Impassable. Can be destroyed at Level 3+.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <div class="section">
+            <!-- Japanese Content -->
+            <div class="lang-content active" id="controls-ja">
+                <h2>🎮 操作方法</h2>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h3>移動操作</h3>
+                        <p><span class="key">↑ W</span>北に移動</p>
+                        <p><span class="key">↓ S</span>南に移動</p>
+                        <p><span class="key">← A</span>西に移動</p>
+                        <p><span class="key">→ D</span>東に移動</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>アクション</h3>
+                        <p><span class="key">Space</span>遠吠え（回復）</p>
+                        <p><span class="key">X</span>障害物破壊</p>
+                        <p><span class="key">Q</span>母ウルフ操作</p>
+                        <p><span class="key">E</span>群れ操作</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>操作切り替え</h3>
+                        <p>母ウルフと群れを個別に操作できます。画面下部のボタンまたはキーボードで切り替え可能。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>音楽制御</h3>
+                        <p>9曲のBGMが用意されており、前の曲/次の曲/再生停止を操作できます。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- English Content -->
+            <div class="lang-content" id="controls-en">
+                <h2>🎮 Controls</h2>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h3>Movement</h3>
+                        <p><span class="key">↑ W</span>Move North</p>
+                        <p><span class="key">↓ S</span>Move South</p>
+                        <p><span class="key">← A</span>Move West</p>
+                        <p><span class="key">→ D</span>Move East</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>Actions</h3>
+                        <p><span class="key">Space</span>Howl (Heal)</p>
+                        <p><span class="key">X</span>Destroy Obstacle</p>
+                        <p><span class="key">Q</span>Control Mother Wolf</p>
+                        <p><span class="key">E</span>Control Pack</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>Control Switching</h3>
+                        <p>You can control the Mother Wolf and pack separately. Switch using buttons at the bottom or keyboard.</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>Music Control</h3>
+                        <p>9 BGM tracks are available with previous/next/play-pause controls.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gameplay Section -->
+        <div class="section">
+            <!-- Japanese Content -->
+            <div class="lang-content active" id="gameplay-ja">
+                <h2>⚔️ ゲームプレイ要素</h2>
+                
+                <h3>狩猟システム</h3>
+                <p>敵のいるマスに移動すると自動的に戦闘が開始されます。母ウルフまたは群れで攻撃し、敵を倒すと経験値と満腹度を獲得できます。</p>
+                
+                <h3>群れシステム</h3>
+                <p>母ウルフが敵を倒すと、その敵の特性を持つ新しい子ウルフが群れに加わります。群れは独立して行動でき、強力な集団攻撃が可能です。</p>
+                
+                <div class="tips">
+                    <h4>💡 生存のコツ</h4>
+                    <ul>
+                        <li>満腹度が0になると体力が減少します</li>
+                        <li>遠吠えで母ウルフと群れの体力を回復できます</li>
+                        <li>レベル3になると障害物を破壊できるようになります</li>
+                        <li>群れの特性を活用して戦略的に戦いましょう</li>
+                    </ul>
+                </div>
+
+                <h3>📊 ステータス管理</h3>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h4>母ウルフのステータス</h4>
+                        <p><strong>HP:</strong> 体力。0になるとゲームオーバー</p>
+                        <p><strong>満腹度:</strong> 時間経過で減少。0で体力減少</p>
+                        <p><strong>経験値:</strong> 敵を倒して獲得。レベルアップに必要</p>
+                        <p><strong>攻撃力:</strong> 戦闘でのダメージ量</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>群れのステータス</h4>
+                        <p><strong>総頭数:</strong> 群れのサイズ</p>
+                        <p><strong>群れHP:</strong> 全メンバーの合計体力</p>
+                        <p><strong>総攻撃力:</strong> 群れ全体の攻撃力</p>
+                        <p><strong>特性:</strong> 継承した能力の一覧</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- English Content -->
+            <div class="lang-content" id="gameplay-en">
+                <h2>⚔️ Gameplay Elements</h2>
+                
+                <h3>Hunting System</h3>
+                <p>Combat automatically starts when moving to an enemy's tile. Attack with Mother Wolf or pack to gain experience and hunger when defeating enemies.</p>
+                
+                <h3>Pack System</h3>
+                <p>When Mother Wolf defeats an enemy, a new wolf pup with that enemy's trait joins the pack. The pack can act independently and perform powerful group attacks.</p>
+                
+                <div class="tips">
+                    <h4>💡 Survival Tips</h4>
+                    <ul>
+                        <li>Health decreases when hunger reaches 0</li>
+                        <li>Use howl to restore health for Mother Wolf and pack</li>
+                        <li>Obstacle destruction ability unlocks at Level 3</li>
+                        <li>Use pack traits strategically in combat</li>
+                    </ul>
+                </div>
+
+                <h3>📊 Status Management</h3>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h4>Mother Wolf Stats</h4>
+                        <p><strong>HP:</strong> Health. Game over when it reaches 0</p>
+                        <p><strong>Hunger:</strong> Decreases over time. Health drops when 0</p>
+                        <p><strong>EXP:</strong> Gained by defeating enemies. Needed for level up</p>
+                        <p><strong>Attack:</strong> Damage dealt in combat</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>Pack Stats</h4>
+                        <p><strong>Total Wolves:</strong> Size of the pack</p>
+                        <p><strong>Pack HP:</strong> Combined health of all members</p>
+                        <p><strong>Total Attack:</strong> Combined attack power of the pack</p>
+                        <p><strong>Traits:</strong> List of inherited abilities</p>
+                    </div>
+                </div>
+            <!-- Chinese Content -->
+            <div class="lang-content" id="overview-zh">
+                <h2>🎯 游戏概述</h2>
+                <h3>目标</h3>
+                <p>作为母狼在野生世界中生存，征服所有50个关卡是最终目标。在每个关卡中到达目标（🏁）即可进入下一关。</p>
+                
+                <h3>进度系统</h3>
+                <div class="feature-list">
+                    <div class="feature-item">🌟 经验值与升级</div>
+                    <div class="feature-item">🐺 狼群扩展与强化</div>
+                    <div class="feature-item">🏆 Boss战（每10关）</div>
+                    <div class="feature-item">🎵 动态BGM系统</div>
+                </div>
+
+                <h3>🌍 游戏世界</h3>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h4>🌾 草原</h4>
+                        <p>安全的移动区域。基本地形类型。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🌲 森林</h4>
+                        <p>可通行但经常有敌人潜伏。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>⛰️ 山脉</h4>
+                        <p>不可通行。3级以上可以破坏。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>💧 水域</h4>
+                        <p>不可通行。3级以上可以破坏。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Section Chinese -->
+            <div class="lang-content" id="controls-zh">
+                <h2>🎮 操作方法</h2>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h3>移动操作</h3>
+                        <p><span class="key">↑ W</span>向北移动</p>
+                        <p><span class="key">↓ S</span>向南移动</p>
+                        <p><span class="key">← A</span>向西移动</p>
+                        <p><span class="key">→ D</span>向东移动</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>动作</h3>
+                        <p><span class="key">Space</span>嚎叫（治疗）</p>
+                        <p><span class="key">X</span>破坏障碍物</p>
+                        <p><span class="key">Q</span>控制母狼</p>
+                        <p><span class="key">E</span>控制狼群</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>控制切换</h3>
+                        <p>可以分别控制母狼和狼群。使用底部按钮或键盘切换。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>音乐控制</h3>
+                        <p>提供9首BGM，可进行上一首/下一首/播放暂停操作。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gameplay Section Chinese -->
+            <div class="lang-content" id="gameplay-zh">
+                <h2>⚔️ 游戏玩法要素</h2>
+                
+                <h3>狩猎系统</h3>
+                <p>移动到敌人格子时自动开始战斗。用母狼或狼群攻击，击败敌人获得经验值和饱食度。</p>
+                
+                <h3>狼群系统</h3>
+                <p>母狼击败敌人时，具有该敌人特性的新小狼会加入狼群。狼群可独立行动，进行强力的群体攻击。</p>
+                
+                <div class="tips">
+                    <h4>💡 生存技巧</h4>
+                    <ul>
+                        <li>饱食度为0时生命值会减少</li>
+                        <li>使用嚎叫为母狼和狼群恢复生命值</li>
+                        <li>3级时解锁障碍物破坏能力</li>
+                        <li>战略性地使用狼群特性进行战斗</li>
+                    </ul>
+                </div>
+
+                <h3>📊 状态管理</h3>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h4>母狼状态</h4>
+                        <p><strong>HP:</strong> 生命值。降至0时游戏结束</p>
+                        <p><strong>饱食度:</strong> 随时间减少。为0时生命值下降</p>
+                        <p><strong>经验值:</strong> 击败敌人获得。升级所需</p>
+                        <p><strong>攻击力:</strong> 战斗中造成的伤害</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>狼群状态</h4>
+                        <p><strong>总狼数:</strong> 狼群规模</p>
+                        <p><strong>狼群HP:</strong> 所有成员的合计生命值</p>
+                        <p><strong>总攻击力:</strong> 狼群的合计攻击力</p>
+                        <p><strong>特性:</strong> 继承能力列表</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enemies Section Chinese -->
+            <div class="lang-content" id="enemies-zh">
+                <h2>👹 敌人与特性系统</h2>
+                
+                <h3>普通敌人</h3>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h4>🐰 兔子</h4>
+                        <p><strong>特性: 敏捷</strong></p>
+                        <p>移动迅速的小型猎物。为狼群提供攻击力奖励。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🦌 鹿</h4>
+                        <p><strong>特性: 生命力</strong></p>
+                        <p>拥有高生命值。增加狼群成员的最大生命值。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🐗 野猪</h4>
+                        <p><strong>特性: 力量</strong></p>
+                        <p>拥有强大攻击力。显著增强狼群的攻击力。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🐻 熊</h4>
+                        <p><strong>特性: 防御</strong></p>
+                        <p>高防御力。减少狼群受到的伤害。</p>
+                    </div>
+                </div>
+
+                <h3>Boss敌人（每10关）</h3>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h4>🐺 阿尔法狼</h4>
+                        <p><strong>特性: 领导力</strong></p>
+                        <p>提升狼群整体战斗效率的特殊特性。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🐉 远古龙</h4>
+                        <p><strong>特性: 龙之力</strong></p>
+                        <p>赋予狼群压倒性力量的传说特性。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🦍 金刚王</h4>
+                        <p><strong>特性: 巨人之力</strong></p>
+                        <p>用巨大的力量压倒敌人。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h4>🔥 元素领主</h4>
+                        <p><strong>特性: 元素之力</strong></p>
+                        <p>操控自然力量的最强存在。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy Section Chinese -->
+            <div class="lang-content" id="strategy-zh">
+                <h2>🧠 攻略策略</h2>
+                
+                <div class="tips">
+                    <h4>🌱 前期策略</h4>
+                    <ul>
+                        <li>首先狩猎弱敌（兔子、鹿）组建狼群</li>
+                        <li>注意饱食度管理，定期用嚎叫恢复</li>
+                        <li>目标达到3级解锁障碍物破坏能力</li>
+                        <li>高效使用母狼和狼群控制进行狩猎</li>
+                    </ul>
+                </div>
+
+                <div class="tips">
+                    <h4>⚔️ 中期策略</h4>
+                    <ul>
+                        <li>组建具有多样特性的狼群提升战斗力</li>
+                        <li>为即将到来的Boss战最大化狼群生命值和攻击力</li>
+                        <li>战略性使用地形，用破坏清除最优路线</li>
+                        <li>通过升级强化母狼基础能力</li>
+                    </ul>
+                </div>
+
+                <div class="tips">
+                    <h4>👑 后期策略</h4>
+                    <ul>
+                        <li>积极收集Boss特性（领导力、龙之力等）</li>
+                        <li>通过狼群和母狼配合高效击败强敌</li>
+                        <li>重视征服50关的持久战略</li>
+                        <li>成为终极捕食者和野性统治者</li>
+                    </ul>
+                </div>
+
+                <h3>🎯 高级技巧</h3>
+                <div class="grid">
+                    <div class="grid-item">
+                        <h3>双重控制</h3>
+                        <p>分别控制母狼和狼群进行钳击和战术优势。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>特性组合</h3>
+                        <p>防御特性提升生存率，攻击特性确保火力的平衡型编成很有效。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>资源管理</h3>
+                        <p>平衡饱食度和生命值，掌握嚎叫使用时机。</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>路线优化</h3>
+                        <p>利用障碍物破坏确保最短路线，高效到达目标。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="lang-content active" id="footer-ja">
+                <p>🌙 野生の王者となり、群れと共に頂点を目指せ 🌙</p>
+                <p><a href="https://www.tacorari.eu/wolf.html" class="play-button">🎮 ゲームをプレイ</a></p>
+            </div>
+            <div class="lang-content" id="footer-en">
+                <p>🌙 Become the ruler of the wild and reach the apex with your pack 🌙</p>
+                <p><a href="https://www.tacorari.eu/wolf.html" class="play-button">🎮 Play Game</a></p>
+            </div>
+            <div class="lang-content" id="footer-zh">
+                <p>🌙 成为野性统治者，与狼群共同登顶 🌙</p>
+                <p><a href="https://www.tacorari.eu/wolf.html" class="play-button">🎮 开始游戏</a></p>
+            </div>
+        </div>
+                    <div class="grid-item
