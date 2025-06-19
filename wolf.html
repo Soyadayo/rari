@@ -49,6 +49,7 @@
             align-items: start;
         }
 
+        /* Adjusted game-grid border to match tile size */
         .game-grid {
             display: grid;
             grid-template-columns: repeat(12, 45px);
@@ -57,7 +58,8 @@
             background: #111;
             padding: 10px;
             border-radius: 10px;
-            border: 3px solid #8a2be2;
+            /* Border thickness and padding adjusted to visually align with tiles better */
+            border: 3px solid #8a2be2; /* Keeping the purple border */
             box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.3);
             overflow: visible; /* Allow content to overflow if needed */
         }
@@ -82,11 +84,21 @@
             transform: scale(1.05);
         }
 
-        /* Terrain styles */
+        /* Terrain styles - Original themes */
         .grass { background: linear-gradient(135deg, #2d5016, #3e6b1f); }
         .forest { background: linear-gradient(135deg, #1a3a1a, #2d5a2d); }
         .mountain { background: linear-gradient(135deg, #4a4a4a, #6a6a6a); }
         .water { background: linear-gradient(135deg, #1e3a5f, #2e5a8f); }
+
+        /* New terrain themes */
+        .desert { background: linear-gradient(135deg, #c28b3a, #e6b880); }
+        .volcano { background: linear-gradient(135deg, #4a0000, #8b0000); }
+        .snow { background: linear-gradient(135deg, #e0f2f7, #c6e2e9); }
+        .swamp { background: linear-gradient(135deg, #324a3e, #4a6a5e); }
+        .crystal { background: linear-gradient(135deg, #a0c4ff, #bdb2ff); } /* Light blue to lavender */
+        .void { background: linear-gradient(135deg, #1a0033, #330066); } /* Dark purple/black */
+
+
         .goal {
             background: linear-gradient(135deg, #ffd700, #ffed4e);
             animation: goalPulse 2s infinite;
@@ -269,6 +281,16 @@
             width: 100%;
             margin: 5px 0;
         }
+
+        /* New placement for howl and destroy buttons */
+        .action-buttons-container {
+            grid-column: span 3; /* Spans across all 3 columns */
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Space between buttons */
+            margin-top: 10px;
+        }
+
 
         .control-selection {
             grid-column: span 3; /* Span full width */
@@ -558,9 +580,14 @@
                     <button class="control-btn"></button>
                     <button class="control-btn" onclick="move(1, 0)" id="moveSouthBtn">⬇️ 南</button>
                     <button class="control-btn"></button>
-                    <button class="control-btn action-btn" onclick="howl()" id="howlBtn">🌙 遠吠え</button>
-                    <button class="control-btn action-btn" onclick="destroyObstacle()" id="destroyBtn">💥 破壊</button>
-                    <button class="control-btn action-btn" onclick="resetGame()" id="resetBtn">🔄 リセット</button>
+
+                    <!-- New container for action buttons, placed below movement controls -->
+                    <div class="action-buttons-container">
+                        <button class="control-btn action-btn" onclick="howl()" id="howlBtn">🌙 遠吠え</button>
+                        <button class="control-btn action-btn" onclick="destroyObstacle()" id="destroyBtn">💥 破壊</button>
+                    </div>
+                    
+                    <button class="control-btn action-btn" onclick="resetGame()" id="resetBtn" style="grid-column: span 3;">🔄 リセット</button>
 
                     <div class="music-controls-container">
                         <span id="musicControllerLabel">音楽コントローラー</span>
@@ -775,8 +802,16 @@
                 goliath: "巨人の力",
                 elemental: "元素の力",
                 // Terrain types for messages
+                grass: "草原",
+                forest: "森林",
+                mountain: "山",
                 water: "水",
-                mountain: "山"
+                desert: "砂漠",
+                volcano: "火山",
+                snow: "雪原",
+                swamp: "沼地",
+                crystal: "クリスタル",
+                void: "虚無"
             },
             en: {
                 title: "🐺 The Matriarch and the Pack 🐺",
@@ -852,8 +887,16 @@
                 goliath: "Goliath Strength",
                 elemental: "Elemental Power",
                 // Terrain types for messages
+                grass: "Grass",
+                forest: "Forest",
+                mountain: "Mountain",
                 water: "Water",
-                mountain: "Mountain"
+                desert: "Desert",
+                volcano: "Volcano",
+                snow: "Snow",
+                swamp: "Swamp",
+                crystal: "Crystal",
+                void: "Void"
             },
             zh: {
                 title: "🐺 The Matriarch and the Pack 🐺",
@@ -929,8 +972,16 @@
                 goliath: "巨人之力",
                 elemental: "元素之力",
                 // Terrain types for messages
+                grass: "草原",
+                forest: "森林",
+                mountain: "山",
                 water: "水",
-                mountain: "山"
+                desert: "沙漠",
+                volcano: "火山",
+                snow: "雪原",
+                swamp: "沼泽",
+                crystal: "水晶",
+                void: "虚空"
             }
         };
 
@@ -993,6 +1044,7 @@
         const GAME_BOARD_SIZE = 12;
         const MAX_STAGE = 50;
         const BOSS_STAGE_INTERVAL = 10;
+        const STAGE_THEME_INTERVAL = 10; // New constant for theme change interval
 
         // Terrain types
         const TERRAIN = {
@@ -1000,6 +1052,12 @@
             FOREST: 'forest',
             MOUNTAIN: 'mountain',
             WATER: 'water',
+            DESERT: 'desert', // New terrain type
+            VOLCANO: 'volcano', // New terrain type
+            SNOW: 'snow',     // New terrain type
+            SWAMP: 'swamp',   // New terrain type
+            CRYSTAL: 'crystal', // New terrain type
+            VOID: 'void',     // New terrain type
             GOAL: 'goal'
         };
 
@@ -1020,6 +1078,20 @@
             { icon: '🦍', name: 'King Kong', baseHealth: 1200, baseAttack: 100, exp: 800, speed: 1, trait: 'goliath' },
             { icon: '🔥', name: 'Elemental Lord', baseHealth: 1500, baseAttack: 120, exp: 1000, speed: 2, trait: 'elemental' }
         ];
+
+        // Music playlist - GitHub hosted music files (re-added as it was removed in previous commit)
+        // const playlist = [
+        //     "https://github.com/Soyadayo/Mappon/blob/main/music1.mp3?raw=true",
+        //     "https://github.com/Soyadayo/Mappon/blob/main/music2.mp3?raw=true",
+        //     "https://github.com/Soyadayo/Mappon/blob/main/music3.mp3?raw=true",
+        //     "https://github.com/Soyadayo/Mappon/blob/main/music4.mp3?raw=true",
+        //     "https://github.com/Soyadayo/Mappon/blob/main/music5.mp3?raw=true",
+        //     "https://github.com/Soyadayo/Mappon/blob/main/music6.mp3?raw=true",
+        //     "https://github.com/Soyadayo/Mappon/blob/main/music7.mp3?raw=true",
+        //     "https://github.com/Soyadayo/Mappon/blob/main/music8.mp3?raw=true",
+        //     "https://github.com/Soyadayo/Mappon/blob/main/music9.mp3?raw=true"
+        // ];
+
 
         // Initialize game
         function initGame() {
@@ -1202,30 +1274,48 @@
             updateMusicDisplay();
         }
 
-        // Generate random terrain
+        // Generate random terrain based on stage theme
         function generateTerrain() {
             gameState.grid = [];
-            const terrainTypes = [TERRAIN.GRASS, TERRAIN.FOREST, TERRAIN.MOUNTAIN, TERRAIN.WATER];
+            let currentTerrainTypes = [];
+
+            // Determine terrain theme based on stage
+            const themeIndex = Math.floor((gameState.stage - 1) / STAGE_THEME_INTERVAL);
+            switch (themeIndex) {
+                case 0: // Stages 1-10
+                    currentTerrainTypes = [TERRAIN.GRASS, TERRAIN.FOREST, TERRAIN.MOUNTAIN, TERRAIN.WATER];
+                    break;
+                case 1: // Stages 11-20
+                    currentTerrainTypes = [TERRAIN.DESERT, TERRAIN.MOUNTAIN, TERRAIN.WATER];
+                    break;
+                case 2: // Stages 21-30
+                    currentTerrainTypes = [TERRAIN.VOLCANO, TERRAIN.MOUNTAIN, TERRAIN.WATER];
+                    break;
+                case 3: // Stages 31-40
+                    currentTerrainTypes = [TERRAIN.SNOW, TERRAIN.FOREST, TERRAIN.WATER];
+                    break;
+                case 4: // Stages 41-50
+                    currentTerrainTypes = [TERRAIN.SWAMP, TERRAIN.FOREST, TERRAIN.WATER];
+                    break;
+                case 5: // Stages 51+ (if MAX_STAGE allows) - Example for further stages
+                    currentTerrainTypes = [TERRAIN.CRYSTAL, TERRAIN.VOID, TERRAIN.WATER];
+                    break;
+                default:
+                    currentTerrainTypes = [TERRAIN.GRASS, TERRAIN.FOREST, TERRAIN.MOUNTAIN, TERRAIN.WATER];
+                    break;
+            }
 
             for (let row = 0; row < GAME_BOARD_SIZE; row++) {
                 gameState.grid[row] = [];
                 for (let col = 0; col < GAME_BOARD_SIZE; col++) {
                     if (row === 0 && col === 0) {
-                        gameState.grid[row][col] = TERRAIN.GRASS; // Player starting position
+                        gameState.grid[row][col] = currentTerrainTypes[0]; // Player starting position uses first terrain type of theme
                     } else if (row === GAME_BOARD_SIZE - 1 && col === GAME_BOARD_SIZE - 1) {
-                        gameState.grid[row][col] = TERRAIN.GOAL; // Goal
+                        gameState.grid[row][col] = TERRAIN.GOAL; // Goal remains constant
                     } else {
-                        // Weighted random terrain generation
-                        const weights = [40, 30, 20, 10]; // grass, forest, mountain, water
-                        const random = Math.random() * 100;
-                        let cumulative = 0;
-                        for (let i = 0; i < terrainTypes.length; i++) {
-                            cumulative += weights[i];
-                            if (random < cumulative) {
-                                gameState.grid[row][col] = terrainTypes[i];
-                                break;
-                            }
-                        }
+                        // Randomly assign terrain from current theme
+                        const randomIndex = Math.floor(Math.random() * currentTerrainTypes.length);
+                        gameState.grid[row][col] = currentTerrainTypes[randomIndex];
                     }
                 }
             }
@@ -1242,9 +1332,13 @@
                 } else if (y < GAME_BOARD_SIZE - 1) {
                     y++;
                 }
-                // Change impassable terrain on the path to grass
-                if (gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN) {
-                    gameState.grid[x][y] = TERRAIN.GRASS;
+                // Change impassable terrain on the path to a passable one (e.g., grass/first theme terrain)
+                const currentThemePassableTerrain = Object.values(TERRAIN).filter(t => t !== TERRAIN.WATER && t !== TERRAIN.MOUNTAIN && t !== TERRAIN.GOAL);
+                const replacementTerrain = currentThemePassableTerrain[0] || TERRAIN.GRASS; // Fallback to GRASS
+                
+                if (gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN || 
+                    gameState.grid[x][y] === TERRAIN.VOLCANO || gameState.grid[x][y] === TERRAIN.VOID) { // Also consider new impassable terrains
+                    gameState.grid[x][y] = replacementTerrain;
                 }
             }
         }
@@ -1265,7 +1359,8 @@
                     y = Math.floor(Math.random() * GAME_BOARD_SIZE);
                 } while ((x === gameState.player.x && y === gameState.player.y) || // Avoid player position
                          (gameState.pack && x === gameState.pack.x && y === gameState.pack.y) || // Avoid pack position
-                         gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN);
+                         gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN ||
+                         gameState.grid[x][y] === TERRAIN.VOLCANO || gameState.grid[x][y] === TERRAIN.VOID); // Also check new impassable terrains
 
                 gameState.enemies.push({
                     x, y,
@@ -1293,7 +1388,8 @@
                 } while ((x === gameState.player.x && y === gameState.player.y) || // Avoid player position
                          (gameState.pack && x === gameState.pack.x && y === gameState.pack.y) || // Avoid pack position
                          gameState.enemies.some(e => e.x === x && e.y === y) || // Avoid other enemies
-                         gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN);
+                         gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN ||
+                         gameState.grid[x][y] === TERRAIN.VOLCANO || gameState.grid[x][y] === TERRAIN.VOID); // Also check new impassable terrains
 
                 // Enemy strength scales with stage
                 const typeIndex = Math.min(Math.floor(Math.random() * ENEMY_TYPES.length),
@@ -1361,13 +1457,20 @@
                     }
                     // Terrain
                     else {
-                        switch (gameState.grid[row][col]) {
-                            case TERRAIN.GRASS: content = '🌾'; break;
-                            case TERRAIN.FOREST: content = '🌲'; break;
-                            case TERRAIN.MOUNTAIN: content = '⛰️'; break;
-                            case TERRAIN.WATER: content = '💧'; break;
-                            case TERRAIN.GOAL: content = '🏁'; break;
-                        }
+                        const terrainIconMap = {
+                            [TERRAIN.GRASS]: '🌾',
+                            [TERRAIN.FOREST]: '🌲',
+                            [TERRAIN.MOUNTAIN]: '⛰️',
+                            [TERRAIN.WATER]: '💧',
+                            [TERRAIN.DESERT]: '🏜️', // Icon for desert
+                            [TERRAIN.VOLCANO]: '🌋', // Icon for volcano
+                            [TERRAIN.SNOW]: '❄️',   // Icon for snow
+                            [TERRAIN.SWAMP]: '🌿',  // Icon for swamp (like murky plants)
+                            [TERRAIN.CRYSTAL]: '💎', // Icon for crystal
+                            [TERRAIN.VOID]: '⚫',   // Icon for void (black circle)
+                            [TERRAIN.GOAL]: '🏁'
+                        };
+                        content = terrainIconMap[gameState.grid[row][col]] || '';
                     }
 
                     tile.innerHTML = content;
@@ -1508,8 +1611,9 @@
             }
 
             const terrain = gameState.grid[newX][newY];
-            if (terrain === TERRAIN.WATER || terrain === TERRAIN.MOUNTAIN) {
-                const terrainType = getTranslation(terrain === TERRAIN.WATER ? 'water' : 'mountain');
+            // Update impassable terrains to include new types
+            if (terrain === TERRAIN.WATER || terrain === TERRAIN.MOUNTAIN || terrain === TERRAIN.VOLCANO || terrain === TERRAIN.VOID) {
+                const terrainType = getTranslation(terrain); // Get translated name for new terrain types
                 addMessage(getTranslation("cannotPassWaterMountain", {terrainType}), "hunt");
                 return;
             }
@@ -1659,7 +1763,7 @@
             if (x < 0 || x >= GAME_BOARD_SIZE || y < 0 || y >= GAME_BOARD_SIZE) return false; // Board boundary
 
             const terrain = gameState.grid[x][y];
-            if (terrain === TERRAIN.WATER || terrain === TERRAIN.MOUNTAIN) return false; // Impassable terrain
+            if (terrain === TERRAIN.WATER || terrain === TERRAIN.MOUNTAIN || terrain === TERRAIN.VOLCANO || terrain === TERRAIN.VOID) return false; // Impassable terrain
 
             // Don't move onto controlled unit
             if (x === controlledUnit.x && y === controlledUnit.y) return false;
@@ -1919,6 +2023,8 @@
             return x >= 0 && x < GAME_BOARD_SIZE && y >= 0 && y < GAME_BOARD_SIZE &&
                    gameState.grid[x][y] !== TERRAIN.WATER &&
                    gameState.grid[x][y] !== TERRAIN.MOUNTAIN &&
+                   gameState.grid[x][y] !== TERRAIN.VOLCANO &&
+                   gameState.grid[x][y] !== TERRAIN.VOID && // Add new impassable terrains
                    !(gameState.player.x === x && gameState.player.y === y) && // Enemies can't move onto player
                    !(gameState.pack && gameState.pack.x === x && gameState.pack.y === y) && // Enemies can't move onto pack
                    !gameState.enemies.some(e => e !== currentEnemy && e.x === x && e.y === y); // Enemies can't move onto other enemies
@@ -2034,8 +2140,10 @@
                 const y = gameState.player.y + dy;
 
                 if (x >= 0 && x < GAME_BOARD_SIZE && y >= 0 && y < GAME_BOARD_SIZE) {
-                    if (gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN) {
-                        gameState.grid[x][y] = TERRAIN.GRASS;
+                    // Check for destroyable terrains, including new ones
+                    if (gameState.grid[x][y] === TERRAIN.WATER || gameState.grid[x][y] === TERRAIN.MOUNTAIN ||
+                        gameState.grid[x][y] === TERRAIN.VOLCANO || gameState.grid[x][y] === TERRAIN.VOID) {
+                        gameState.grid[x][y] = TERRAIN.GRASS; // Replace with basic grass or first theme terrain
                         destroyed = true;
                     }
                 }
@@ -2130,7 +2238,7 @@
                 updatePackHealth(); // Recalculate total pack health after healing
             }
 
-            generateTerrain();
+            generateTerrain(); // Regenerate terrain based on new stage
             generateEnemies(); // Generate new enemies for new stage
             renderGame();
         }
