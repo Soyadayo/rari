@@ -101,9 +101,17 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             font-size: 24px;
             animation: motherWolfGlow 2s infinite;
+            background-image: url('https://github.com/Soyadayo/Mappon/blob/main/mother_wolf.png?raw=true');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .player.controlled {
             border: 3px solid #00ffff; /* Cyan border for controlled Mother Wolf */
+            border-radius: 6px;
         }
 
         @keyframes motherWolfGlow {
@@ -117,9 +125,17 @@
             font-size: 22px;
             position: relative;
             animation: packPulse 3s infinite;
+            background-image: url('https://github.com/Soyadayo/Mappon/blob/main/pack_wolf.png?raw=true');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .pack-icon.controlled {
             border: 3px solid #00ffff; /* Cyan border for controlled Pack */
+            border-radius: 6px;
         }
 
         @keyframes packPulse {
@@ -1151,12 +1167,12 @@
                     // Mother Wolf
                     if (gameState.player.x === row && gameState.player.y === col) {
                         const controlledClass = gameState.controlledWolf === 'mother' ? ' controlled' : '';
-                        content = `<span class="player${controlledClass}">🐺</span>`;
+                        content = `<span class="player${controlledClass}"></span>`;
                     }
                     // Pack
                     else if (gameState.pack && gameState.pack.x === row && gameState.pack.y === col) {
                         const controlledClass = gameState.controlledWolf === 'pack' ? ' controlled' : '';
-                        content = `<span class="pack-icon${controlledClass}">🐺<span class="pack-size">${gameState.packMembers.length}</span></span>`;
+                        content = `<span class="pack-icon${controlledClass}"><span class="pack-size">${gameState.packMembers.length}</span></span>`;
                     }
                     // Enemy (with HP bar)
                     else if (gameState.enemies.some(e => e.x === row && e.y === col)) {
