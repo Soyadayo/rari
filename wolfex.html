@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wolf Pack Evolution RPG - The Matriarch and the Pack</title>
+    <title>The Matriarch and the Pack - Wolf Pack Evolution RPG</title>
     <style>
         * {
             margin: 0;
@@ -268,6 +268,20 @@
             font-size: 3rem;
             margin-bottom: 10px;
             filter: drop-shadow(0 0 10px #8a2be2);
+            width: 64px;
+            height: 64px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: inline-block;
+        }
+
+        .mother-wolf-icon {
+            background-image: url('https://github.com/Soyadayo/Mappon/raw/main/mother_wolf.png');
+        }
+
+        .pack-wolf-icon {
+            background-image: url('https://github.com/Soyadayo/Mappon/raw/main/pack_wolf.png');
         }
 
         .wolf-glow {
@@ -335,13 +349,13 @@
 
     <div class="container">
         <header>
-            <h1><span class="emoji-wolf">🐺</span> Wolf Pack Evolution RPG <span class="emoji-wolf">🐺</span></h1>
+            <h1><span class="emoji-wolf">🐺</span> The Matriarch and the Pack <span class="emoji-wolf">🐺</span></h1>
             
             <!-- Japanese Content -->
             <div class="lang-content active" id="content-ja">
                 <p class="subtitle">母ウルフとして群れを率い、最強の捕食者へと進化せよ</p>
                 <div class="game-description">
-                    <p>母ウルフとなって野生の世界を駆け抜け、獲物を狩って群れを拡大し、50のステージを制覇する壮大なサバイバルRPG。戦略的な移動と狩猟、群れの管理がゲームの鍵となります。</p>
+                    <p>母ウルフとなって野生の世界を駆け抜け、獲物を狩って群れを拡大し、50のステージを制覇する壮大なサバイバルシミュレーションRPG。戦略的な移動と狩猟、群れの管理がゲームの鍵となります。</p>
                 </div>
                 <div class="button-group">
                     <a href="https://www.tacorari.eu/wolf.html" class="play-button">🌐 オンラインでプレイ</a>
@@ -353,7 +367,7 @@
             <div class="lang-content" id="content-en">
                 <p class="subtitle">Lead your pack as the Matriarch and evolve into the ultimate predator</p>
                 <div class="game-description">
-                    <p>Become the Mother Wolf and traverse the wild world, hunt prey to expand your pack, and conquer 50 stages in this epic survival RPG. Strategic movement, hunting, and pack management are the keys to the game.</p>
+                    <p>Become the Mother Wolf and traverse the wild world, hunt prey to expand your pack, and conquer 50 stages in this epic survival simulation RPG. Strategic movement, hunting, and pack management are the keys to the game.</p>
                 </div>
                 <div class="button-group">
                     <a href="https://www.tacorari.eu/wolf.html" class="play-button">🌐 Play Online</a>
@@ -365,7 +379,7 @@
             <div class="lang-content" id="content-zh">
                 <p class="subtitle">作为母狼率领狼群，进化成最强的捕食者</p>
                 <div class="game-description">
-                    <p>成为母狼，穿越野生世界，狩猎猎物扩大狼群，征服50个关卡的史诗生存RPG。战略性移动、狩猎和狼群管理是游戏的关键。</p>
+                    <p>成为母狼，穿越野生世界，狩猎猎物扩大狼群，征服50个关卡的史诗生存模拟RPG。战略性移动、狩猎和狼群管理是游戏的关键。</p>
                 </div>
                 <div class="button-group">
                     <a href="https://www.tacorari.eu/wolf.html" class="play-button">🌐 在线游戏</a>
@@ -376,7 +390,7 @@
 
         <div class="character-showcase">
             <div class="character-card">
-                <div class="character-icon wolf-glow">🐺</div>
+                <div class="character-icon mother-wolf-icon wolf-glow"></div>
                 <div class="lang-content active" id="mother-ja">
                     <h3>母ウルフ</h3>
                     <p>群れのリーダー。強力な攻撃力と特殊能力を持つ</p>
@@ -391,7 +405,7 @@
                 </div>
             </div>
             <div class="character-card">
-                <div class="character-icon">🐺</div>
+                <div class="character-icon pack-wolf-icon"></div>
                 <div class="lang-content active" id="pack-ja">
                     <h3>群れ</h3>
                     <p>母ウルフが狩った獲物から生まれる。特性を継承する</p>
@@ -416,12 +430,7 @@
                 <p>母ウルフとして野生の世界を生き抜き、50のステージを制覇することが最終目標です。各ステージでゴール（🏁）に到達すると次のステージに進めます。</p>
                 
                 <h3>進行システム</h3>
-                <div class="feature-list">
-                    <div class="feature-item">🌟 経験値とレベルアップ</div>
-                    <div class="feature-item">🐺 群れの拡大と強化</div>
-                    <div class="feature-item">🏆 ボス戦（10ステージごと）</div>
-                    <div class="feature-item">🎵 動的BGMシステム</div>
-                </div>
+                <p>経験値システム、群れの拡大、ボス戦、動的BGMなど豊富な要素で構成された本格的なRPGシステムです。</p>
 
                 <h3>🌍 ゲーム世界</h3>
                 <div class="grid">
@@ -478,12 +487,7 @@
                 <p>Survive as the Mother Wolf in the wild world and conquer all 50 stages as your ultimate goal. Reach the Goal (🏁) in each stage to advance to the next.</p>
                 
                 <h3>Progression System</h3>
-                <div class="feature-list">
-                    <div class="feature-item">🌟 Experience & Level Up</div>
-                    <div class="feature-item">🐺 Pack Expansion & Enhancement</div>
-                    <div class="feature-item">🏆 Boss Battles (Every 10 stages)</div>
-                    <div class="feature-item">🎵 Dynamic BGM System</div>
-                </div>
+                <p>A comprehensive RPG system featuring experience points, pack expansion, boss battles, and dynamic BGM elements.</p>
 
                 <h3>🌍 Game World</h3>
                 <div class="grid">
@@ -653,12 +657,7 @@
                 <p>作为母狼在野生世界中生存，征服所有50个关卡是最终目标。在每个关卡中到达目标（🏁）即可进入下一关。</p>
                 
                 <h3>进度系统</h3>
-                <div class="feature-list">
-                    <div class="feature-item">🌟 经验值与升级</div>
-                    <div class="feature-item">🐺 狼群扩展与强化</div>
-                    <div class="feature-item">🏆 Boss战（每10关）</div>
-                    <div class="feature-item">🎵 动态BGM系统</div>
-                </div>
+                <p>由经验值系统、狼群扩展、Boss战、动态BGM等丰富要素构成的正统RPG系统。</p>
 
                 <h3>🌍 游戏世界</h3>
                 <div class="grid">
