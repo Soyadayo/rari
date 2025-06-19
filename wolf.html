@@ -318,6 +318,33 @@
             border-color: #00ffff;
         }
 
+        .help-button-container {
+            grid-column: span 3;
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .help-button {
+            padding: 8px 15px;
+            font-size: 14px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+            border: 2px solid #FF4444;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .help-button:hover {
+            background: linear-gradient(135deg, #FF4444, #FF6B6B);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
         .music-controls-container {
             grid-column: span 3;
             display: flex;
@@ -501,9 +528,14 @@
     <div class="game-container">
         <h1 id="gameTitle">🐺 The Matriarch and the Pack 🐺</h1>
 
+        <div class="help-button-container">
+            <a href="https://www.tacorari.eu/wolfex.html" target="_blank" class="help-button" id="helpButton">📖 操作方法・ゲーム概要</a>
+        </div>
+
         <div class="language-selection">
             <button id="langJaBtn" class="control-btn active" onclick="setLanguage('ja')">日本語</button>
             <button id="langEnBtn" class="control-btn" onclick="setLanguage('en')">English</button>
+            <button id="langZhBtn" class="control-btn" onclick="setLanguage('zh')">中文</button>
         </div>
 
         <div class="stage-info">
@@ -671,6 +703,7 @@
         const translations = {
             ja: {
                 title: "🐺 The Matriarch and the Pack 🐺",
+                helpButton: "📖 操作方法・ゲーム概要",
                 stage: "ステージ",
                 controlledBy: "現在操作中:",
                 motherWolfControl: "母ウルフを操作",
@@ -747,6 +780,7 @@
             },
             en: {
                 title: "🐺 The Matriarch and the Pack 🐺",
+                helpButton: "📖 How to Play・Game Guide",
                 stage: "Stage",
                 controlledBy: "Currently Controlling:",
                 motherWolfControl: "Control Mother Wolf",
@@ -820,6 +854,83 @@
                 // Terrain types for messages
                 water: "Water",
                 mountain: "Mountain"
+            },
+            zh: {
+                title: "🐺 The Matriarch and the Pack 🐺",
+                helpButton: "📖 操作方法・游戏指南",
+                stage: "关卡",
+                controlledBy: "当前控制:",
+                motherWolfControl: "控制母狼",
+                packControl: "控制狼群",
+                west: "⬅️ 西",
+                north: "⬆️ 北",
+                east: "➡️ 东",
+                south: "⬇️ 南",
+                howl: "🌙 嚎叫",
+                destroy: "💥 破坏",
+                reset: "🔄 重置",
+                musicController: "音乐控制器",
+                motherWolf: "🐺 母狼",
+                level: "等级",
+                hp: "生命值",
+                hunger: "饥饿度",
+                exp: "经验值",
+                attack: "攻击力",
+                packInfo: "🐺 狼群信息",
+                totalWolves: "总数量",
+                packHp: "狼群生命值",
+                totalPackAttack: "狼群总攻击力",
+                messages: "📜 消息",
+                gameOver: "游戏结束！",
+                gameOverMessage1: "母狼倒下了。你的旅程在此结束。",
+                gameOverMessage2: "恭喜！你带领狼群成为了这片土地上最强的存在！",
+                tryAgain: "再次尝试",
+                victory: "胜利！",
+                cannotPassWaterMountain: "🚫 无法通过{terrainType}！使用破坏按钮清除。",
+                boardEdge: "🚫 地图边缘！",
+                motherCannotMoveOnPack: "🚫 母狼不能移动到狼群位置。",
+                packCannotMoveOnMother: "🚫 狼群不能移动到母狼位置。",
+                noPackToControl: "🐺 没有狼群成员！无法控制狼群。切换到母狼。",
+                controlledWolfSwitched: "控制切换到{unitType}。",
+                hungerDamage: "🍖 你因饥饿受到伤害！",
+                motherStarved: "母狼饿死了！",
+                dealtDamage: "🦷 你对{enemyName}造成了{damage}点伤害！",
+                ateEnemy: "🍖 你吃掉了{enemyName}！饥饿度恢复 +{exp}经验值",
+                newPupBorn: "✨ 一只拥有'{traitName}'特性的新幼狼诞生了！",
+                defeatedBoss: "🏆 你击败了强大的{enemyName}！",
+                enemyCounterattacked: "💥 {enemyName}反击！受到{damage}点伤害。",
+                motherDefeated: "母狼被敌人击败了！",
+                packDealtDamage: "🐺 你的狼群（{packCount}只狼）对{enemyName}造成了{damage}点伤害！",
+                packDefeatedEnemy: "🐺 你的狼群击败了{enemyName}！母狼获得{exp}经验值。",
+                packMemberLost: "💀 {lostWolves}只狼群成员在战斗中倒下了...",
+                packDisbanded: "🐾 你的狼群解散了！",
+                howled: "🌙 你嚎叫了！母狼和{healedCount}只狼群成员恢复了{healAmount}生命值！",
+                tooHungryToHowl: "🚫 太饿了无法嚎叫！",
+                level3Required: "🚫 你需要达到3级或更高才能破坏障碍物！",
+                motherOnlySkill: "🚫 这个技能只能由母狼使用！",
+                obstacleDestroyed: "💥 障碍物被破坏了！",
+                noObstaclesNearby: "🚫 附近没有可破坏的障碍物！",
+                levelUp: "🌟 升级！你现在是{level}级！",
+                destroyAbilityUnlocked: "💪 你现在可以使用破坏障碍物能力了！",
+                gameClear: "🎉 你征服了所有关卡！游戏通关！",
+                advancingStage: "🎉 前进到第{stage}关！",
+                hpHungerRestored: "💪 生命值和饥饿度完全恢复！",
+                initialMessage1: "🌙 作为母狼，组建你的狼群！从猎物那里继承特性，建立最强的狼群！",
+                initialMessage2: "🎯 前往目标（金色方块）！",
+                // Trait names for display
+                speed: "速度",
+                health: "生命力",
+                attack: "力量",
+                defense: "防御",
+                vision: "视觉",
+                leadership: "领导力",
+                ferocity: "凶猛",
+                draconic: "龙之力",
+                goliath: "巨人之力",
+                elemental: "元素之力",
+                // Terrain types for messages
+                water: "水",
+                mountain: "山"
             }
         };
 
@@ -839,10 +950,12 @@
             // Update language buttons
             document.getElementById('langJaBtn').classList.remove('active');
             document.getElementById('langEnBtn').classList.remove('active');
-            document.getElementById(`lang${lang === 'ja' ? 'Ja' : 'En'}Btn`).classList.add('active');
+            document.getElementById('langZhBtn').classList.remove('active');
+            document.getElementById(`lang${lang === 'ja' ? 'Ja' : lang === 'en' ? 'En' : 'Zh'}Btn`).classList.add('active');
             
             // Update all text elements
             document.getElementById('gameTitle').textContent = getTranslation('title');
+            document.getElementById('helpButton').textContent = getTranslation('helpButton');
             document.getElementById('stageLabel').textContent = getTranslation('stage');
             document.getElementById('controlledWolfLabel').textContent = getTranslation('controlledBy');
             document.getElementById('controlMotherBtn').textContent = getTranslation('motherWolfControl');
@@ -871,8 +984,8 @@
             
             // Update controlled wolf display
             const unitType = gameState.controlledWolf === 'mother' ? 
-                (lang === 'ja' ? '母ウルフ' : 'Mother Wolf') : 
-                (lang === 'ja' ? '群れ' : 'Pack');
+                (lang === 'ja' ? '母ウルフ' : lang === 'en' ? 'Mother Wolf' : '母狼') : 
+                (lang === 'ja' ? '群れ' : lang === 'en' ? 'Pack' : '狼群');
             document.getElementById('controlledWolfDisplay').textContent = unitType;
         }
 
@@ -1326,8 +1439,8 @@
 
             // Update controlled wolf display
             const unitType = gameState.controlledWolf === 'mother' ? 
-                (gameState.currentLanguage === 'ja' ? '母ウルフ' : 'Mother Wolf') : 
-                (gameState.currentLanguage === 'ja' ? '群れ' : 'Pack');
+                (gameState.currentLanguage === 'ja' ? '母ウルフ' : gameState.currentLanguage === 'en' ? 'Mother Wolf' : '母狼') : 
+                (gameState.currentLanguage === 'ja' ? '群れ' : gameState.currentLanguage === 'en' ? 'Pack' : '狼群');
             document.getElementById('controlledWolfDisplay').textContent = unitType;
         }
 
@@ -1351,8 +1464,8 @@
             }
             gameState.controlledWolf = target;
             const unitType = target === 'mother' ? 
-                (gameState.currentLanguage === 'ja' ? '母ウルフ' : 'Mother Wolf') : 
-                (gameState.currentLanguage === 'ja' ? '群れ' : 'Pack');
+                (gameState.currentLanguage === 'ja' ? '母ウルフ' : gameState.currentLanguage === 'en' ? 'Mother Wolf' : '母狼') : 
+                (gameState.currentLanguage === 'ja' ? '群れ' : gameState.currentLanguage === 'en' ? 'Pack' : '狼群');
             addMessage(getTranslation("controlledWolfSwitched", {unitType}), "level");
             updateControlButtons();
             renderGame(); // Re-render to update highlighting
