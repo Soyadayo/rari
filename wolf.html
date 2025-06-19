@@ -564,7 +564,7 @@
         </div>
     </div>
 
-    <audio id="gameMusic" preload="auto" loop></audio>
+    <audio id="gameMusic" preload="auto"></audio>
 
     <script>
         // Game state
@@ -584,11 +584,17 @@
             musicPlaying: false // Track if music is playing
         };
 
-        // Music playlist (placeholder URLs - replace with actual music files)
+        // Music playlist - GitHub hosted music files
         const playlist = [
-            "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav", // Placeholder
-            "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav", // Placeholder
-            "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav", // Placeholder
+            "https://github.com/Soyadayo/Mappon/blob/main/music1.mp3?raw=true",
+            "https://github.com/Soyadayo/Mappon/blob/main/music2.mp3?raw=true",
+            "https://github.com/Soyadayo/Mappon/blob/main/music3.mp3?raw=true",
+            "https://github.com/Soyadayo/Mappon/blob/main/music4.mp3?raw=true",
+            "https://github.com/Soyadayo/Mappon/blob/main/music5.mp3?raw=true",
+            "https://github.com/Soyadayo/Mappon/blob/main/music6.mp3?raw=true",
+            "https://github.com/Soyadayo/Mappon/blob/main/music7.mp3?raw=true",
+            "https://github.com/Soyadayo/Mappon/blob/main/music8.mp3?raw=true",
+            "https://github.com/Soyadayo/Mappon/blob/main/music9.mp3?raw=true"
         ];
 
         let audioPlayer; // Declared globally to be accessible
@@ -845,6 +851,47 @@
             addMessage(getTranslation("initialMessage2"), "level");
             updateControlButtons(); // Update control button state
             renderGame();
+            
+            // Auto-start music when page loads
+            startMusicOnLoad();
+        }
+
+        // Auto-start music on page load
+        function startMusicOnLoad() {
+            // Try to auto-play music when the page loads
+            setTimeout(() => {
+                if (audioPlayer && playlist.length > 0) {
+                    audioPlayer.play().then(() => {
+                        gameState.musicPlaying = true;
+                        document.getElementById('playPauseBtn').textContent = '⏸️';
+                        console.log("Music auto-started successfully");
+                    }).catch(error => {
+                        console.log("Auto-play was prevented by browser policy:", error);
+                        // Music will need user interaction to start
+                        gameState.musicPlaying = false;
+                        document.getElementById('playPauseBtn').textContent = '▶️';
+                        
+                        // Add a one-time click listener to start music on first user interaction
+                        const startMusicOnFirstClick = () => {
+                            if (!gameState.musicPlaying) {
+                                audioPlayer.play().then(() => {
+                                    gameState.musicPlaying = true;
+                                    document.getElementById('playPauseBtn').textContent = '⏸️';
+                                    console.log("Music started after user interaction");
+                                }).catch(err => {
+                                    console.log("Still could not start music:", err);
+                                });
+                            }
+                            // Remove the listener after first use
+                            document.removeEventListener('click', startMusicOnFirstClick);
+                            document.removeEventListener('keydown', startMusicOnFirstClick);
+                        };
+                        
+                        document.addEventListener('click', startMusicOnFirstClick, { once: true });
+                        document.addEventListener('keydown', startMusicOnFirstClick, { once: true });
+                    });
+                }
+            }, 500); // Small delay to ensure everything is loaded
         }
 
         // Setup audio player
@@ -859,21 +906,46 @@
 
             // Event listener for when the current song ends
             audioPlayer.addEventListener('ended', () => {
-                nextSong(); // Play next song automatically
+                nextSong(true); // Auto-advance to next song
             });
             
             // Handle audio loading errors
-            audioPlayer.addEventListener('error', () => {
-                console.log("Audio file could not be loaded.");
-                document.getElementById('playPauseBtn').textContent = '❌';
+            audioPlayer.addEventListener('error', (e) => {
+                console.log("Audio file could not be loaded:", e);
+                // Try next song if current one fails
+                if (gameState.musicPlaying) {
+                    nextSong(true);
+                }
             });
+
+            // Event listener for when audio can play
+            audioPlayer.addEventListener('canplaythrough', () => {
+                // Audio is ready to play
+                updateMusicDisplay();
+            });
+
+            // Event listener for when audio loads successfully
+            audioPlayer.addEventListener('loadeddata', () => {
+                console.log(`Music ${gameState.currentSongIndex + 1} loaded successfully`);
+            });
+        }
+
+        // Update music display to show current track
+        function updateMusicDisplay() {
+            // Could add track number display here if desired
+            // For now, just ensure button states are correct
+            if (gameState.musicPlaying && !audioPlayer.paused) {
+                document.getElementById('playPauseBtn').textContent = '⏸️';
+            } else {
+                document.getElementById('playPauseBtn').textContent = '▶️';
+            }
         }
 
         // Toggle play/pause
         function togglePlayPause() {
             if (!audioPlayer || playlist.length === 0) return;
             
-            if (gameState.musicPlaying) {
+            if (gameState.musicPlaying && !audioPlayer.paused) {
                 audioPlayer.pause();
                 gameState.musicPlaying = false;
                 document.getElementById('playPauseBtn').textContent = '▶️';
@@ -883,24 +955,44 @@
                     document.getElementById('playPauseBtn').textContent = '⏸️';
                 }).catch(error => {
                     console.log("Could not play audio:", error);
-                    document.getElementById('playPauseBtn').textContent = '❌';
+                    // Try loading the audio again
+                    audioPlayer.load();
+                    setTimeout(() => {
+                        audioPlayer.play().then(() => {
+                            gameState.musicPlaying = true;
+                            document.getElementById('playPauseBtn').textContent = '⏸️';
+                        }).catch(err => {
+                            console.log("Still could not play audio:", err);
+                            document.getElementById('playPauseBtn').textContent = '❌';
+                        });
+                    }, 1000);
                 });
             }
         }
 
         // Next song
-        function nextSong() {
+        function nextSong(autoAdvance = false) {
             if (playlist.length === 0) return;
             
             gameState.currentSongIndex = (gameState.currentSongIndex + 1) % playlist.length;
             audioPlayer.src = playlist[gameState.currentSongIndex];
             audioPlayer.load();
             
-            if (gameState.musicPlaying) {
-                audioPlayer.play().catch(error => {
-                    console.log("Could not play next song:", error);
-                });
+            // If music was playing or this is an auto-advance, continue playing
+            if (gameState.musicPlaying || autoAdvance) {
+                audioPlayer.addEventListener('canplaythrough', () => {
+                    audioPlayer.play().then(() => {
+                        gameState.musicPlaying = true;
+                        document.getElementById('playPauseBtn').textContent = '⏸️';
+                    }).catch(error => {
+                        console.log("Could not play next song:", error);
+                        gameState.musicPlaying = false;
+                        document.getElementById('playPauseBtn').textContent = '▶️';
+                    });
+                }, { once: true });
             }
+            
+            updateMusicDisplay();
         }
 
         // Previous song
@@ -911,11 +1003,21 @@
             audioPlayer.src = playlist[gameState.currentSongIndex];
             audioPlayer.load();
             
+            // If music was playing, continue playing the previous song
             if (gameState.musicPlaying) {
-                audioPlayer.play().catch(error => {
-                    console.log("Could not play previous song:", error);
-                });
+                audioPlayer.addEventListener('canplaythrough', () => {
+                    audioPlayer.play().then(() => {
+                        gameState.musicPlaying = true;
+                        document.getElementById('playPauseBtn').textContent = '⏸️';
+                    }).catch(error => {
+                        console.log("Could not play previous song:", error);
+                        gameState.musicPlaying = false;
+                        document.getElementById('playPauseBtn').textContent = '▶️';
+                    });
+                }, { once: true });
             }
+            
+            updateMusicDisplay();
         }
 
         // Generate random terrain
