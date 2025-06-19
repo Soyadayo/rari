@@ -37,7 +37,7 @@
         h1 {
             text-align: center;
             color: #8a2be2;
-            font-size: 2.5em;
+            font-size: 2.2em;
             margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
@@ -59,6 +59,7 @@
             border-radius: 10px;
             border: 3px solid #8a2be2;
             box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.3);
+            overflow: visible; /* Allow content to overflow if needed */
         }
 
         .tile {
@@ -73,6 +74,7 @@
             border-radius: 4px;
             transition: all 0.3s ease;
             position: relative;
+            overflow: visible; /* Allow badges to extend outside tile */
         }
 
         .tile:hover {
@@ -146,15 +148,19 @@
 
         .pack-size {
             position: absolute;
-            top: -10px;
-            right: -10px;
+            top: -8px;
+            right: -8px;
             background: #ff4444;
             color: white;
-            font-size: 12px;
-            padding: 2px 6px;
-            border-radius: 10px;
+            font-size: 10px;
+            padding: 1px 4px;
+            border-radius: 8px;
             font-weight: bold;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            min-width: 16px;
+            text-align: center;
+            line-height: 1.2;
+            z-index: 10;
         }
 
         .enemy {
@@ -493,7 +499,7 @@
 </head>
 <body>
     <div class="game-container">
-        <h1 id="gameTitle">🐺 Wolf Pack Evolution 🐺</h1>
+        <h1 id="gameTitle">🐺 The Matriarch and the Pack 🐺</h1>
 
         <div class="language-selection">
             <button id="langJaBtn" class="control-btn active" onclick="setLanguage('ja')">日本語</button>
@@ -664,7 +670,7 @@
         // Translations object
         const translations = {
             ja: {
-                title: "🐺 ウルフパック進化RPG 🐺",
+                title: "🐺 The Matriarch and the Pack 🐺",
                 stage: "ステージ",
                 controlledBy: "現在操作中:",
                 motherWolfControl: "母ウルフを操作",
@@ -740,7 +746,7 @@
                 mountain: "山"
             },
             en: {
-                title: "🐺 Wolf Pack Evolution RPG 🐺",
+                title: "🐺 The Matriarch and the Pack 🐺",
                 stage: "Stage",
                 controlledBy: "Currently Controlling:",
                 motherWolfControl: "Control Mother Wolf",
@@ -1224,9 +1230,9 @@
                     else if (gameState.pack && gameState.pack.x === row && gameState.pack.y === col) {
                         const controlledClass = gameState.controlledWolf === 'pack' ? ' controlled' : '';
                         if (gameState.imagesLoaded.packWolf) {
-                            content = `<span class="pack-icon${controlledClass}"><span class="pack-size">${gameState.packMembers.length}</span></span>`;
+                            content = `<span class="pack-icon${controlledClass}"></span>`;
                         } else {
-                            content = `<span class="pack-icon${controlledClass}" style="background-image: none; color: #9370db; font-size: 22px;">🐺<span class="pack-size">${gameState.packMembers.length}</span></span>`;
+                            content = `<span class="pack-icon${controlledClass}" style="background-image: none; color: #9370db; font-size: 22px;">🐺</span>`;
                         }
                     }
                     // Enemy (with HP bar)
@@ -1955,8 +1961,19 @@
         function gameOver(message) {
             gameState.player.health = 0; // Ensure HP is zero
             addMessage(`💀 ${message} ${getTranslation("gameOver")}`, "hunt");
+            
+            // Update modal content
             document.getElementById('gameOverMessage').textContent = message;
-            document.getElementById('gameOverModal').style.display = 'flex'; // Show modal
+            document.getElementById('gameOverHeading').textContent = getTranslation("gameOver");
+            document.getElementById('tryAgainBtn').textContent = getTranslation("tryAgain");
+            
+            // Show modal
+            document.getElementById('gameOverModal').style.display = 'flex';
+            
+            // Auto-restart after 3 seconds
+            setTimeout(() => {
+                resetGame();
+            }, 3000);
         }
 
         // Next stage
@@ -1964,10 +1981,17 @@
             if (gameState.stage >= MAX_STAGE) {
                 // Game clear!
                 addMessage(getTranslation("gameClear"), "level");
+                
+                // Update modal for victory
                 document.getElementById('gameOverMessage').textContent = getTranslation("gameOverMessage2");
-                document.getElementById('gameOverModal').style.display = 'flex';
                 document.getElementById('gameOverHeading').textContent = getTranslation("victory");
                 document.getElementById('tryAgainBtn').textContent = getTranslation("tryAgain");
+                document.getElementById('gameOverModal').style.display = 'flex';
+                
+                // Auto-restart after 5 seconds for victory screen
+                setTimeout(() => {
+                    resetGame();
+                }, 5000);
                 return;
             }
 
@@ -2015,9 +2039,10 @@
 
         // Reset game
         function resetGame() {
-            // Hide game over modal
+            // Hide game over modal immediately
             document.getElementById('gameOverModal').style.display = 'none';
 
+            // Reset game state completely
             gameState = {
                 player: { x: 0, y: 0, health: 100, maxHealth: 100, hunger: 100, maxHunger: 100, level: 1, exp: 0, attack: 20 },
                 pack: null,
@@ -2029,13 +2054,28 @@
                 stage: 1,
                 playerMoveCount: 0,
                 controlledWolf: 'mother', // Reset to control mother wolf
-                currentLanguage: gameState.currentLanguage, // Preserve language setting
-                currentSongIndex: gameState.currentSongIndex, // Preserve music settings
-                musicPlaying: gameState.musicPlaying
+                currentLanguage: gameState.currentLanguage || 'ja', // Preserve language setting
+                currentSongIndex: gameState.currentSongIndex || 0, // Preserve music settings
+                musicPlaying: gameState.musicPlaying || false,
+                imagesLoaded: gameState.imagesLoaded || { motherWolf: false, packWolf: false }
             };
 
-            document.getElementById('messages').innerHTML = ''; // Clear messages
-            initGame();
+            // Clear messages
+            document.getElementById('messages').innerHTML = '';
+            
+            // Reset modal content to default
+            document.getElementById('gameOverHeading').textContent = gameState.currentLanguage === 'ja' ? 'ゲームオーバー！' : 'Game Over!';
+            document.getElementById('tryAgainBtn').textContent = gameState.currentLanguage === 'ja' ? 'もう一度プレイ' : 'Try Again';
+            
+            // Re-initialize game
+            generateTerrain();
+            generateEnemies();
+            updatePackHealth();
+            setLanguage(gameState.currentLanguage);
+            addMessage(getTranslation("initialMessage1"), "level");
+            addMessage(getTranslation("initialMessage2"), "level");
+            updateControlButtons();
+            renderGame();
         }
 
         // Keyboard controls
