@@ -1,0 +1,79 @@
+🐺 Wolf Pack Evolution RPG - How to Play 🐺
+
+Welcome to "Wolf Pack Evolution RPG"! You are the Mother Wolf of a pack, exploring vast fields, battling enemies, and growing your pack to become the strongest in the land.
+🎮 Game Objective
+
+Start from Stage 1 and aim for the Goal (golden tile 🏁) in each stage. Your ultimate goal is to clear all 50 stages!
+🗺️ Map Elements
+
+    Mother Wolf (🐺): This is your character. You move across the map and lead your pack.
+
+    Pack (🐺 [Count]): Appears when the Mother Wolf gains new pack members. The pack icon shows the current number of wolves in your pack.
+
+    Grass (🌾): Basic terrain that is easy to move through.
+
+    Forest (🌲): Similar to grass, you can move through forests.
+
+    Mountain (⛰️): Impassable terrain. However, once you reach Level 3, you can use the "Destroy" ability to clear a path.
+
+    Water (💧): Impassable terrain. This can also be removed using the "Destroy" ability.
+
+    Goal (🏁): The clear point for each stage. Reaching this tile will advance you to the next stage.
+
+    Enemies (🐰🦌🐗🐻🦅): Prey and dangerous animals that randomly appear on the map. Defeat them to gain experience and meat.
+
+🕹️ Controls
+
+Use the buttons below the game board or the corresponding keyboard keys to control your Mother Wolf.
+
+    ⬆️ (North) / W: Move North (Up)
+
+    ⬅️ (West) / A: Move West (Left)
+
+    ➡️ (East) / D: Move East (Right)
+
+    ⬇️ (South) / S: Move South (Down)
+
+    🌙 (Howl) / Spacebar: Restores your HP and your pack's HP. Requires 20 Hunger to use.
+
+    💥 (Destroy) / X: Transforms nearby mountains or water into grass (available from Level 3).
+
+    🔄 (Reset): Restarts the game from the beginning.
+
+📊 Stats and Systems
+
+    Mother Wolf:
+
+        HP: Your health. The game ends if your HP reaches 0.
+
+        Hunger: Decreases over time and with actions. If it reaches 0, your HP will start to deplete. Defeat enemies and eat meat to restore hunger.
+
+        Level & EXP: Gain experience by defeating enemies to level up. Leveling up increases your HP, Hunger capacity, and Attack power.
+
+        Attack: Your base damage dealt to enemies.
+
+    Pack Info:
+
+        Total Wolves: The number of wolves in your pack. Increases by defeating enemies.
+
+        Pack HP: The collective health of your pack. It decreases when your pack takes damage, and if it reaches 0, you may lose pack members.
+
+        Total Pack Attack: The combined damage your pack can deal to enemies.
+
+        Pack Traits: Displays the special abilities inherited by your pack members from defeated enemies.
+
+    Messages: Important game events and hints will be displayed here.
+
+⚔️ Combat and Pack Actions
+
+    Combat: Moving onto the same tile as an enemy initiates combat. If your pack is present, they will also join the battle.
+
+    Enemy Strength: Enemies progressively become stronger with each stage.
+
+    Boss Enemies: Every 10 stages (10, 20, 30, 40, 50), a significantly powerful boss enemy will appear. Defeating bosses grants a large amount of experience.
+
+    Pack Action Frequency: Your pack will automatically act (pursue/attack enemies, or follow the Mother Wolf) every 2 Mother Wolf moves.
+
+    Pack Damage: If your pack takes damage, its "Pack HP" will decrease. If it reaches 0, you will lose pack members.
+
+Lead your strongest pack and aim for the final goal of 50 stages! Good luck, Mother Wolf!
