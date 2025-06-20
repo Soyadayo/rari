@@ -44,8 +44,8 @@
 
         .game-area {
             display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 30px;
+            grid-template-columns: 280px 1fr 380px;
+            gap: 20px;
             align-items: start;
         }
 
@@ -162,7 +162,8 @@
         .pack-size {
             position: absolute;
             top: -8px;
-            right: -8px;
+            left: 50%;
+            transform: translateX(-50%);
             background: #ff4444;
             color: white;
             font-size: 10px;
@@ -246,30 +247,39 @@
             background: linear-gradient(90deg, #00bfff, #87cefa);
         }
 
-        /* Controls - Improved layout */
+        /* Controls - Compact left panel */
+        .controls-panel {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            backdrop-filter: blur(5px);
+            height: fit-content;
+        }
+
         .controls {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 20px 0;
+            gap: 8px;
+            margin: 15px 0;
         }
 
         .control-btn {
             background: linear-gradient(135deg, #8a2be2, #6a1b9a);
             border: none;
             color: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 15px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
             background: linear-gradient(135deg, #6a1b9a, #8a2be2);
         }
 
@@ -279,48 +289,53 @@
 
         .action-btn {
             background: linear-gradient(135deg, #e74c3c, #c0392b);
-            font-size: 13px;
+            font-size: 11px;
         }
 
         .control-selection {
             grid-column: span 3;
             display: flex;
-            justify-content: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 8px;
             margin-bottom: 10px;
             align-items: center;
             color: #fff;
-            font-size: 1.1em;
-            flex-wrap: wrap;
+            font-size: 0.9em;
+        }
+
+        .control-selection-buttons {
+            display: flex;
+            gap: 5px;
+            width: 100%;
         }
 
         .control-selection button {
-            padding: 8px 15px;
-            font-size: 14px;
+            padding: 6px 8px;
+            font-size: 11px;
             background: #555;
             border: 2px solid #555;
+            flex: 1;
         }
         .control-selection button.active {
             background: #8a2be2;
             border-color: #00ffff;
-            box-shadow: 0 0 8px #00ffff;
+            box-shadow: 0 0 6px #00ffff;
         }
 
         .language-selection {
-            grid-column: span 3;
             display: flex;
-            justify-content: flex-end;
-            gap: 5px;
+            justify-content: center;
+            gap: 3px;
             margin-bottom: 10px;
         }
 
         .language-selection button {
-            padding: 5px 10px;
-            font-size: 12px;
+            padding: 4px 8px;
+            font-size: 10px;
             background: #333;
             border: 1px solid #666;
             color: white;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
             transition: background 0.2s;
         }
@@ -331,34 +346,34 @@
         }
 
         .help-button-container {
-            grid-column: span 3;
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             margin-bottom: 10px;
         }
 
         .help-button {
-            padding: 8px 15px;
-            font-size: 14px;
+            padding: 6px 10px;
+            font-size: 11px;
             background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
             border: 2px solid #FF4444;
             color: white;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            text-align: center;
         }
 
         .help-button:hover {
             background: linear-gradient(135deg, #FF4444, #FF6B6B);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
         }
 
         .music-controls-container {
-            grid-column: span 3;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -369,7 +384,7 @@
         .music-controls {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             width: 100%;
         }
 
@@ -377,15 +392,26 @@
             background: linear-gradient(135deg, #4CAF50, #2E8B57);
             border: none;
             color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
             cursor: pointer;
             transition: background 0.3s ease;
         }
 
         .music-controls button:hover {
             background: linear-gradient(135deg, #2E8B57, #4CAF50);
+        }
+
+        /* Bottom music panel */
+        .bottom-music-panel {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            backdrop-filter: blur(5px);
+            margin-top: 20px;
+            text-align: center;
         }
 
         /* Message area */
@@ -512,12 +538,28 @@
         }
 
         /* Responsive design */
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
             .game-area {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
 
+            .controls-panel {
+                order: 2;
+            }
+
+            .game-board {
+                order: 1;
+            }
+
+            .ui-panel {
+                order: 3;
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
             .game-grid {
                 grid-template-columns: repeat(15, 35px);
                 grid-template-rows: repeat(15, 35px);
@@ -529,9 +571,13 @@
                 font-size: 14px;
             }
 
-            .ui-panel {
-                width: 100%;
-                max-width: 100%;
+            .controls {
+                gap: 5px;
+            }
+
+            .control-btn {
+                padding: 6px;
+                font-size: 10px;
             }
         }
     </style>
@@ -540,29 +586,31 @@
     <div class="game-container">
         <h1 id="gameTitle">🐺 The Matriarch and the Pack 🐺</h1>
 
-        <div class="help-button-container">
-            <a href="https://www.tacorari.eu/wolfex.html" target="_blank" class="help-button" id="helpButton">📖 操作方法・ゲーム概要</a>
-        </div>
-
-        <div class="language-selection">
-            <button id="langJaBtn" class="control-btn active" onclick="setLanguage('ja')">日本語</button>
-            <button id="langEnBtn" class="control-btn" onclick="setLanguage('en')">English</button>
-            <button id="langZhBtn" class="control-btn" onclick="setLanguage('zh')">中文</button>
-        </div>
-
         <div class="stage-info">
             <span id="stageLabel">ステージ</span> <span id="stage">1</span> / 50
         </div>
 
         <div class="game-area">
-            <div class="game-board">
-                <div class="game-grid" id="gameGrid"></div>
+            <!-- Left Controls Panel -->
+            <div class="controls-panel">
+                <div class="help-button-container">
+                    <a href="https://www.tacorari.eu/wolfex.html" target="_blank" class="help-button" id="helpButton">📖 操作方法・ゲーム概要</a>
+                </div>
+
+                <div class="language-selection">
+                    <button id="langJaBtn" class="control-btn active" onclick="setLanguage('ja')">日本語</button>
+                    <button id="langEnBtn" class="control-btn" onclick="setLanguage('en')">English</button>
+                    <button id="langZhBtn" class="control-btn" onclick="setLanguage('zh')">中文</button>
+                </div>
 
                 <div class="controls">
                     <div class="control-selection">
-                        <span id="controlledWolfLabel">現在操作中:</span> <span id="controlledWolfDisplay">母ウルフ</span>
-                        <button id="controlMotherBtn" class="control-btn active" onclick="switchControlledWolf('mother')">母ウルフを操作</button>
-                        <button id="controlPackBtn" class="control-btn" onclick="switchControlledWolf('pack')">群れを操作</button>
+                        <span id="controlledWolfLabel">現在操作中:</span>
+                        <span id="controlledWolfDisplay">母ウルフ</span>
+                        <div class="control-selection-buttons">
+                            <button id="controlMotherBtn" class="control-btn active" onclick="switchControlledWolf('mother')">母ウルフ</button>
+                            <button id="controlPackBtn" class="control-btn" onclick="switchControlledWolf('pack')">群れ</button>
+                        </div>
                     </div>
                     <button class="control-btn" onclick="move(0, -1)" id="moveWestBtn">⬅️ 西</button>
                     <button class="control-btn" onclick="move(-1, 0)" id="moveNorthBtn">⬆️ 北</button>
@@ -572,18 +620,15 @@
                     <button class="control-btn action-btn" onclick="destroyObstacle()" id="destroyBtn">💥 破壊</button>
                     
                     <button class="control-btn action-btn" onclick="resetGame()" id="resetBtn" style="grid-column: span 3;">🔄 リセット</button>
-
-                    <div class="music-controls-container">
-                        <span id="musicControllerLabel">音楽コントローラー</span>
-                        <div class="music-controls">
-                            <button id="prevMusicBtn" onclick="prevSong()">⏮️</button>
-                            <button id="playPauseBtn" onclick="togglePlayPause()">▶️</button>
-                            <button id="nextMusicBtn" onclick="nextSong()">⏭️</button>
-                        </div>
-                    </div>
                 </div>
             </div>
 
+            <!-- Game Board -->
+            <div class="game-board">
+                <div class="game-grid" id="gameGrid"></div>
+            </div>
+
+            <!-- Right UI Panel -->
             <div class="ui-panel">
                 <div class="stat-group">
                     <h3 id="motherWolfStatsTitle">🐺 母ウルフ</h3>
@@ -617,6 +662,18 @@
                 <div class="stat-group">
                     <h3 id="messagesTitle">📜 メッセージ</h3>
                     <div class="message-area" id="messages"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Music Panel -->
+        <div class="bottom-music-panel">
+            <div class="music-controls-container">
+                <span id="musicControllerLabel">音楽コントローラー</span>
+                <div class="music-controls">
+                    <button id="prevMusicBtn" onclick="prevSong()">⏮️</button>
+                    <button id="playPauseBtn" onclick="togglePlayPause()">▶️</button>
+                    <button id="nextMusicBtn" onclick="nextSong()">⏭️</button>
                 </div>
             </div>
         </div>
