@@ -1,133 +1,855 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haus Tacorari - Thoughtful Indie Games</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Haus Tacorari - Game Portfolio</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+JP:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url('https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
-            line-height: 1.6;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+        font-family: "Noto Serif JP", serif;
+        color: #e0e0e0;
+        line-height: 1.6;
+      }
+      
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+      
+      .flex {
+        display: flex;
+      }
+      
+      .flex-col {
+        flex-direction: column;
+      }
+      
+      .flex-row {
+        flex-direction: row;
+      }
+      
+      .items-center {
+        align-items: center;
+      }
+      
+      .justify-center {
+        justify-content: center;
+      }
+      
+      .justify-between {
+        justify-content: space-between;
+      }
+      
+      .text-center {
+        text-align: center;
+      }
+      
+      .grid {
+        display: grid;
+      }
+      
+      .gap-4 { gap: 1rem; }
+      .gap-6 { gap: 1.5rem; }
+      .gap-8 { gap: 2rem; }
+      .gap-10 { gap: 2.5rem; }
+      .gap-12 { gap: 3rem; }
+      
+      .space-x-4 > * + * { margin-left: 1rem; }
+      .space-x-6 > * + * { margin-left: 1.5rem; }
+      .space-x-8 > * + * { margin-left: 2rem; }
+      .space-y-4 > * + * { margin-top: 1rem; }
+      .space-y-6 > * + * { margin-top: 1.5rem; }
+      
+      .w-full { width: 100%; }
+      .w-auto { width: auto; }
+      .w-10 { width: 2.5rem; }
+      .w-16 { width: 4rem; }
+      .h-8 { height: 2rem; }
+      .h-10 { height: 2.5rem; }
+      .h-16 { height: 4rem; }
+      .h-64 { height: 16rem; }
+      .h-80 { height: 20rem; }
+      .h-screen { height: 100vh; }
+      
+      .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+      .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+      .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+      .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+      .py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+      .py-20 { padding-top: 5rem; padding-bottom: 5rem; }
+      
+      .px-4 { padding-left: 1rem; padding-right: 1rem; }
+      .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .px-8 { padding-left: 2rem; padding-right: 2rem; }
+      
+      .p-6 { padding: 1.5rem; }
+      
+      .mt-4 { margin-top: 1rem; }
+      .mt-6 { margin-top: 1.5rem; }
+      .mb-2 { margin-bottom: 0.5rem; }
+      .mb-4 { margin-bottom: 1rem; }
+      .mb-6 { margin-bottom: 1.5rem; }
+      .mb-8 { margin-bottom: 2rem; }
+      .mb-10 { margin-bottom: 2.5rem; }
+      .mb-16 { margin-bottom: 4rem; }
+      .mr-3 { margin-right: 0.75rem; }
+      
+      .my-8 { margin-top: 2rem; margin-bottom: 2rem; }
+      
+      .text-sm { font-size: 0.875rem; }
+      .text-lg { font-size: 1.125rem; }
+      .text-xl { font-size: 1.25rem; }
+      .text-2xl { font-size: 1.5rem; }
+      .text-3xl { font-size: 1.875rem; }
+      .text-5xl { font-size: 3rem; }
+      
+      .font-bold { font-weight: 700; }
+      .font-semibold { font-weight: 600; }
+      .italic { font-style: italic; }
+      
+      .text-primary { color: #d4a017; }
+      .text-gray-300 { color: #d1d5db; }
+      .text-gray-400 { color: #9ca3af; }
+      .text-gray-500 { color: #6b7280; }
+      .text-gray-900 { color: #111827; }
+      .text-black { color: #000; }
+      
+      .bg-transparent { background-color: transparent; }
+      .bg-black { background-color: #000; }
+      .bg-yellow-500 { background-color: #eab308; }
+      .bg-gray-800 { background-color: #1f2937; }
+      .bg-gray-700 { background-color: #374151; }
+      .bg-opacity-10 { background-color: rgba(0, 0, 0, 0.1); }
+      .bg-opacity-30 { background-color: rgba(0, 0, 0, 0.3); }
+      .bg-opacity-60 { background-color: rgba(0, 0, 0, 0.6); }
+      .bg-opacity-90 { background-color: rgba(0, 0, 0, 0.9); }
+      
+      .border { border-width: 1px; }
+      .border-2 { border-width: 2px; }
+      .border-b { border-bottom-width: 1px; }
+      .border-t { border-top-width: 1px; }
+      .border-gray-700 { border-color: #374151; }
+      .border-gray-800 { border-color: #1f2937; }
+      .border-primary { border-color: #d4a017; }
+      
+      .rounded { border-radius: 8px; }
+      .rounded-lg { border-radius: 16px; }
+      .rounded-full { border-radius: 9999px; }
+      .rounded-button { border-radius: 8px; }
+      
+      .fixed { position: fixed; }
+      .absolute { position: absolute; }
+      .relative { position: relative; }
+      .top-0 { top: 0; }
+      .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+      .z-10 { z-index: 10; }
+      .z-50 { z-index: 50; }
+      
+      .overflow-hidden { overflow: hidden; }
+      .object-cover { object-fit: cover; }
+      
+      .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+      
+      .transition-colors { transition-property: color, background-color, border-color; transition-duration: 0.3s; }
+      .transition-all { transition-property: all; transition-duration: 0.3s; }
+      
+      .hover\:text-primary:hover { color: #d4a017; }
+      .hover\:text-gray-300:hover { color: #d1d5db; }
+      .hover\:bg-gray-700:hover { background-color: #374151; }
+      .hover\:bg-yellow-600:hover { background-color: #ca8a04; }
+      .hover\:bg-primary:hover { background-color: #d4a017; }
+      
+      .uppercase { text-transform: uppercase; }
+      .whitespace-nowrap { white-space: nowrap; }
+      .leading-relaxed { line-height: 1.625; }
+      
+      .max-w-3xl { max-width: 48rem; }
+      .mx-auto { margin-left: auto; margin-right: auto; }
+      
+      .hidden { display: none; }
+      .block { display: block; }
+      
+      .flex-1 { flex: 1 1 0%; }
+      
+      /* レスポンシブデザイン */
+      @media (min-width: 768px) {
+        .md\:flex { display: flex; }
+        .md\:hidden { display: none; }
+        .md\:text-4xl { font-size: 2.25rem; }
+        .md\:text-7xl { font-size: 4.5rem; }
+        .md\:text-2xl { font-size: 1.5rem; }
+        .md\:text-xl { font-size: 1.25rem; }
+        .md\:flex-row { flex-direction: row; }
+        .md\:w-1\/2 { width: 50%; }
+        .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .md\:mt-0 { margin-top: 0; }
+      }
+      
+      @media (min-width: 1024px) {
+        .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+      
+      @media (max-width: 640px) {
+        .sm\:flex-row { flex-direction: row; }
+        .sm\:space-y-0 > * + * { margin-top: 0; }
+        .sm\:space-x-6 > * + * { margin-left: 1.5rem; }
+      }
+      .cinzel {
+        font-family: "Cinzel", serif;
+      }
+      .game-title {
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #d4a017;
+        text-shadow: 0 0 10px rgba(212, 160, 23, 0.3);
+      }
+      .section-title {
+        position: relative;
+        display: inline-block;
+      }
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 2px;
+        background-color: #d4a017;
+      }
+      .game-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+      .feature-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+      .language-btn {
+        transition: all 0.3s ease;
+      }
+      .language-btn:hover {
+        transform: translateY(-2px);
+      }
+      .language-btn.active {
+        color: #d4a017;
+        border-color: #d4a017;
+      }
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #d4a017;
+        transition: width 0.3s ease;
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+      .nav-link:hover {
+        color: #d4a017;
+      }
+      .cta-button {
+        background: linear-gradient(45deg, #d4a017, #a88112);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(212, 160, 23, 0.4);
+      }
+      
+      /* モバイルメニューの改善 */
+      .mobile-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #121212;
+        border-top: 1px solid #374151;
+      }
+      .mobile-menu.show {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+      }
+      @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      /* 画像の読み込み改善 */
+      .hero-bg {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 50%, #1a1a1a 100%);
+        position: relative;
+      }
+      .hero-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at center, rgba(212, 160, 23, 0.1) 0%, transparent 70%);
+      }
+      
+      .about-bg {
+        background: linear-gradient(45deg, #1a1a1a 0%, #2c2c2c 50%, #1a1a1a 100%);
+        position: relative;
+      }
+      .about-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="%23d4a017" opacity="0.1"/></svg>');
+        background-size: 20px 20px;
+      }
+
+      /* レスポンシブ改善 */
+      @media (max-width: 768px) {
+        .game-title {
+          font-size: 2.5rem;
+          letter-spacing: 1px;
         }
-        header {
-            background: linear-gradient(to right, #c2185b, #7b1fa2);
-            text-align: center;
-            padding: 3rem 0;
-            border-bottom: 3px solid #fff;
+        .hero-content {
+          padding: 1rem;
         }
-        header h1 {
-            margin: 0;
-            font-size: 3rem;
-            font-weight: 600;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-        }
-        header p {
-            margin: 0.5rem 0 0;
-            font-size: 1.3rem;
-            color: #f3e5f5;
-        }
-        .container {
-            max-width: 1100px;
-            margin: 2rem auto;
-            padding: 2rem;
-        }
-        .game-description {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            margin-bottom: 2rem;
-            border: 2px solid #c2185b;
-        }
-        .game-description h2 {
-            color: #ff4081;
-            font-size: 2.2rem;
-            text-align: center;
-            font-weight: 600;
-        }
-        .game-description p {
-            font-size: 1.2rem;
-            color: #e0e0e0;
-        }
-        .links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            justify-content: center;
-        }
-        .links a {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: linear-gradient(to right, #ff4081, #ab47bc);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: 400;
-            transition: transform 0.3s, background 0.3s;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
-        }
-        .links a:hover {
-            background: linear-gradient(to right, #d81b60, #8e24aa);
-            transform: translateY(-3px);
-        }
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            background: linear-gradient(to right, #c2185b, #7b1fa2);
-            border-top: 3px solid #fff;
-        }
-        footer p {
-            margin: 0;
-            font-size: 1rem;
-            color: #f3e5f5;
-        }
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 2.2rem;
-            }
-            header p {
-                font-size: 1.1rem;
-            }
-            .container {
-                padding: 1rem;
-            }
-            .game-description {
-                padding: 1.5rem;
-            }
-            .links a {
-                width: 100%;
-                text-align: center;
-                font-size: 1rem;
-            }
-        }
+      }
+      
+      /* アクセシビリティ改善 */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      
+      /* フォーカス可視化 */
+      a:focus, button:focus {
+        outline: 2px solid #d4a017;
+        outline-offset: 2px;
+      }
     </style>
-</head>
-<body>
-    <header>
-        <h1>Haus Tacorari</h1>
-        <p>Explore independent games offering quiet and thoughtful experiences.</p>
+  </head>
+  <body>
+    <header
+      class="w-full fixed top-0 z-50 border-b border-gray-800"
+      style="background: rgba(18, 18, 18, 0.9);"
+    >
+      <div
+        class="container mx-auto px-4 py-4 flex justify-between items-center relative"
+      >
+        <div class="flex items-center">
+          <img
+            src="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png"
+            alt="Haus Tacorari Logo"
+            class="h-8 w-auto mr-3"
+            loading="lazy"
+          />
+          <h1 class="text-2xl font-bold cinzel text-primary">
+            Haus Tacorari
+          </h1>
+        </div>
+        
+        <!-- デスクトップナビゲーション -->
+        <nav class="hidden md:flex space-x-8" role="navigation" aria-label="Main navigation">
+          <a href="#games" class="nav-link text-gray-300 hover:text-primary">Games</a>
+          <a href="#features" class="nav-link text-gray-300 hover:text-primary">Features</a>
+          <a href="#about" class="nav-link text-gray-300 hover:text-primary">About</a>
+        </nav>
+        
+        <div class="flex items-center space-x-4">
+          <a
+            href="https://www.instagram.com/haustacorari/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
+            aria-label="Follow us on Instagram"
+          >
+            <i class="ri-instagram-line ri-lg text-gray-300" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://buymeacoffee.com/tacorari"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-button transition-colors text-sm"
+          >
+            ☕ Support Us
+          </a>
+          
+          <!-- モバイルメニューボタン -->
+          <button
+            class="md:hidden w-10 h-10 flex items-center justify-center text-gray-300"
+            id="mobile-menu-button"
+            aria-label="Toggle mobile menu"
+            aria-expanded="false"
+          >
+            <i class="ri-menu-line ri-lg" aria-hidden="true"></i>
+          </button>
+        </div>
+        
+        <!-- モバイルメニュー -->
+        <nav class="mobile-menu md:hidden" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+          <div class="px-4 py-6 space-y-4">
+            <a href="#games" class="block text-gray-300 hover:text-primary py-2">Games</a>
+            <a href="#features" class="block text-gray-300 hover:text-primary py-2">Features</a>
+            <a href="#about" class="block text-gray-300 hover:text-primary py-2">About</a>
+          </div>
+        </nav>
+      </div>
     </header>
-    <div class="container">
-        <div class="game-description">
-            <h2>Mother Wolf - Our Latest Adventure</h2>
-            <p>Become the Mother Wolf and traverse the wild world, hunt prey to expand your pack, and conquer 50 stages in this epic survival simulation RPG. Strategic movement, hunting, and pack management are the keys to the game.</p>
+
+    <!-- ヒーローセクション -->
+    <section
+      class="w-full h-screen flex items-center justify-center relative overflow-hidden hero-bg"
+    >
+      <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+      <div
+        class="container mx-auto px-4 z-10 flex flex-col items-center text-center hero-content"
+      >
+        <h1 class="text-5xl md:text-7xl font-bold mb-4 game-title cinzel">
+          Haus Tacorari
+        </h1>
+        <p class="text-xl md:text-2xl italic mb-8 text-gray-300">
+          Dark Fantasy Gaming Experience
+        </p>
+        <p class="text-lg md:text-xl max-w-3xl mb-10 leading-relaxed">
+          Immerse yourself in tactical strategy and compelling narratives. Experience our collection of dark fantasy games featuring deep strategic gameplay and emotional storytelling.
+        </p>
+        <div
+          class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6"
+        >
+          <button
+            class="cta-button px-8 py-3 text-lg font-bold text-gray-900 rounded-button whitespace-nowrap"
+            onclick="document.getElementById('games').scrollIntoView({behavior: 'smooth'})"
+          >
+            Explore Games
+          </button>
+          <button
+            class="px-8 py-3 text-lg font-bold border-2 border-primary text-primary bg-transparent rounded-button hover:bg-primary hover:bg-opacity-10 transition-all whitespace-nowrap"
+            onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})"
+          >
+            Learn More
+          </button>
         </div>
-        <div class="links">
-            <a href="https://www.tacorari.eu/wolf.html" target="_blank">Play Mother Wolf</a>
-            <a href="https://www.tacorari.eu/wolfex.html" target="_blank">Game Controls</a>
-            <a href="https://www.tacorari.eu/games.html" target="_blank">Tactics (In Development)</a>
-            <a href="https://www.tacorari.eu/" target="_blank">Back to Home</a>
+      </div>
+    </section>
+
+    <!-- ゲームセクション -->
+    <section id="games" class="py-20" style="background-color: #1a1a1a;">
+      <div class="container mx-auto px-4">
+        <h2
+          class="text-3xl font-bold mb-16 text-center section-title cinzel"
+        >
+          Our Games
+        </h2>
+        <div class="grid gap-12" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+          
+          <!-- The Matriarch and the Pack -->
+          <article class="game-card rounded-lg overflow-hidden border border-gray-700" style="background-color: #2a2a2a;">
+            <div class="relative">
+              <img
+                src="https://soyadayo.github.io/Mappon/wolfgame.png"
+                alt="The Matriarch and the Pack game screenshot"
+                class="w-full h-64 object-cover"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-4 cinzel text-primary">
+                The Matriarch and the Pack
+              </h3>
+              <p class="text-gray-300 mb-6 leading-relaxed">
+                A dark fantasy 3D turn-based tactical SRPG where a cursed mother, transformed into a werewolf, fights for the prosperity of her species and the future of her children. Experience tactical combat, child-rearing, and a story that interweaves hope and despair.
+              </p>
+              <div class="flex flex-col gap-4" style="flex-direction: column;">
+                <a
+                  href="https://www.tacorari.eu/wolfex.html"
+                  class="cta-button px-6 py-3 text-center font-bold text-gray-900 rounded-button flex-1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Play Now
+                </a>
+                <button
+                  class="px-6 py-3 font-bold border-2 border-primary text-primary bg-transparent rounded-button hover-bg-primary transition-all flex-1"
+                  onclick="alert('More information about The Matriarch and the Pack will be available soon!')"
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Seasons of Civilization -->
+          <article class="game-card rounded-lg overflow-hidden border border-gray-700" style="background-color: #2a2a2a;">
+            <div class="relative">
+              <img
+                src="https://soyadayo.github.io/Mappon/leavesgame.png"
+                alt="Seasons of Civilization game screenshot"
+                class="w-full h-64 object-cover"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-4 cinzel text-primary">
+                Seasons of Civilization
+              </h3>
+              <p class="text-gray-300 mb-6 leading-relaxed">
+                A strategic civilization-building game that follows the cyclical nature of growth and decay. Guide your civilization through the changing seasons of prosperity and challenge, making crucial decisions that will determine your legacy.
+              </p>
+              <div class="flex flex-col gap-4" style="flex-direction: column;">
+                <a
+                  href="https://www.tacorari.eu/leavesex.html"
+                  class="cta-button px-6 py-3 text-center font-bold text-gray-900 rounded-button flex-1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Play Now
+                </a>
+                <button
+                  class="px-6 py-3 font-bold border-2 border-primary text-primary bg-transparent rounded-button hover-bg-primary transition-all flex-1"
+                  onclick="alert('More information about Seasons of Civilization will be available soon!')"
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </article>
+
         </div>
-    </div>
-    <footer>
-        <p>© 2025 Haus Tacorari. All rights reserved.</p>
+      </div>
+    </section>
+
+    <!-- フィーチャーセクション -->
+    <section id="features" class="py-20" style="background-color: #222222;">
+      <div class="container mx-auto px-4">
+        <h2
+          class="text-3xl font-bold mb-16 text-center section-title cinzel"
+        >
+          Game Features
+        </h2>
+        <div class="grid gap-8" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+          <div
+            class="feature-card p-6 rounded-lg border border-gray-700"
+            style="background-color: #2a2a2a;"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 rounded-full mx-auto"
+              style="background-color: rgba(212, 160, 23, 0.1);"
+            >
+              <i class="ri-sword-line text-primary" style="font-size: 2rem;" aria-hidden="true"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">Tactical Combat</h3>
+            <p class="text-gray-300">
+              Strategic combat systems with deep tactical gameplay. Utilize terrain, positioning, and character abilities to overcome challenging encounters and achieve victory.
+            </p>
+          </div>
+          <div
+            class="feature-card p-6 rounded-lg border border-gray-700"
+            style="background-color: #2a2a2a;"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 rounded-full mx-auto"
+              style="background-color: rgba(212, 160, 23, 0.1);"
+            >
+              <i class="ri-heart-line text-primary" style="font-size: 2rem;" aria-hidden="true"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">Emotional Storytelling</h3>
+            <p class="text-gray-300">
+              Rich narratives that explore themes of family, sacrifice, and survival. Experience compelling character development and meaningful choices that impact the story.
+            </p>
+          </div>
+          <div
+            class="feature-card p-6 rounded-lg border border-gray-700"
+            style="background-color: #2a2a2a;"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 rounded-full mx-auto"
+              style="background-color: rgba(212, 160, 23, 0.1);"
+            >
+              <i class="ri-book-open-line text-primary" style="font-size: 2rem;" aria-hidden="true"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">Dark Fantasy Worlds</h3>
+            <p class="text-gray-300">
+              Immersive dark fantasy settings with atmospheric visuals and sound design. Explore mysterious worlds filled with ancient curses and forgotten magic.
+            </p>
+          </div>
+          <div
+            class="feature-card p-6 rounded-lg border border-gray-700"
+            style="background-color: #2a2a2a;"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 rounded-full mx-auto"
+              style="background-color: rgba(212, 160, 23, 0.1);"
+            >
+              <i class="ri-landscape-line text-primary" style="font-size: 2rem;" aria-hidden="true"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">Diverse Environments</h3>
+            <p class="text-gray-300">
+              Multiple unique stages and environments that reflect the game worlds. Each location offers distinct challenges and opportunities for strategic gameplay.
+            </p>
+          </div>
+          <div
+            class="feature-card p-6 rounded-lg border border-gray-700"
+            style="background-color: #2a2a2a;"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 rounded-full mx-auto"
+              style="background-color: rgba(212, 160, 23, 0.1);"
+            >
+              <i class="ri-gamepad-line text-primary" style="font-size: 2rem;" aria-hidden="true"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">Strategic Depth</h3>
+            <p class="text-gray-300">
+              Complex systems that reward careful planning and strategic thinking. Multiple paths to victory and high replayability ensure lasting entertainment value.
+            </p>
+          </div>
+          <div
+            class="feature-card p-6 rounded-lg border border-gray-700"
+            style="background-color: #2a2a2a;"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 rounded-full mx-auto"
+              style="background-color: rgba(212, 160, 23, 0.1);"
+            >
+              <i class="ri-music-line text-primary" style="font-size: 2rem;" aria-hidden="true"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">Immersive Presentation</h3>
+            <p class="text-gray-300">
+              Beautiful visuals and atmospheric soundtracks that enhance the gaming experience. Dramatic presentations and cutscenes bring the stories to life.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 bg-primary bg-opacity-10 rounded-full mx-auto"
+            >
+              <i class="ri-gamepad-line ri-2x text-primary" aria-hidden="true"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">Strategic Depth</h3>
+            <p class="text-gray-300">
+              Complex systems that reward careful planning and strategic thinking. Multiple paths to victory and high replayability ensure lasting entertainment value.
+            </p>
+          </div>
+          <div
+            class="feature-card bg-[#2a2a2a] p-6 rounded-lg border border-gray-700"
+          >
+            <div
+              class="w-16 h-16 flex items-center justify-center mb-4 bg-primary bg-opacity-10 rounded-full mx-auto"
+            >
+              <i class="ri-music-line ri-2x text-primary" aria-hidden="true"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-center">Immersive Presentation</h3>
+            <p class="text-gray-300">
+              Beautiful visuals and atmospheric soundtracks that enhance the gaming experience. Dramatic presentations and cutscenes bring the stories to life.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- アバウトセクション -->
+    <section id="about" class="py-20 about-bg">
+      <div class="container mx-auto px-4 relative z-10">
+        <h2
+          class="text-3xl md:text-4xl font-bold mb-16 text-center section-title cinzel"
+        >
+          About Haus Tacorari
+        </h2>
+        <div class="flex flex-col md:flex-row items-center gap-10">
+          <div class="w-full md:w-1/2">
+            <div class="w-full h-80 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-2xl flex items-center justify-center">
+              <div class="text-center">
+                <i class="ri-gamepad-2-line ri-4x text-primary mb-4" aria-hidden="true"></i>
+                <p class="text-gray-400">Studio Image</p>
+              </div>
+            </div>
+          </div>
+          <div class="w-full md:w-1/2 space-y-6">
+            <p class="text-lg leading-relaxed">
+              <span class="text-primary font-bold">Haus Tacorari</span> is an independent game development studio dedicated to creating immersive dark fantasy experiences that combine strategic gameplay with emotionally compelling narratives.
+            </p>
+            <p class="text-lg leading-relaxed">
+              We specialize in tactical RPGs and strategy games that explore complex themes of family, sacrifice, and the struggle between hope and despair. Our games feature deep strategic systems while maintaining accessibility for players of all skill levels.
+            </p>
+            <p class="text-lg leading-relaxed">
+              Each of our titles is crafted with attention to atmospheric detail, from haunting soundscapes to evocative visual design. We believe that games can be both challenging and emotionally meaningful.
+            </p>
+            <p class="text-lg leading-relaxed">
+              Join us on our journey as we continue to create unique gaming experiences that push the boundaries of interactive storytelling and strategic gameplay.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTAセクション -->
+    <section class="py-20 bg-[#1a1a1a]">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6 cinzel text-primary">
+          Start Your Adventure
+        </h2>
+        <p class="text-xl max-w-3xl mx-auto mb-10">
+          Dive into our collection of dark fantasy games and experience tactical combat, compelling stories, and atmospheric worlds. Begin your journey with Haus Tacorari today.
+        </p>
+        <div
+          class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6"
+        >
+          <a
+            href="https://www.tacorari.eu/wolfex.html"
+            class="cta-button px-8 py-4 text-lg font-bold text-gray-900 rounded-button whitespace-nowrap"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Play The Matriarch
+          </a>
+          <a
+            href="https://www.tacorari.eu/leavesex.html"
+            class="cta-button px-8 py-4 text-lg font-bold text-gray-900 rounded-button whitespace-nowrap"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Play Seasons
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="py-10 bg-[#121212]">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div>
+            <img
+              src="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png"
+              alt="Haus Tacorari Logo"
+              class="h-8 w-auto mb-2"
+              loading="lazy"
+            />
+            <h3 class="text-2xl font-bold cinzel text-primary mb-2">
+              Haus Tacorari
+            </h3>
+            <p class="text-gray-400">Independent Game Development Studio</p>
+          </div>
+          <div class="mt-6 md:mt-0">
+            <p class="text-gray-400 text-sm">
+              Follow us on <a href="https://www.instagram.com/haustacorari/" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-secondary">Instagram</a> | 
+              Support us on <a href="https://buymeacoffee.com/tacorari" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-secondary">Buy Me a Coffee</a>
+            </p>
+          </div>
+        </div>
+        <hr class="border-gray-800 my-8" />
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <p class="text-gray-500 text-sm">
+            © 2025 Haus Tacorari. All rights reserved.
+          </p>
+          <nav class="flex space-x-6 mt-4 md:mt-0" aria-label="Footer navigation">
+            <a href="#" class="text-gray-400 hover:text-gray-300 text-sm">Privacy Policy</a>
+            <a href="#" class="text-gray-400 hover:text-gray-300 text-sm">Terms of Use</a>
+            <a href="#" class="text-gray-400 hover:text-gray-300 text-sm">Contact Us</a>
+          </nav>
+        </div>
+      </div>
     </footer>
-</body>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // モバイルメニューの実装
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        if (mobileMenuButton && mobileMenu) {
+          mobileMenuButton.addEventListener("click", function () {
+            const isExpanded = this.getAttribute("aria-expanded") === "true";
+            this.setAttribute("aria-expanded", !isExpanded);
+            mobileMenu.classList.toggle("show");
+          });
+
+          // モバイルメニューのリンククリックでメニューを閉じる
+          const mobileMenuLinks = mobileMenu.querySelectorAll("a");
+          mobileMenuLinks.forEach(link => {
+            link.addEventListener("click", function () {
+              mobileMenu.classList.remove("show");
+              mobileMenuButton.setAttribute("aria-expanded", "false");
+            });
+          });
+        }
+
+        // スムーススクロールの実装
+        const navLinks = document.querySelectorAll(".nav-link, .mobile-menu a");
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("href");
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+              const headerHeight = 80;
+              const targetPosition = targetElement.offsetTop - headerHeight;
+              
+              window.scrollTo({
+                top: targetPosition,
+                behavior: "smooth",
+              });
+            }
+          });
+        });
+
+        // エラーハンドリング付きの画像読み込み
+        const images = document.querySelectorAll('img');
+        images.forEach(img => {
+          img.addEventListener('error', function() {
+            console.warn('Failed to load image:', this.src);
+            // フォールバック処理を追加可能
+          });
+        });
+      });
+    </script>
+  </body>
 </html>
