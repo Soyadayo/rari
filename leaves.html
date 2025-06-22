@@ -12,11 +12,19 @@
             font-family: 'Georgia', serif;
             overflow: hidden;
             height: 100vh;
+            width: 100vw;
+            position: relative;
         }
 
         #gameCanvas {
             display: block;
             cursor: crosshair;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
         }
 
         #top-ui {
@@ -153,6 +161,105 @@
             background: #1976D2;
         }
 
+        #challenge-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 16px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            font-size: 12px;
+            color: #2F4F4F;
+            max-width: 280px;
+            border-left: 4px solid #FF6B35;
+        }
+
+        .challenge-title {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #FF6B35;
+        }
+
+        .challenge-progress {
+            background: #f0f0f0;
+            border-radius: 10px;
+            height: 8px;
+            margin: 4px 0;
+            overflow: hidden;
+        }
+
+        .challenge-progress-bar {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        #event-notification {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            max-width: 400px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .event-drought { background: linear-gradient(135deg, #FF6B35, #F7931E); }
+        .event-storm { background: linear-gradient(135deg, #4A90E2, #357ABD); }
+        .event-blessing { background: linear-gradient(135deg, #7ED321, #4A90E2); }
+
+        #achievements-panel {
+            position: absolute;
+            top: 200px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 16px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            font-size: 11px;
+            color: #2F4F4F;
+            max-width: 250px;
+            border-left: 4px solid #FFD700;
+        }
+
+        .achievement {
+            padding: 4px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .achievement.completed {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .achievement.completed::before {
+            content: "✓ ";
+            color: #4CAF50;
+        }
+
         .ui-stat {
             display: flex;
             flex-direction: column;
@@ -233,856 +340,666 @@
         <span id="seasonName">Spring</span> 🌸
     </div>
 
+    <div id="challenge-panel">
+        <div class="challenge-title">Current Challenge</div>
+        <div id="challenge-text">Reach 100 population in 60 seconds</div>
+        <div class="challenge-progress">
+            <div class="challenge-progress-bar" id="challenge-progress" style="width: 0%"></div>
+        </div>
+        <div id="challenge-timer">Time: 60s</div>
+    </div>
+
+    <div id="achievements-panel">
+        <div class="challenge-title">🏆 Achievements</div>
+        <div id="achievements-list">
+            <div class="achievement" id="achievement-first-leaf">Collect your first leaf</div>
+            <div class="achievement" id="achievement-100-pop">Reach 100 population</div>
+            <div class="achievement" id="achievement-fast-growth">Reach 500 pop in 2 minutes</div>
+            <div class="achievement" id="achievement-survive-drought">Survive a drought</div>
+            <div class="achievement" id="achievement-all-regions">Have all regions thriving</div>
+            <div class="achievement" id="achievement-1000-leaves">Collect 1000 leaves total</div>
+        </div>
+    </div>
+
+    <div id="event-notification">
+        <div id="event-text">🌪️ Storm Warning!</div>
+        <div id="event-description">Strong winds will scatter your leaves!</div>
+    </div>
+
     <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        // Game state
-        let gameState = {
-            leafCount: 0,
-            phase: 1,
-            population: 0,
-            windX: 0,
-            windY: 0,
-            mouseX: canvas.width / 2,
-            mouseY: canvas.height / 2,
-            time: 0,
-            season: 0,
-            storyTimer: 0,
-            currentStoryIndex: 0,
-            musicEnabled: true,
-            currentTrack: 1
-        };
-
-        // Music system
-        let currentAudio = null;
-        const musicTracks = [
-            'https://github.com/Soyadayo/Mappon/raw/main/lmusic1.mp3',
-            'https://github.com/Soyadayo/Mappon/raw/main/lmusic2.mp3',
-            'https://github.com/Soyadayo/Mappon/raw/main/lmusic3.mp3',
-            'https://github.com/Soyadayo/Mappon/raw/main/lmusic4.mp3',
-            'https://github.com/Soyadayo/Mappon/raw/main/lmusic5.mp3',
-            'https://github.com/Soyadayo/Mappon/raw/main/lmusic6.mp3',
-            'https://github.com/Soyadayo/Mappon/raw/main/lmusic7.mp3',
-            'https://github.com/Soyadayo/Mappon/raw/main/lmusic8.mp3'
-        ];
-
-        function playMusic() {
-            if (!gameState.musicEnabled) return;
+        try {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
             
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio = null;
+            // Set canvas to full window size
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
             }
             
-            currentAudio = new Audio(musicTracks[gameState.currentTrack - 1]);
-            currentAudio.volume = 0.6;
-            currentAudio.loop = false;
-            
-            currentAudio.addEventListener('ended', () => {
-                gameState.currentTrack = (gameState.currentTrack % 8) + 1;
-                updateMusicInfo();
-                playMusic();
-            });
-            
-            currentAudio.addEventListener('error', (e) => {
-                gameState.currentTrack = (gameState.currentTrack % 8) + 1;
-                updateMusicInfo();
-                setTimeout(playMusic, 1000);
-            });
-            
-            // Try to play immediately, fallback to user interaction
-            currentAudio.play().then(() => {
-                console.log('Music started successfully');
-            }).catch(e => {
-                console.log('Autoplay blocked, will try on user interaction');
-                // Set up one-time click listener to start music
-                const startMusicOnClick = () => {
-                    currentAudio.play().then(() => {
-                        console.log('Music started after user interaction');
-                    }).catch(err => {
-                        console.log('Music failed to start:', err);
-                    });
-                    document.removeEventListener('click', startMusicOnClick);
-                    canvas.removeEventListener('mousemove', startMusicOnClick);
-                };
-                document.addEventListener('click', startMusicOnClick, { once: true });
-                canvas.addEventListener('mousemove', startMusicOnClick, { once: true });
-            });
-        }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
 
-        function toggleMusic() {
-            gameState.musicEnabled = !gameState.musicEnabled;
-            const button = document.getElementById('music-toggle');
-            
-            if (gameState.musicEnabled) {
-                button.textContent = '🎵 Music ON';
-                button.classList.remove('muted');
-                playMusic();
-            } else {
-                button.textContent = '🔇 Music OFF';
-                button.classList.add('muted');
+            let gameState = {
+                leafCount: 0,
+                totalLeavesCollected: 0,
+                phase: 1,
+                population: 0,
+                windX: 0,
+                windY: 0,
+                mouseX: canvas.width / 2,
+                mouseY: canvas.height / 2,
+                time: 0,
+                season: 0,
+                storyTimer: 0,
+                currentStoryIndex: 0,
+                musicEnabled: true,
+                currentTrack: 1,
+                currentChallenge: null,
+                challengeStartTime: 0,
+                challengeTimeLimit: 60,
+                currentEvent: null,
+                eventStartTime: 0,
+                eventDuration: 0,
+                achievements: {
+                    'first-leaf': false,
+                    '100-pop': false,
+                    'fast-growth': false,
+                    'survive-drought': false,
+                    'all-regions': false,
+                    '1000-leaves': false
+                }
+            };
+
+            let currentAudio = null;
+            const musicTracks = [
+                'https://github.com/Soyadayo/Mappon/raw/main/lmusic1.mp3',
+                'https://github.com/Soyadayo/Mappon/raw/main/lmusic2.mp3',
+                'https://github.com/Soyadayo/Mappon/raw/main/lmusic3.mp3',
+                'https://github.com/Soyadayo/Mappon/raw/main/lmusic4.mp3',
+                'https://github.com/Soyadayo/Mappon/raw/main/lmusic5.mp3',
+                'https://github.com/Soyadayo/Mappon/raw/main/lmusic6.mp3',
+                'https://github.com/Soyadayo/Mappon/raw/main/lmusic7.mp3',
+                'https://github.com/Soyadayo/Mappon/raw/main/lmusic8.mp3'
+            ];
+
+            const seasons = [
+                { name: "Spring", emoji: "🌸", leafSpawnRate: 600, leafColors: ['#90EE90', '#98FB98', '#8FBC8F'], windMultiplier: 1.2 },
+                { name: "Summer", emoji: "☀️", leafSpawnRate: 1000, leafColors: ['#228B22', '#32CD32', '#006400'], windMultiplier: 0.8 },
+                { name: "Autumn", emoji: "🍂", leafSpawnRate: 300, leafColors: ['#FF6347', '#FF4500', '#DAA520', '#CD853F'], windMultiplier: 1.5 },
+                { name: "Winter", emoji: "❄️", leafSpawnRate: 1500, leafColors: ['#F0F8FF', '#E6E6FA', '#D3D3D3'], windMultiplier: 2.0 }
+            ];
+
+            const phases = [
+                { name: "Primitive Age", description: "Gather leaves to create the first settlements", leafRequirement: 0 },
+                { name: "Agricultural Dawn", description: "First farms emerge from the earth", leafRequirement: 25 },
+                { name: "Village Formation", description: "Small communities take root", leafRequirement: 60 },
+                { name: "Farming Expansion", description: "Crops flourish across the land", leafRequirement: 120 },
+                { name: "Town Emergence", description: "Trade begins between settlements", leafRequirement: 250 },
+                { name: "Industrial Awakening", description: "Technology begins to develop", leafRequirement: 400 },
+                { name: "Urban Development", description: "Great cities rise from the earth", leafRequirement: 650 },
+                { name: "Industrial Revolution", description: "Machines transform society", leafRequirement: 950 },
+                { name: "Modern Civilization", description: "Advanced technological society", leafRequirement: 1400 },
+                { name: "Eco-Future Utopia", description: "Perfect harmony with nature", leafRequirement: 2000 }
+            ];
+
+            const stories = {
+                1: ["Elder Grok notices that leaves fall in patterns. He wonders if the wind spirits are trying to tell them something..."],
+                2: ["Farmer Bram's wife is furious - he spent all morning watching leaves fall instead of tending the wheat!"],
+                3: ["Blacksmith Henrik complains that too many leaves clog his forge, but his apprentice thinks they're beautiful."],
+                4: ["Merchant Aldric refuses to trade with farms that have 'too few leaves,' claiming their produce is inferior."],
+                5: ["Mayor Davidson's controversial decision to redirect leaf-fall to wealthy districts causes protests."],
+                6: ["Factory owner Carnegie refuses to build in areas with low leaf-fall, believing it affects productivity."],
+                7: ["City planner Morrison's grand vision is undermined by the reality that some districts never prosper."],
+                8: ["Railroad baron Huntington's train routes mysteriously follow the ancient patterns of leaf distribution."],
+                9: ["Tech mogul Harrison's algorithms predict city growth patterns based on historical leaf-fall data."],
+                10: ["In the perfect eco-city, AI systems ensure that every district receives optimal leaf distribution."]
+            };
+
+            const challenges = [
+                { text: "Reach 100 population in 60 seconds", target: 100, timeLimit: 60, type: 'population' },
+                { text: "Collect 50 leaves in 45 seconds", target: 50, timeLimit: 45, type: 'leaves' },
+                { text: "Get 3 thriving regions in 90 seconds", target: 3, timeLimit: 90, type: 'thriving' }
+            ];
+
+            const events = [
+                { name: "Drought", emoji: "🌵", description: "Leaf spawning reduced!", effect: { leafSpawnMultiplier: 0.3, windMultiplier: 0.5 }, duration: 20000, probability: 0.15 },
+                { name: "Storm", emoji: "🌪️", description: "Strong winds everywhere!", effect: { leafSpawnMultiplier: 2.0, windMultiplier: 3.0 }, duration: 15000, probability: 0.20 },
+                { name: "Nature's Blessing", emoji: "🌟", description: "Nature smiles upon you!", effect: { leafSpawnMultiplier: 3.0, windMultiplier: 1.5 }, duration: 25000, probability: 0.10 }
+            ];
+
+            let leaves = [];
+            let regions = [];
+            let leafSpawnInterval;
+
+            function playMusic() {
+                if (!gameState.musicEnabled) return;
                 if (currentAudio) {
                     currentAudio.pause();
                     currentAudio = null;
                 }
-            }
-        }
-
-        function updateMusicInfo() {
-            document.getElementById('music-info').textContent = `Track ${gameState.currentTrack} of 8`;
-        }
-
-        // Seasons
-        const seasons = [
-            { 
-                name: "Spring", 
-                emoji: "🌸", 
-                leafSpawnRate: 600, 
-                leafColors: ['#90EE90', '#98FB98', '#8FBC8F'],
-                windMultiplier: 1.2
-            },
-            { 
-                name: "Summer", 
-                emoji: "☀️", 
-                leafSpawnRate: 1000, 
-                leafColors: ['#228B22', '#32CD32', '#006400'],
-                windMultiplier: 0.8
-            },
-            { 
-                name: "Autumn", 
-                emoji: "🍂", 
-                leafSpawnRate: 300, 
-                leafColors: ['#FF6347', '#FF4500', '#DAA520', '#CD853F'],
-                windMultiplier: 1.5
-            },
-            { 
-                name: "Winter", 
-                emoji: "❄️", 
-                leafSpawnRate: 1500, 
-                leafColors: ['#F0F8FF', '#E6E6FA', '#D3D3D3'],
-                windMultiplier: 2.0
-            }
-        ];
-
-        // Civilization phases
-        const phases = [
-            { name: "Primitive Age", description: "Gather leaves to create the first settlements", leafRequirement: 0 },
-            { name: "Agricultural Dawn", description: "First farms emerge from the earth", leafRequirement: 25 },
-            { name: "Village Formation", description: "Small communities take root", leafRequirement: 60 },
-            { name: "Farming Expansion", description: "Crops flourish across the land", leafRequirement: 120 },
-            { name: "Town Emergence", description: "Trade begins between settlements", leafRequirement: 250 },
-            { name: "Industrial Awakening", description: "Technology begins to develop", leafRequirement: 400 },
-            { name: "Urban Development", description: "Great cities rise from the earth", leafRequirement: 650 },
-            { name: "Industrial Revolution", description: "Machines transform society", leafRequirement: 950 },
-            { name: "Modern Civilization", description: "Advanced technological society", leafRequirement: 1400 },
-            { name: "Eco-Future Utopia", description: "Perfect harmony with nature", leafRequirement: 2000 }
-        ];
-
-        // Stories
-        const stories = {
-            1: [
-                "Elder Grok notices that leaves fall in patterns. He wonders if the wind spirits are trying to tell them something...",
-                "Young Tala refuses to help gather berries, preferring to chase the dancing leaves. Her mother sighs deeply.",
-                "The tribe argues about whether to follow the leaf-heavy winds north or stay by the familiar river.",
-                "Wise woman Nira claims she can predict the weather by watching how leaves spiral down from the trees."
-            ],
-            2: [
-                "Farmer Bram's wife is furious - he spent all morning watching leaves fall instead of tending the wheat!",
-                "Little Pip discovered that certain leaves make the best mulch, but his siblings think he's just being lazy.",
-                "The village elder declares that areas with more fallen leaves will have better harvests next season.",
-                "Marta and Jorik argue about whose field gets more leaf-fall, threatening to divide the community."
-            ],
-            3: [
-                "Blacksmith Henrik complains that too many leaves clog his forge, but his apprentice thinks they're beautiful.",
-                "The miller's daughter Rosa insists on wearing leaf crowns to the harvest festival, much to her father's embarrassment.",
-                "Village councilman Olaf proposes a tax on leaf collection, causing uproar in the town square.",
-                "Baker Ingrid discovers that bread made near leaf-rich areas tastes better, but no one believes her."
-            ],
-            4: [
-                "Merchant Aldric refuses to trade with farms that have 'too few leaves,' claiming their produce is inferior.",
-                "Young couple Erik and Astrid fight over which plot of land to farm - he wants the leafy area, she prefers practical plains.",
-                "The regional governor visits and is puzzled why some areas thrive while others remain barren and abandoned.",
-                "Traveling scholar Matthias documents the strange correlation between leaf density and crop yields."
-            ],
-            5: [
-                "Mayor Davidson's controversial decision to redirect leaf-fall to wealthy districts causes protests in the poor quarters.",
-                "Shopkeeper Eleanor notices that customers from leafy neighborhoods have more coins to spend.",
-                "The town's first newspaper publishes a heated debate about 'leaf inequality' between different districts.",
-                "Young inventor Thomas claims he can build a machine to distribute leaves more fairly, but the council laughs."
-            ],
-            6: [
-                "Factory owner Carnegie refuses to build in areas with low leaf-fall, believing it affects worker productivity.",
-                "Engineer Sarah's proposal for a 'leaf distribution railway' is rejected as too expensive and impractical.",
-                "The growing industrial district creates a stark contrast with the abandoned, leaf-poor outskirts of town.",
-                "Workers in the thriving factory quarter whisper about the 'ghost neighborhoods' where few leaves fall."
-            ],
-            7: [
-                "City planner Morrison's grand vision is undermined by the reality that some districts never receive enough leaves to prosper.",
-                "The mayor's daughter Rebecca volunteers to teach children in the struggling neighborhoods, against her family's wishes.",
-                "Newspaper editor Williams publishes exposés about the 'Tale of Two Cities' - the leafy rich and the barren poor.",
-                "Street vendor Miguel moves his cart daily, following the leaf patterns to find customers with money to spend."
-            ],
-            8: [
-                "Railroad baron Huntington's train routes mysteriously follow the ancient patterns of leaf distribution.",
-                "Dr. Adelaide's research suggests that leaf patterns might influence human behavior and economic development.",
-                "The great factory owner's son questions why their family's wealth seems tied to something as simple as falling leaves.",
-                "Labor organizer Patrick rallies workers from the leaf-poor districts, demanding equal distribution of natural resources."
-            ],
-            9: [
-                "Tech mogul Harrison's algorithms predict city growth patterns based on historical leaf-fall data, revolutionizing urban planning.",
-                "Environmental scientist Dr. Chen discovers that leaf patterns have shaped human civilization for millennia.",
-                "The government's new 'Leaf Equity Act' attempts to address centuries of unequal development through artificial redistribution.",
-                "Philosopher Maria writes that the random fall of leaves reveals the arbitrary nature of human prosperity and suffering."
-            ],
-            10: [
-                "In the perfect eco-city, AI systems ensure that every district receives optimal leaf distribution for maximum harmony.",
-                "Citizens of the utopian society still tell stories of the ancient times when leaf-fall determined one's fate.",
-                "The Great Archive contains millions of stories about how the simple act of leaves falling shaped human civilization.",
-                "Children play games imitating the wind, not knowing that their ancestors once depended on its whims for survival."
-            ]
-        };
-
-        // Region class
-        class Region {
-            constructor(x, width) {
-                this.x = x;
-                this.width = width;
-                this.leafDensity = 0;
-                this.buildings = [];
-                this.prosperity = 0;
-                this.population = 0;
+                currentAudio = new Audio(musicTracks[gameState.currentTrack - 1]);
+                currentAudio.volume = 0.6;
+                currentAudio.loop = false;
+                currentAudio.addEventListener('ended', () => {
+                    gameState.currentTrack = (gameState.currentTrack % 8) + 1;
+                    updateMusicInfo();
+                    playMusic();
+                });
+                currentAudio.play().catch(() => {});
             }
 
-            update() {
-                this.leafDensity = leaves.filter(leaf => 
-                    leaf.landed && leaf.x >= this.x && leaf.x < this.x + this.width
-                ).length;
-
-                if (this.leafDensity > 15) {
-                    this.prosperity = 3;
-                    this.population = Math.floor(this.leafDensity * 8 * gameState.phase);
-                } else if (this.leafDensity > 8) {
-                    this.prosperity = 2;
-                    this.population = Math.floor(this.leafDensity * 4 * gameState.phase);
-                } else if (this.leafDensity > 3) {
-                    this.prosperity = 1;
-                    this.population = Math.floor(this.leafDensity * 2 * gameState.phase);
+            function toggleMusic() {
+                gameState.musicEnabled = !gameState.musicEnabled;
+                const button = document.getElementById('music-toggle');
+                if (gameState.musicEnabled) {
+                    button.textContent = '🎵 Music ON';
+                    button.classList.remove('muted');
+                    playMusic();
                 } else {
+                    button.textContent = '🔇 Music OFF';
+                    button.classList.add('muted');
+                    if (currentAudio) {
+                        currentAudio.pause();
+                        currentAudio = null;
+                    }
+                }
+            }
+
+            function updateMusicInfo() {
+                document.getElementById('music-info').textContent = `Track ${gameState.currentTrack} of 8`;
+            }
+
+            function startNewChallenge() {
+                const challenge = challenges[Math.floor(Math.random() * challenges.length)];
+                gameState.currentChallenge = challenge;
+                gameState.challengeStartTime = gameState.time;
+                document.getElementById('challenge-text').textContent = challenge.text;
+                document.getElementById('challenge-timer').textContent = `Time: ${challenge.timeLimit}s`;
+                document.getElementById('challenge-progress').style.width = '0%';
+            }
+
+            function updateChallenge() {
+                if (!gameState.currentChallenge) return;
+                const timeElapsed = Math.floor((gameState.time - gameState.challengeStartTime) / 60);
+                const timeRemaining = Math.max(0, gameState.currentChallenge.timeLimit - timeElapsed);
+                document.getElementById('challenge-timer').textContent = `Time: ${timeRemaining}s`;
+                
+                let progress = 0;
+                const challenge = gameState.currentChallenge;
+                if (challenge.type === 'population') {
+                    progress = Math.min(100, (gameState.population / challenge.target) * 100);
+                } else if (challenge.type === 'leaves') {
+                    progress = Math.min(100, (gameState.leafCount / challenge.target) * 100);
+                } else if (challenge.type === 'thriving') {
+                    const thrivingCount = regions.filter(r => r.prosperity === 3).length;
+                    progress = Math.min(100, (thrivingCount / challenge.target) * 100);
+                }
+                document.getElementById('challenge-progress').style.width = progress + '%';
+                
+                if (progress >= 100 || timeRemaining <= 0) {
+                    setTimeout(startNewChallenge, 3000);
+                    gameState.currentChallenge = null;
+                }
+            }
+
+            function getEventEffects() {
+                if (!gameState.currentEvent) return { leafSpawnMultiplier: 1.0, windMultiplier: 1.0 };
+                return gameState.currentEvent.effect;
+            }
+
+            function showEventNotification(title, description, className) {
+                const notification = document.getElementById('event-notification');
+                document.getElementById('event-text').textContent = title;
+                document.getElementById('event-description').textContent = description;
+                notification.className = className;
+                notification.style.display = 'block';
+                setTimeout(() => notification.style.display = 'none', 4000);
+            }
+
+            class Region {
+                constructor(x, width) {
+                    this.x = x;
+                    this.width = width;
+                    this.leafDensity = 0;
+                    this.buildings = [];
                     this.prosperity = 0;
                     this.population = 0;
                 }
 
-                if (this.prosperity > 0 && this.buildings.length < this.prosperity * 3) {
-                    this.buildings.push(new Building(
-                        this.x + Math.random() * this.width,
-                        canvas.height - 60,
-                        this.prosperity
-                    ));
-                }
-
-                if (this.buildings.length > this.prosperity * 3) {
-                    this.buildings = this.buildings.slice(0, this.prosperity * 3);
-                }
-            }
-
-            draw() {
-                const colors = ['#8B4513', '#CD853F', '#DAA520', '#228B22'];
-                ctx.fillStyle = colors[this.prosperity];
-                ctx.globalAlpha = 0.3;
-                ctx.fillRect(this.x, canvas.height - 60, this.width, 60);
-                ctx.globalAlpha = 1;
-
-                this.buildings.forEach(building => building.draw());
-            }
-        }
-
-        // Leaf class
-        class Leaf {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = -20;
-                this.vx = (Math.random() - 0.5) * 2;
-                this.vy = Math.random() * 2 + 1;
-                this.rotation = Math.random() * Math.PI * 2;
-                this.rotationSpeed = (Math.random() - 0.5) * 0.1;
-                this.size = Math.random() * 12 + 8;
-                this.color = this.getSeasonalColor();
-                this.landed = false;
-                this.landedTime = 0;
-                this.alpha = 1;
-                this.leafType = Math.floor(Math.random() * 3);
-                this.flutter = Math.random() * Math.PI * 2;
-            }
-
-            getSeasonalColor() {
-                const seasonColors = seasons[gameState.season].leafColors;
-                const baseColor = seasonColors[Math.floor(Math.random() * seasonColors.length)];
-                
-                const hsl = this.hexToHsl(baseColor);
-                const hue = (hsl.h + (Math.random() - 0.5) * 30 + 360) % 360;
-                const sat = Math.max(0, Math.min(100, hsl.s + (Math.random() - 0.5) * 20));
-                const light = Math.max(20, Math.min(80, hsl.l + (Math.random() - 0.5) * 20));
-                
-                return `hsl(${hue}, ${sat}%, ${light}%)`;
-            }
-
-            hexToHsl(hex) {
-                const r = parseInt(hex.slice(1, 3), 16) / 255;
-                const g = parseInt(hex.slice(3, 5), 16) / 255;
-                const b = parseInt(hex.slice(5, 7), 16) / 255;
-                
-                const max = Math.max(r, g, b);
-                const min = Math.min(r, g, b);
-                let h, s, l = (max + min) / 2;
-                
-                if (max === min) {
-                    h = s = 0;
-                } else {
-                    const d = max - min;
-                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-                    switch (max) {
-                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                        case g: h = (b - r) / d + 2; break;
-                        case b: h = (r - g) / d + 4; break;
+                update() {
+                    this.leafDensity = leaves.filter(leaf => leaf.landed && leaf.x >= this.x && leaf.x < this.x + this.width).length;
+                    
+                    if (this.leafDensity > 15) {
+                        this.prosperity = 3;
+                    } else if (this.leafDensity > 8) {
+                        this.prosperity = 2;
+                    } else if (this.leafDensity > 3) {
+                        this.prosperity = 1;
+                    } else {
+                        this.prosperity = 0;
                     }
-                    h /= 6;
-                }
-                
-                return { h: h * 360, s: s * 100, l: l * 100 };
-            }
+                    
+                    this.population = Math.floor(this.leafDensity * (this.prosperity + 1) * gameState.phase);
 
-            update() {
-                if (!this.landed) {
-                    this.flutter += 0.1;
-                    const flutterForce = Math.sin(this.flutter) * 0.02;
-                    
-                    const windStrength = 0.3 * seasons[gameState.season].windMultiplier;
-                    this.vx += gameState.windX * windStrength + flutterForce;
-                    this.vy += gameState.windY * windStrength * 0.1;
-                    
-                    this.vy += 0.04;
-                    this.vx *= 0.98;
-                    this.vy = Math.min(this.vy, 3);
-                    
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    
-                    this.rotation += this.rotationSpeed + Math.abs(this.vx) * 0.02;
-                    
-                    if (this.y > canvas.height - 60) {
-                        this.landed = true;
-                        this.y = canvas.height - 60 + Math.random() * 5;
-                        this.landedTime = 0;
-                        gameState.leafCount++;
-                        updatePhase();
+                    // Generate buildings based on prosperity
+                    const targetBuildings = this.prosperity * 3;
+                    if (this.prosperity > 0 && this.buildings.length < targetBuildings) {
+                        for (let i = this.buildings.length; i < targetBuildings; i++) {
+                            this.buildings.push(new Building(
+                                this.x + Math.random() * this.width,
+                                canvas.height - 60,
+                                this.prosperity
+                            ));
+                        }
                     }
-                } else {
-                    this.landedTime++;
-                    const decomposeRate = gameState.season === 3 ? 2500 : 1500;
-                    this.alpha = Math.max(0, 1 - this.landedTime / decomposeRate);
+
+                    // Remove buildings if prosperity drops
+                    if (this.buildings.length > targetBuildings) {
+                        this.buildings = this.buildings.slice(0, targetBuildings);
+                    }
+                }
+
+                draw() {
+                    const colors = ['#8B4513', '#CD853F', '#DAA520', '#228B22'];
+                    ctx.fillStyle = colors[this.prosperity];
+                    ctx.globalAlpha = 0.3;
+                    ctx.fillRect(this.x, canvas.height - 60, this.width, 60);
+                    ctx.globalAlpha = 1;
+
+                    // Draw buildings
+                    this.buildings.forEach(building => building.draw());
                 }
             }
 
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.rotation);
-                
-                ctx.globalAlpha = this.alpha;
-                
-                this.drawLeafShape();
-                
-                ctx.restore();
+            class Building {
+                constructor(x, y, prosperity) {
+                    this.x = x;
+                    this.y = y;
+                    this.prosperity = prosperity;
+                    this.size = 12 + prosperity * 8 + Math.random() * 6;
+                    this.height = 20 + prosperity * 12 + Math.random() * 15;
+                    this.color = this.getColorByProsperity();
+                    this.roofColor = this.getRoofColor();
+                    this.buildingType = Math.floor(Math.random() * 3);
+                    this.windows = this.generateWindows();
+                }
+
+                getColorByProsperity() {
+                    const prosperityColors = [
+                        '#4A4A4A', // abandoned - dark gray
+                        '#8B4513', // struggling - brown
+                        '#CD853F', // growing - tan
+                        '#F5DEB3'  // thriving - wheat
+                    ];
+                    return prosperityColors[this.prosperity];
+                }
+
+                getRoofColor() {
+                    const roofColors = ['#8B0000', '#654321', '#2F4F4F', '#800080'];
+                    return roofColors[Math.floor(Math.random() * roofColors.length)];
+                }
+
+                generateWindows() {
+                    const windows = [];
+                    const windowsPerRow = Math.floor(this.size / 8);
+                    const rows = Math.floor(this.height / 12);
+                    
+                    for (let row = 0; row < rows; row++) {
+                        for (let col = 0; col < windowsPerRow; col++) {
+                            if (Math.random() > 0.3) {
+                                windows.push({
+                                    x: col * 8 + 2,
+                                    y: row * 12 + 4,
+                                    lit: this.prosperity > 1 && Math.random() > 0.4
+                                });
+                            }
+                        }
+                    }
+                    return windows;
+                }
+
+                draw() {
+                    // Building shadow
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+                    ctx.fillRect(this.x - this.size/2 + 2, this.y - this.height + 2, this.size, this.height);
+                    
+                    // Building gradient
+                    const gradient = ctx.createLinearGradient(
+                        this.x - this.size/2, this.y - this.height,
+                        this.x + this.size/2, this.y
+                    );
+                    gradient.addColorStop(0, this.adjustBrightness(this.color, 20));
+                    gradient.addColorStop(0.3, this.color);
+                    gradient.addColorStop(1, this.adjustBrightness(this.color, -20));
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(this.x - this.size/2, this.y - this.height, this.size, this.height);
+                    
+                    // Building outline
+                    ctx.strokeStyle = this.adjustBrightness(this.color, -30);
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(this.x - this.size/2, this.y - this.height, this.size, this.height);
+                    
+                    // Roof
+                    this.drawRoof();
+                    
+                    // Windows
+                    this.windows.forEach(window => {
+                        const windowColor = window.lit ? '#FFE135' : '#87CEEB';
+                        const alpha = window.lit ? 0.9 : 0.6;
+                        
+                        ctx.fillStyle = windowColor;
+                        ctx.globalAlpha = alpha;
+                        ctx.fillRect(
+                            this.x - this.size/2 + window.x,
+                            this.y - this.height + window.y,
+                            4, 4
+                        );
+                        ctx.globalAlpha = 1;
+                        
+                        // Window frame
+                        ctx.strokeStyle = this.adjustBrightness(this.color, -40);
+                        ctx.lineWidth = 0.5;
+                        ctx.strokeRect(
+                            this.x - this.size/2 + window.x,
+                            this.y - this.height + window.y,
+                            4, 4
+                        );
+                    });
+                    
+                    // Door (for prosperity > 0)
+                    if (this.prosperity > 0) {
+                        ctx.fillStyle = '#654321';
+                        ctx.fillRect(this.x - 3, this.y - 12, 6, 12);
+                        ctx.fillStyle = '#FFD700';
+                        ctx.beginPath();
+                        ctx.arc(this.x + 2, this.y - 6, 1, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                drawRoof() {
+                    if (this.buildingType === 0) {
+                        // Triangular roof
+                        ctx.fillStyle = this.roofColor;
+                        ctx.beginPath();
+                        ctx.moveTo(this.x, this.y - this.height - 8);
+                        ctx.lineTo(this.x - this.size/2 - 2, this.y - this.height);
+                        ctx.lineTo(this.x + this.size/2 + 2, this.y - this.height);
+                        ctx.closePath();
+                        ctx.fill();
+                        
+                        // Roof highlight
+                        ctx.fillStyle = this.adjustBrightness(this.roofColor, 30);
+                        ctx.beginPath();
+                        ctx.moveTo(this.x, this.y - this.height - 8);
+                        ctx.lineTo(this.x - this.size/2 - 2, this.y - this.height);
+                        ctx.lineTo(this.x, this.y - this.height);
+                        ctx.closePath();
+                        ctx.fill();
+                    } else if (this.buildingType === 1) {
+                        // Flat roof with slight overhang
+                        ctx.fillStyle = this.adjustBrightness(this.roofColor, -10);
+                        ctx.fillRect(this.x - this.size/2 - 1, this.y - this.height - 3, this.size + 2, 3);
+                    } else {
+                        // Domed roof
+                        ctx.fillStyle = this.roofColor;
+                        ctx.beginPath();
+                        ctx.ellipse(this.x, this.y - this.height, this.size/2 + 1, 6, 0, 0, Math.PI);
+                        ctx.fill();
+                    }
+                }
+
+                adjustBrightness(color, amount) {
+                    // Convert hex to RGB, adjust brightness, convert back
+                    const hex = color.replace('#', '');
+                    const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
+                    const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
+                    const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
+                    return `rgb(${r}, ${g}, ${b})`;
+                }
             }
 
-            drawLeafShape() {
-                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
-                gradient.addColorStop(0, this.color);
-                gradient.addColorStop(0.7, this.color);
-                gradient.addColorStop(1, this.adjustBrightness(this.color, -30));
-                
-                ctx.fillStyle = gradient;
-                
-                if (this.leafType === 0) {
+            class Leaf {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = -20;
+                    this.vx = (Math.random() - 0.5) * 2;
+                    this.vy = Math.random() * 2 + 1;
+                    this.rotation = 0;
+                    this.size = Math.random() * 12 + 8;
+                    this.color = seasons[gameState.season].leafColors[Math.floor(Math.random() * seasons[gameState.season].leafColors.length)];
+                    this.landed = false;
+                    this.alpha = 1;
+                }
+
+                update() {
+                    if (!this.landed) {
+                        const effects = getEventEffects();
+                        this.vx += gameState.windX * 0.3 * effects.windMultiplier;
+                        this.vy += 0.04;
+                        this.x += this.vx;
+                        this.y += this.vy;
+                        this.rotation += 0.05;
+                        
+                        if (this.y > canvas.height - 60) {
+                            this.landed = true;
+                            gameState.leafCount++;
+                            gameState.totalLeavesCollected++;
+                            updatePhase();
+                        }
+                    } else {
+                        this.alpha -= 0.001;
+                    }
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation);
+                    ctx.globalAlpha = this.alpha;
+                    ctx.fillStyle = this.color;
                     ctx.beginPath();
                     ctx.ellipse(0, 0, this.size, this.size * 0.6, 0, 0, Math.PI * 2);
                     ctx.fill();
-                } else if (this.leafType === 1) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, -this.size);
-                    ctx.quadraticCurveTo(this.size * 0.5, -this.size * 0.3, this.size * 0.7, 0);
-                    ctx.quadraticCurveTo(this.size * 0.3, this.size * 0.3, 0, this.size * 0.8);
-                    ctx.quadraticCurveTo(-this.size * 0.3, this.size * 0.3, -this.size * 0.7, 0);
-                    ctx.quadraticCurveTo(-this.size * 0.5, -this.size * 0.3, 0, -this.size);
-                    ctx.fill();
-                } else {
-                    ctx.beginPath();
-                    ctx.moveTo(0, this.size * 0.3);
-                    ctx.bezierCurveTo(-this.size * 0.5, -this.size * 0.5, -this.size, -this.size * 0.3, -this.size * 0.3, 0);
-                    ctx.bezierCurveTo(-this.size * 0.1, this.size * 0.1, 0, this.size * 0.8, 0, this.size * 0.3);
-                    ctx.bezierCurveTo(0, this.size * 0.8, this.size * 0.1, this.size * 0.1, this.size * 0.3, 0);
-                    ctx.bezierCurveTo(this.size, -this.size * 0.3, this.size * 0.5, -this.size * 0.5, 0, this.size * 0.3);
-                    ctx.fill();
+                    ctx.restore();
                 }
-                
-                ctx.strokeStyle = this.adjustBrightness(this.color, -40);
-                ctx.lineWidth = 0.5;
-                ctx.globalAlpha = this.alpha * 0.8;
-                
-                ctx.beginPath();
-                ctx.moveTo(0, -this.size * 0.8);
-                ctx.lineTo(0, this.size * 0.6);
-                
-                for (let i = -0.6; i <= 0.6; i += 0.3) {
-                    ctx.moveTo(0, this.size * i);
-                    ctx.lineTo(this.size * 0.4 * Math.sign(Math.sin(i * 3)), this.size * (i + 0.2));
-                    ctx.moveTo(0, this.size * i);
-                    ctx.lineTo(-this.size * 0.4 * Math.sign(Math.sin(i * 3)), this.size * (i + 0.2));
-                }
-                ctx.stroke();
-                
-                ctx.globalAlpha = this.alpha;
             }
 
-            adjustBrightness(color, amount) {
-                const hsl = color.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
-                if (hsl) {
-                    const lightness = Math.max(0, Math.min(100, parseInt(hsl[3]) + amount));
-                    return `hsl(${hsl[1]}, ${hsl[2]}%, ${lightness}%)`;
-                }
-                return color;
-            }
-        }
-
-        // Building class
-        class Building {
-            constructor(x, y, prosperity) {
-                this.x = x;
-                this.y = y;
-                this.prosperity = prosperity;
-                this.size = 12 + prosperity * 8 + Math.random() * 6;
-                this.height = 20 + prosperity * 12 + Math.random() * 15;
-                this.color = this.getColorByProsperity();
-                this.roofColor = this.getRoofColor();
-                this.buildingType = Math.floor(Math.random() * 3);
-                this.windows = this.generateWindows();
-            }
-
-            getColorByProsperity() {
-                const prosperityColors = [
-                    '#4A4A4A',
-                    '#8B4513',
-                    '#CD853F',
-                    '#F5DEB3'
-                ];
-                return prosperityColors[this.prosperity];
-            }
-
-            getRoofColor() {
-                const roofColors = ['#8B0000', '#654321', '#2F4F4F', '#800080'];
-                return roofColors[Math.floor(Math.random() * roofColors.length)];
-            }
-
-            generateWindows() {
-                const windows = [];
-                const windowsPerRow = Math.floor(this.size / 8);
-                const rows = Math.floor(this.height / 12);
-                
-                for (let row = 0; row < rows; row++) {
-                    for (let col = 0; col < windowsPerRow; col++) {
-                        if (Math.random() > 0.3) {
-                            windows.push({
-                                x: col * 8 + 2,
-                                y: row * 12 + 4,
-                                lit: this.prosperity > 1 && Math.random() > 0.4
-                            });
-                        }
+            function updateLeafSpawning() {
+                const effects = getEventEffects();
+                const rate = Math.max(100, seasons[gameState.season].leafSpawnRate / effects.leafSpawnMultiplier);
+                clearInterval(leafSpawnInterval);
+                leafSpawnInterval = setInterval(() => {
+                    if (leaves.filter(leaf => !leaf.landed).length < 20) {
+                        leaves.push(new Leaf());
                     }
-                }
-                return windows;
+                }, rate);
             }
 
-            draw() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-                ctx.fillRect(this.x - this.size/2 + 2, this.y - this.height + 2, this.size, this.height);
+            function updateSeason() {
+                gameState.season = (gameState.season + 1) % 4;
+                const season = seasons[gameState.season];
+                document.getElementById('seasonName').textContent = season.name;
+                document.getElementById('season-indicator').innerHTML = 
+                    `<span id="seasonName">${season.name}</span> ${season.emoji}`;
                 
-                const gradient = ctx.createLinearGradient(
-                    this.x - this.size/2, this.y - this.height,
-                    this.x + this.size/2, this.y
+                // Update leaf spawning for new season
+                updateLeafSpawning();
+                
+                // Show season change notification
+                showEventNotification(
+                    `${season.emoji} ${season.name} arrives!`,
+                    `The world changes with the new season`,
+                    'event-blessing'
                 );
-                gradient.addColorStop(0, this.adjustBrightness(this.color, 20));
-                gradient.addColorStop(0.3, this.color);
-                gradient.addColorStop(1, this.adjustBrightness(this.color, -20));
+            }
+
+            function updatePhase() {
+                const nextPhase = phases[gameState.phase];
+                if (nextPhase && gameState.leafCount >= nextPhase.leafRequirement) {
+                    gameState.phase++;
+                    updateUI();
+                }
+            }
+
+            function updateUI() {
+                document.getElementById('leafCount').textContent = gameState.leafCount;
+                document.getElementById('phase').textContent = gameState.phase;
                 
-                ctx.fillStyle = gradient;
-                ctx.fillRect(this.x - this.size/2, this.y - this.height, this.size, this.height);
-                
-                ctx.strokeStyle = this.adjustBrightness(this.color, -30);
-                ctx.lineWidth = 1;
-                ctx.strokeRect(this.x - this.size/2, this.y - this.height, this.size, this.height);
-                
-                this.drawRoof();
-                
-                this.windows.forEach(window => {
-                    const windowColor = window.lit ? '#FFE135' : '#87CEEB';
-                    const alpha = window.lit ? 0.9 : 0.6;
-                    
-                    ctx.fillStyle = windowColor;
-                    ctx.globalAlpha = alpha;
-                    ctx.fillRect(
-                        this.x - this.size/2 + window.x,
-                        this.y - this.height + window.y,
-                        4, 4
-                    );
-                    ctx.globalAlpha = 1;
-                    
-                    ctx.strokeStyle = this.adjustBrightness(this.color, -40);
-                    ctx.lineWidth = 0.5;
-                    ctx.strokeRect(
-                        this.x - this.size/2 + window.x,
-                        this.y - this.height + window.y,
-                        4, 4
-                    );
+                let totalPopulation = 0;
+                const prosperityCounts = [0, 0, 0, 0];
+                regions.forEach(region => {
+                    prosperityCounts[region.prosperity]++;
+                    totalPopulation += region.population;
                 });
                 
-                if (this.prosperity > 0) {
-                    ctx.fillStyle = '#654321';
-                    ctx.fillRect(this.x - 3, this.y - 12, 6, 12);
-                    ctx.fillStyle = '#FFD700';
-                    ctx.beginPath();
-                    ctx.arc(this.x + 2, this.y - 6, 1, 0, Math.PI * 2);
-                    ctx.fill();
+                gameState.population = totalPopulation;
+                document.getElementById('population').textContent = totalPopulation;
+                document.getElementById('abandonedRegions').textContent = prosperityCounts[0];
+                document.getElementById('strugglingRegions').textContent = prosperityCounts[1];
+                document.getElementById('growingRegions').textContent = prosperityCounts[2];
+                document.getElementById('thrivingRegions').textContent = prosperityCounts[3];
+                
+                const currentPhase = phases[gameState.phase - 1];
+                if (currentPhase) {
+                    document.getElementById('phaseTitle').textContent = currentPhase.name;
+                    document.getElementById('phaseDescription').textContent = currentPhase.description;
                 }
             }
 
-            drawRoof() {
-                if (this.buildingType === 0) {
-                    ctx.fillStyle = this.roofColor;
-                    ctx.beginPath();
-                    ctx.moveTo(this.x, this.y - this.height - 8);
-                    ctx.lineTo(this.x - this.size/2 - 2, this.y - this.height);
-                    ctx.lineTo(this.x + this.size/2 + 2, this.y - this.height);
-                    ctx.closePath();
-                    ctx.fill();
-                    
-                    ctx.fillStyle = this.adjustBrightness(this.roofColor, 30);
-                    ctx.beginPath();
-                    ctx.moveTo(this.x, this.y - this.height - 8);
-                    ctx.lineTo(this.x - this.size/2 - 2, this.y - this.height);
-                    ctx.lineTo(this.x, this.y - this.height);
-                    ctx.closePath();
-                    ctx.fill();
-                } else if (this.buildingType === 1) {
-                    ctx.fillStyle = this.adjustBrightness(this.roofColor, -10);
-                    ctx.fillRect(this.x - this.size/2 - 1, this.y - this.height - 3, this.size + 2, 3);
-                } else {
-                    ctx.fillStyle = this.roofColor;
-                    ctx.beginPath();
-                    ctx.ellipse(this.x, this.y - this.height, this.size/2 + 1, 6, 0, 0, Math.PI);
-                    ctx.fill();
+            function drawBackground() {
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                
+                // Season-specific backgrounds
+                if (gameState.season === 0) { // Spring
+                    gradient.addColorStop(0, '#87CEEB');
+                    gradient.addColorStop(0.3, '#B0E0E6');
+                    gradient.addColorStop(0.7, '#E0F6FF');
+                    gradient.addColorStop(1, '#F0FFF0');
+                } else if (gameState.season === 1) { // Summer
+                    gradient.addColorStop(0, '#87CEFA');
+                    gradient.addColorStop(0.3, '#98D8E8');
+                    gradient.addColorStop(0.7, '#B8E6B8');
+                    gradient.addColorStop(1, '#90EE90');
+                } else if (gameState.season === 2) { // Autumn
+                    gradient.addColorStop(0, '#F4A460');
+                    gradient.addColorStop(0.3, '#DEB887');
+                    gradient.addColorStop(0.7, '#D2B48C');
+                    gradient.addColorStop(1, '#D2691E');
+                } else { // Winter
+                    gradient.addColorStop(0, '#B0C4DE');
+                    gradient.addColorStop(0.3, '#D3D3D3');
+                    gradient.addColorStop(0.7, '#E6E6FA');
+                    gradient.addColorStop(1, '#F5F5F5');
+                }
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            function drawGround() {
+                ctx.fillStyle = '#228B22';
+                ctx.fillRect(0, canvas.height - 60, canvas.width, 60);
+            }
+
+            function gameLoop() {
+                gameState.time++;
+                
+                // Season change every 30 seconds (1800 frames at 60fps)
+                if (gameState.time % 1800 === 0) {
+                    updateSeason();
+                }
+                
+                // Random events every 5 seconds
+                if (gameState.time % 300 === 0 && Math.random() < 0.3) {
+                    const event = events[Math.floor(Math.random() * events.length)];
+                    gameState.currentEvent = event;
+                    gameState.eventStartTime = gameState.time;
+                    showEventNotification(`${event.emoji} ${event.name}!`, event.description, 'event-blessing');
+                    updateLeafSpawning();
+                }
+                
+                // End current event
+                if (gameState.currentEvent && (gameState.time - gameState.eventStartTime) >= gameState.currentEvent.duration) {
+                    gameState.currentEvent = null;
+                    updateLeafSpawning();
+                    showEventNotification("🌱 Weather normalizes", "Natural conditions return", 'event-blessing');
+                }
+                
+                updateChallenge();
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawBackground();
+                drawGround();
+                
+                regions.forEach(region => {
+                    region.update();
+                    region.draw();
+                });
+                
+                leaves = leaves.filter(leaf => {
+                    leaf.update();
+                    leaf.draw();
+                    return leaf.alpha > 0;
+                });
+                
+                gameState.windX *= 0.95;
+                gameState.windY *= 0.95;
+                
+                updateUI();
+                requestAnimationFrame(gameLoop);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+
+            // Initialize regions with proper canvas size
+            function initializeRegions() {
+                regions = [];
+                for (let i = 0; i < 8; i++) {
+                    regions.push(new Region(i * canvas.width / 8, canvas.width / 8));
                 }
             }
 
-            adjustBrightness(color, amount) {
-                const hex = color.replace('#', '');
-                const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
-                const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
-                const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
-                return `rgb(${r}, ${g}, ${b})`;
-            }
-        }
+            initializeRegions();
 
-        // Game objects
-        let leaves = [];
-        let regions = [];
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const newMouseX = e.clientX - rect.left;
+                const newMouseY = e.clientY - rect.top;
+                gameState.windX = (newMouseX - gameState.mouseX) * 0.1;
+                gameState.windY = (newMouseY - gameState.mouseY) * 0.1;
+                gameState.mouseX = newMouseX;
+                gameState.mouseY = newMouseY;
+            });
 
-        const regionWidth = canvas.width / 8;
-        for (let i = 0; i < 8; i++) {
-            regions.push(new Region(i * regionWidth, regionWidth));
-        }
+            // Update resize handler to reinitialize regions
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                initializeRegions();
+            });
 
-        setInterval(() => {
-            if (leaves.filter(leaf => !leaf.landed).length < 20) {
-                leaves.push(new Leaf());
-            }
-        }, seasons[gameState.season].leafSpawnRate);
-
-        canvas.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const newMouseX = e.clientX - rect.left;
-            const newMouseY = e.clientY - rect.top;
+            document.getElementById('music-toggle').addEventListener('click', toggleMusic);
             
-            gameState.windX = (newMouseX - gameState.mouseX) * 0.1;
-            gameState.windY = (newMouseY - gameState.mouseY) * 0.1;
+            updateUI();
+            updateMusicInfo();
             
-            gameState.mouseX = newMouseX;
-            gameState.mouseY = newMouseY;
-        });
-
-        function updateTime() {
-            gameState.time++;
-            
-            if (gameState.time % 1800 === 0) {
-                gameState.season = (gameState.season + 1) % 4;
-                updateSeasonDisplay();
-            }
-            
-            if (gameState.time % 600 === 0) {
-                updateStory();
-            }
-        }
-
-        function updateSeasonDisplay() {
+            // Initialize season display
             const season = seasons[gameState.season];
             document.getElementById('seasonName').textContent = season.name;
             document.getElementById('season-indicator').innerHTML = 
                 `<span id="seasonName">${season.name}</span> ${season.emoji}`;
+            
+            startNewChallenge();
+            updateLeafSpawning();
+            playMusic();
+            gameLoop();
+
+        } catch (error) {
+            console.error('Game initialization failed:', error);
+            document.body.innerHTML = '<div style="padding: 20px; font-family: Arial; text-align: center;"><h2>🍃 Seasons of Civilization</h2><p>Loading game...</p><p style="color: #666;">If this takes too long, please refresh the page.</p></div>';
         }
-
-        function updateStory() {
-            const phaseStories = stories[gameState.phase] || stories[10];
-            gameState.currentStoryIndex = (gameState.currentStoryIndex + 1) % phaseStories.length;
-            document.getElementById('storyText').textContent = phaseStories[gameState.currentStoryIndex];
-        }
-
-        function updatePhase() {
-            const nextPhaseData = phases[gameState.phase];
-            if (nextPhaseData && gameState.leafCount >= nextPhaseData.leafRequirement) {
-                gameState.phase++;
-                updateUI();
-                updateStory();
-            }
-        }
-
-        function updateUI() {
-            document.getElementById('leafCount').textContent = gameState.leafCount;
-            document.getElementById('phase').textContent = gameState.phase;
-            
-            const prosperityCounts = [0, 0, 0, 0];
-            let totalPopulation = 0;
-            
-            regions.forEach(region => {
-                prosperityCounts[region.prosperity]++;
-                totalPopulation += region.population;
-            });
-            
-            document.getElementById('population').textContent = totalPopulation;
-            document.getElementById('abandonedRegions').textContent = prosperityCounts[0];
-            document.getElementById('strugglingRegions').textContent = prosperityCounts[1];
-            document.getElementById('growingRegions').textContent = prosperityCounts[2];
-            document.getElementById('thrivingRegions').textContent = prosperityCounts[3];
-            
-            const currentPhase = phases[gameState.phase - 1];
-            document.getElementById('phaseTitle').textContent = currentPhase.name;
-            document.getElementById('phaseDescription').textContent = currentPhase.description;
-        }
-
-        function drawBackground() {
-            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            
-            if (gameState.season === 0) {
-                gradient.addColorStop(0, '#87CEEB');
-                gradient.addColorStop(0.3, '#B0E0E6');
-                gradient.addColorStop(0.7, '#E0F6FF');
-                gradient.addColorStop(1, '#F0FFF0');
-            } else if (gameState.season === 1) {
-                gradient.addColorStop(0, '#87CEFA');
-                gradient.addColorStop(0.3, '#98D8E8');
-                gradient.addColorStop(0.7, '#B8E6B8');
-                gradient.addColorStop(1, '#90EE90');
-            } else if (gameState.season === 2) {
-                gradient.addColorStop(0, '#F4A460');
-                gradient.addColorStop(0.3, '#DEB887');
-                gradient.addColorStop(0.7, '#D2B48C');
-                gradient.addColorStop(1, '#D2691E');
-            } else {
-                gradient.addColorStop(0, '#B0C4DE');
-                gradient.addColorStop(0.3, '#D3D3D3');
-                gradient.addColorStop(0.7, '#E6E6FA');
-                gradient.addColorStop(1, '#F5F5F5');
-            }
-            
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function drawGround() {
-            const groundHeight = 60;
-            
-            const groundGradient = ctx.createLinearGradient(0, canvas.height - groundHeight, 0, canvas.height);
-            groundGradient.addColorStop(0, '#228B22');
-            groundGradient.addColorStop(0.3, '#32CD32');
-            groundGradient.addColorStop(0.7, '#8B4513');
-            groundGradient.addColorStop(1, '#654321');
-            
-            ctx.fillStyle = groundGradient;
-            ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
-            
-            // Much slower and calmer grass animation
-            ctx.strokeStyle = '#228B22';
-            ctx.lineWidth = 1;
-            
-            for (let x = 0; x < canvas.width; x += 5) {
-                if (Math.random() > 0.8) { // Less frequent grass
-                    const grassHeight = 3 + Math.random() * 6;
-                    // Much slower wind effect on grass
-                    const bend = Math.sin(gameState.time * 0.001 + x * 0.01) * 0.5;
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(x, canvas.height - groundHeight);
-                    ctx.quadraticCurveTo(
-                        x + bend,
-                        canvas.height - groundHeight - grassHeight/2,
-                        x + bend * 1.2,
-                        canvas.height - groundHeight - grassHeight
-                    );
-                    ctx.stroke();
-                }
-            }
-            
-            // Static ground details (no animation)
-            ctx.save();
-            ctx.globalAlpha = 0.6;
-            for (let i = 0; i < 15; i++) {
-                const x = (i * 73) % canvas.width; // Fixed positions
-                const y = canvas.height - groundHeight + 20 + (i * 17) % 20;
-                const size = 2 + (i % 3);
-                
-                if (i % 2 === 0) {
-                    ctx.fillStyle = '#A9A9A9';
-                    ctx.beginPath();
-                    ctx.ellipse(x, y, size, size * 0.7, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                } else {
-                    ctx.fillStyle = '#8B4513';
-                    ctx.beginPath();
-                    ctx.ellipse(x, y, size * 1.5, size, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-            ctx.restore();
-        }
-
-        function drawWind() {
-            if (Math.abs(gameState.windX) > 0.1 || Math.abs(gameState.windY) > 0.1) {
-                const windParticles = 20;
-                const baseAlpha = Math.min(0.3, Math.abs(gameState.windX) + Math.abs(gameState.windY));
-                
-                for (let i = 0; i < windParticles; i++) {
-                    const x = Math.random() * canvas.width;
-                    const y = Math.random() * canvas.height * 0.8;
-                    const length = (Math.abs(gameState.windX) + Math.abs(gameState.windY)) * 25;
-                    
-                    const windGradient = ctx.createLinearGradient(
-                        x, y,
-                        x + gameState.windX * length,
-                        y + gameState.windY * length
-                    );
-                    windGradient.addColorStop(0, `rgba(255, 255, 255, ${baseAlpha})`);
-                    windGradient.addColorStop(0.5, `rgba(255, 255, 255, ${baseAlpha * 0.7})`);
-                    windGradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
-                    
-                    ctx.strokeStyle = windGradient;
-                    ctx.lineWidth = 1 + Math.random();
-                    ctx.lineCap = 'round';
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(x, y);
-                    ctx.lineTo(x + gameState.windX * length, y + gameState.windY * length);
-                    ctx.stroke();
-                }
-                
-                if (Math.abs(gameState.windX) > 0.3) {
-                    for (let i = 0; i < 5; i++) {
-                        const x = Math.random() * canvas.width;
-                        const y = Math.random() * canvas.height * 0.6;
-                        const time = gameState.time * 0.1 + i;
-                        
-                        ctx.fillStyle = `rgba(255, 255, 255, ${baseAlpha * 0.5})`;
-                        ctx.beginPath();
-                        ctx.arc(
-                            x + Math.sin(time) * 20,
-                            y + Math.cos(time * 1.3) * 10,
-                            2,
-                            0,
-                            Math.PI * 2
-                        );
-                        ctx.fill();
-                    }
-                }
-            }
-        }
-
-        function gameLoop() {
-            updateTime();
-            
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            drawBackground();
-            drawGround();
-            
-            regions.forEach(region => {
-                region.update();
-                region.draw();
-            });
-            
-            leaves.forEach((leaf, index) => {
-                leaf.update();
-                leaf.draw();
-                
-                if (leaf.landed && leaf.alpha <= 0) {
-                    leaves.splice(index, 1);
-                }
-            });
-            
-            drawWind();
-            
-            gameState.windX *= 0.95;
-            gameState.windY *= 0.95;
-            
-            updateUI();
-            requestAnimationFrame(gameLoop);
-        }
-
-        updateUI();
-        updateSeasonDisplay();
-        updateStory();
-        updateMusicInfo();
-        
-        document.getElementById('music-toggle').addEventListener('click', toggleMusic);
-        
-        // Try to start music immediately when page loads
-        playMusic();
-        
-        // Also try to start music on first user interaction if autoplay was blocked
-        const ensureMusicStarts = () => {
-            if (gameState.musicEnabled && (!currentAudio || currentAudio.paused)) {
-                playMusic();
-            }
-        };
-        
-        // Multiple fallback triggers for music to start
-        document.addEventListener('click', ensureMusicStarts, { once: true });
-        canvas.addEventListener('mousemove', ensureMusicStarts, { once: true });
-        canvas.addEventListener('touchstart', ensureMusicStarts, { once: true });
-        document.addEventListener('keydown', ensureMusicStarts, { once: true });
-        
-        gameLoop();
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            regions = [];
-            const regionWidth = canvas.width / 8;
-            for (let i = 0; i < 8; i++) {
-                regions.push(new Region(i * regionWidth, regionWidth));
-            }
-        });
     </script>
 </body>
 </html>
