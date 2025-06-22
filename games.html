@@ -1,13 +1,10 @@
-Sure, here is the entire content in English. I've also made sure the demo link points to `https://www.tacorari.eu/wolf.html` and that the specified images are removed.
-
-```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Hunger Within - Haus Tacorari</title>
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <title>Haus Tacorari - Game Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -75,19 +72,19 @@ Sure, here is the entire content in English. I've also made sure the demo link p
         height: 2px;
         background-color: #d4a017;
       }
+      .game-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
       .feature-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
       .feature-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-      }
-      .screenshot {
-        transition: transform 0.3s ease, opacity 0.3s ease;
-      }
-      .screenshot:hover {
-        transform: scale(1.03);
-        opacity: 0.9;
       }
       .language-btn {
         transition: all 0.3s ease;
@@ -137,37 +134,41 @@ Sure, here is the entire content in English. I've also made sure the demo link p
         class="container mx-auto px-4 py-4 flex justify-between items-center"
       >
         <div class="flex items-center">
+          <img
+            src="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png"
+            alt="Haus Tacorari Logo"
+            class="h-8 w-auto mr-3"
+          />
           <h1 class="text-2xl font-bold cinzel text-primary">
-            The Hunger Within
+            Haus Tacorari
           </h1>
         </div>
         <nav class="hidden md:flex space-x-8">
-          <a href="#story" class="nav-link text-gray-300 hover:text-primary"
-            >Story</a
-          >
-          <a href="#gameplay" class="nav-link text-gray-300 hover:text-primary"
-            >Gameplay</a
+          <a href="#games" class="nav-link text-gray-300 hover:text-primary"
+            >Games</a
           >
           <a href="#features" class="nav-link text-gray-300 hover:text-primary"
             >Features</a
           >
-          <a
-            href="#screenshots"
-            class="nav-link text-gray-300 hover:text-primary"
-            >Screenshots</a
+          <a href="#about" class="nav-link text-gray-300 hover:text-primary"
+            >About</a
           >
         </nav>
         <div class="flex items-center space-x-4">
-          <button
-            class="language-btn px-3 py-1 text-sm border border-gray-600 rounded-full text-gray-400"
+          <a
+            href="https://www.instagram.com/haustacorari/"
+            target="_blank"
+            class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
           >
-            日本語
-          </button>
-          <button
-            class="language-btn active px-3 py-1 text-sm border border-gray-600 rounded-full"
+            <i class="ri-instagram-line ri-lg text-gray-300"></i>
+          </a>
+          <a
+            href="https://buymeacoffee.com/tacorari"
+            target="_blank"
+            class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-button transition-colors text-sm"
           >
-            English
-          </button>
+            ☕ Support Us
+          </a>
           <button
             class="md:hidden w-10 h-10 flex items-center justify-center text-gray-300"
           >
@@ -179,29 +180,29 @@ Sure, here is the entire content in English. I've also made sure the demo link p
 
     <section
       class="w-full h-screen flex items-center justify-center relative overflow-hidden"
-      style="background-image: url('https://readdy.ai/api/search-image?query=dark%20fantasy%20forest%20with%20moonlight%2C%20mystical%20atmosphere%2C%20werewolf%20silhouette%2C%20gothic%20horror%2C%20cinematic%20lighting%2C%20high%20quality%2C%20detailed%2C%20atmospheric&width=1920&height=1080&seq=hero1&orientation=landscape'); background-size: cover; background-position: center;"
+      style="background-image: url('https://readdy.ai/api/search-image?query=dark%20fantasy%20forest%20with%20moonlight%2C%20mystical%20atmosphere%2C%20gothic%20horror%2C%20cinematic%20lighting%2C%20high%20quality%2C%20detailed%2C%20atmospheric&width=1920&height=1080&seq=hero1&orientation=landscape'); background-size: cover; background-position: center;"
     >
       <div class="absolute inset-0 bg-black bg-opacity-60"></div>
       <div
         class="container mx-auto px-4 z-10 flex flex-col items-center text-center"
       >
         <h1 class="text-5xl md:text-7xl font-bold mb-4 game-title cinzel">
-          The Hunger Within
+          Haus Tacorari
         </h1>
         <p class="text-xl md:text-2xl italic mb-8 text-gray-300">
-          A tale of hunger in the dark and a mother's love
+          Dark Fantasy Gaming Experience
         </p>
         <p class="text-lg md:text-xl max-w-3xl mb-10 leading-relaxed">
-          A dark fantasy 3D turn-based tactical SRPG where a cursed mother, transformed into a werewolf, fights for the prosperity of her species and the future of her children.
+          Immerse yourself in tactical strategy and compelling narratives. Experience our collection of dark fantasy games featuring deep strategic gameplay and emotional storytelling.
         </p>
         <div
           class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6"
         >
           <a
-            href="https://www.tacorari.eu/wolf.html"
+            href="#games"
             class="cta-button px-8 py-3 text-lg font-bold text-gray-900 rounded-button whitespace-nowrap"
           >
-            Play Demo
+            Explore Games
           </a>
           <button
             class="px-8 py-3 text-lg font-bold border-2 border-primary text-primary bg-transparent rounded-button hover:bg-primary hover:bg-opacity-10 transition-all whitespace-nowrap"
@@ -212,69 +213,86 @@ Sure, here is the entire content in English. I've also made sure the demo link p
       </div>
     </section>
 
-    <section id="story" class="py-20 bg-[#1a1a1a]">
+    <section id="games" class="py-20 bg-[#1a1a1a]">
       <div class="container mx-auto px-4">
         <h2
           class="text-3xl md:text-4xl font-bold mb-16 text-center section-title cinzel"
         >
-          Story
+          Our Games
         </h2>
-        <div class="flex flex-col md:flex-row items-center gap-10">
-          <div class="w-full md:w-1/2">
-            <img
-              src="https://readdy.ai/api/search-image?query=female%20werewolf%20with%20glowing%20eyes%20in%20moonlight%2C%20dark%20fantasy%20style%2C%20emotional%2C%20protective%2C%20detailed%20fur%20texture%2C%20cinematic%20lighting%2C%20high%20quality&width=600&height=800&seq=story1&orientation=portrait"
-              alt="Werewolf Mother"
-              class="w-full h-auto rounded-lg shadow-2xl"
-            />
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          
+          <!-- The Matriarch and the Pack -->
+          <div class="game-card bg-[#2a2a2a] rounded-lg overflow-hidden border border-gray-700">
+            <div class="relative">
+              <img
+                src="https://soyadayo.github.io/Mappon/wolfgame.png"
+                alt="The Matriarch and the Pack"
+                class="w-full h-64 object-cover"
+              />
+              <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-4 cinzel text-primary">
+                The Matriarch and the Pack
+              </h3>
+              <p class="text-gray-300 mb-6 leading-relaxed">
+                A dark fantasy 3D turn-based tactical SRPG where a cursed mother, transformed into a werewolf, fights for the prosperity of her species and the future of her children. Experience tactical combat, child-rearing, and a story that interweaves hope and despair.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <a
+                  href="https://www.tacorari.eu/wolfex.html"
+                  class="cta-button px-6 py-3 text-center font-bold text-gray-900 rounded-button flex-1"
+                >
+                  Play Now
+                </a>
+                <button
+                  class="px-6 py-3 font-bold border-2 border-primary text-primary bg-transparent rounded-button hover:bg-primary hover:bg-opacity-10 transition-all flex-1"
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="w-full md:w-1/2 space-y-6">
-            <p class="text-lg leading-relaxed">
-              <span class="text-primary font-bold">The Cursed Mother's Tale.</span>
-              A mother becomes a werewolf due to a curse. Her desire was for her species to prosper, but for some unknown reason, her children are born with traits of the enemies she consumes.
-            </p>
-            <p class="text-lg leading-relaxed">
-              She realized that to prosper, she must continue to fight and consume. She resents the curse, but her children are innocent.
-            </p>
-            <p class="text-lg leading-relaxed">
-              She suffers from the cannibalistic curse inflicted by a demon. She devours her enemies, lays eggs, and her offspring inherit the enemies' traits (e.g., wolf claws, snake venom).
-            </p>
-            <p class="text-lg leading-relaxed">
-              While hating the curse, she loves her children and fights to defeat the demon and break the curse. Experience a story of tactical combat, child-rearing, and the interweaving of hope and despair across 12 stages.
-            </p>
+
+          <!-- Seasons of Civilization -->
+          <div class="game-card bg-[#2a2a2a] rounded-lg overflow-hidden border border-gray-700">
+            <div class="relative">
+              <img
+                src="https://soyadayo.github.io/Mappon/leavesgame.png"
+                alt="Seasons of Civilization"
+                class="w-full h-64 object-cover"
+              />
+              <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-4 cinzel text-primary">
+                Seasons of Civilization
+              </h3>
+              <p class="text-gray-300 mb-6 leading-relaxed">
+                A strategic civilization-building game that follows the cyclical nature of growth and decay. Guide your civilization through the changing seasons of prosperity and challenge, making crucial decisions that will determine your legacy.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <a
+                  href="https://www.tacorari.eu/leavesex.html"
+                  class="cta-button px-6 py-3 text-center font-bold text-gray-900 rounded-button flex-1"
+                >
+                  Play Now
+                </a>
+                <button
+                  class="px-6 py-3 font-bold border-2 border-primary text-primary bg-transparent rounded-button hover:bg-primary hover:bg-opacity-10 transition-all flex-1"
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
     </section>
 
-    <section id="gameplay" class="py-20 bg-[#222222]">
-      <div class="container mx-auto px-4">
-        <h2
-          class="text-3xl md:text-4xl font-bold mb-16 text-center section-title cinzel"
-        >
-          Gameplay
-        </h2>
-        <div class="flex flex-col md:flex-row-reverse items-center gap-10">
-          <div class="w-full md:w-1/2 space-y-6">
-            <p class="text-lg leading-relaxed">
-              <span class="text-primary font-bold">Tactical Combat System.</span>
-              Players control the mother wolf and her offspring on a 10x10 3D grid, progressing through the game by defeating enemies or achieving stage objectives.
-            </p>
-            <p class="text-lg leading-relaxed">
-              Each character has unique skills and abilities, requiring strategic combat that utilizes terrain and positioning. When the mother wolf defeats an enemy, she can consume it and give birth to offspring with that enemy's traits.
-            </p>
-            <p class="text-lg leading-relaxed">
-              <span class="text-primary font-bold">Child-Rearing System.</span>
-              Between stages, you can train your offspring and enhance their inherited traits. In certain stages, the children will come of age, and their growth will be depicted as the mother watches over them.
-            </p>
-            <p class="text-lg leading-relaxed">
-              Each stage offers different objectives and challenges, requiring players to manage limited resources and devise optimal strategies.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="features" class="py-20 bg-[#1a1a1a]">
+    <section id="features" class="py-20 bg-[#222222]">
       <div class="container mx-auto px-4">
         <h2
           class="text-3xl md:text-4xl font-bold mb-16 text-center section-title cinzel"
@@ -292,7 +310,7 @@ Sure, here is the entire content in English. I've also made sure the demo link p
             </div>
             <h3 class="text-xl font-bold mb-4 text-center">Tactical Combat</h3>
             <p class="text-gray-300">
-              Strategic combat on a 10x10 3D grid. Deep tactical gameplay utilizing terrain and positioning. Diverse combat styles leveraging each character's traits.
+              Strategic combat systems with deep tactical gameplay. Utilize terrain, positioning, and character abilities to overcome challenging encounters and achieve victory.
             </p>
           </div>
           <div
@@ -303,9 +321,9 @@ Sure, here is the entire content in English. I've also made sure the demo link p
             >
               <i class="ri-heart-line ri-2x text-primary"></i>
             </div>
-            <h3 class="text-xl font-bold mb-4 text-center">Child-Rearing System</h3>
+            <h3 class="text-xl font-bold mb-4 text-center">Emotional Storytelling</h3>
             <p class="text-gray-300">
-              A system for birthing and raising offspring with traits gained from consuming enemies. Enhance abilities through child growth and training. Unique bond system influencing the mother-child relationship in the story.
+              Rich narratives that explore themes of family, sacrifice, and survival. Experience compelling character development and meaningful choices that impact the story.
             </p>
           </div>
           <div
@@ -316,9 +334,9 @@ Sure, here is the entire content in English. I've also made sure the demo link p
             >
               <i class="ri-book-open-line ri-2x text-primary"></i>
             </div>
-            <h3 class="text-xl font-bold mb-4 text-center">Deep Story</h3>
+            <h3 class="text-xl font-bold mb-4 text-center">Dark Fantasy Worlds</h3>
             <p class="text-gray-300">
-              A profound dark fantasy intertwining curse and maternal love. Multiple endings influenced by player choices. Relatable characters' conflicts and growth.
+              Immersive dark fantasy settings with atmospheric visuals and sound design. Explore mysterious worlds filled with ancient curses and forgotten magic.
             </p>
           </div>
           <div
@@ -329,9 +347,9 @@ Sure, here is the entire content in English. I've also made sure the demo link p
             >
               <i class="ri-landscape-line ri-2x text-primary"></i>
             </div>
-            <h3 class="text-xl font-bold mb-4 text-center">Diverse Stages</h3>
+            <h3 class="text-xl font-bold mb-4 text-center">Diverse Environments</h3>
             <p class="text-gray-300">
-              12 diverse stages reflecting the dark fantasy world, such as dark forests and blood-stained altars. Unique objectives and challenges for each stage. Changing weather and time of day impacting strategy.
+              Multiple unique stages and environments that reflect the game worlds. Each location offers distinct challenges and opportunities for strategic gameplay.
             </p>
           </div>
           <div
@@ -342,9 +360,9 @@ Sure, here is the entire content in English. I've also made sure the demo link p
             >
               <i class="ri-gamepad-line ri-2x text-primary"></i>
             </div>
-            <h3 class="text-xl font-bold mb-4 text-center">Evolving Gameplay</h3>
+            <h3 class="text-xl font-bold mb-4 text-center">Strategic Depth</h3>
             <p class="text-gray-300">
-              New abilities and challenges unlocked as the game progresses. Enemy AI that adapts to player strategies. Diverse routes to completion enhancing replayability.
+              Complex systems that reward careful planning and strategic thinking. Multiple paths to victory and high replayability ensure lasting entertainment value.
             </p>
           </div>
           <div
@@ -357,50 +375,43 @@ Sure, here is the entire content in English. I've also made sure the demo link p
             </div>
             <h3 class="text-xl font-bold mb-4 text-center">Immersive Presentation</h3>
             <p class="text-gray-300">
-              Beautiful visuals and effects built with Godot 4.x. Atmospheric soundtrack enhancing tension. Dramatic presentations and cutscenes at key moments.
+              Beautiful visuals and atmospheric soundtracks that enhance the gaming experience. Dramatic presentations and cutscenes bring the stories to life.
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="screenshots" class="py-20 bg-[#222222]">
+    <section id="about" class="py-20 bg-[#1a1a1a]">
       <div class="container mx-auto px-4">
         <h2
           class="text-3xl md:text-4xl font-bold mb-16 text-center section-title cinzel"
         >
-          Screenshots
+          About Haus Tacorari
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="screenshot overflow-hidden rounded-lg shadow-lg">
+        <div class="flex flex-col md:flex-row items-center gap-10">
+          <div class="w-full md:w-1/2">
             <img
-              src="https://readdy.ai/api/search-image?query=3D%20tactical%20RPG%20game%2C%20dark%20fantasy%20style%2C%20werewolf%20mother%20with%20cubs%2C%20isometric%20view%2C%20grid-based%20combat%2C%20high%20quality%20game%20screenshot&width=600&height=400&seq=screen1&orientation=landscape"
-              alt="Combat Scene"
-              class="w-full h-auto object-cover"
+              src="https://readdy.ai/api/search-image?query=indie%20game%20development%20studio%2C%20dark%20fantasy%20aesthetic%2C%20creative%20workspace%2C%20atmospheric%20lighting%2C%20artistic%20concept&width=600&height=400&seq=studio1&orientation=landscape"
+              alt="Haus Tacorari Studio"
+              class="w-full h-auto rounded-lg shadow-2xl"
             />
           </div>
-          <div class="screenshot overflow-hidden rounded-lg shadow-lg">
-            <img
-              src="https://readdy.ai/api/search-image?query=dark%20fantasy%20game%20cutscene%2C%20werewolf%20mother%20with%20children%2C%20emotional%20moment%2C%20cinematic%20lighting%2C%20high%20quality%20game%20screenshot&width=600%20height=400&seq=screen2&orientation=landscape"
-              alt="Cutscene"
-              class="w-full h-auto object-cover"
-            />
+          <div class="w-full md:w-1/2 space-y-6">
+            <p class="text-lg leading-relaxed">
+              <span class="text-primary font-bold">Haus Tacorari</span> is an independent game development studio dedicated to creating immersive dark fantasy experiences that combine strategic gameplay with emotionally compelling narratives.
+            </p>
+            <p class="text-lg leading-relaxed">
+              We specialize in tactical RPGs and strategy games that explore complex themes of family, sacrifice, and the struggle between hope and despair. Our games feature deep strategic systems while maintaining accessibility for players of all skill levels.
+            </p>
+            <p class="text-lg leading-relaxed">
+              Each of our titles is crafted with attention to atmospheric detail, from haunting soundscapes to evocative visual design. We believe that games can be both challenging and emotionally meaningful.
+            </p>
+            <p class="text-lg leading-relaxed">
+              Join us on our journey as we continue to create unique gaming experiences that push the boundaries of interactive storytelling and strategic gameplay.
+            </p>
           </div>
-          <div class="screenshot overflow-hidden rounded-lg shadow-lg">
-            <img
-              src="https://readdy.ai/api/search-image?query=dark%20fantasy%20game%20world%20map%2C%20blood%20moon%2C%20gothic%20horror%20atmosphere%2C%20werewolf%20territory%2C%20high%20quality%20game%20screenshot&width=600&height=400&seq=screen4&orientation=landscape"
-              alt="World Map"
-              class="w-full h-auto object-cover"
-            />
-          </div>
-          <div class="screenshot overflow-hidden rounded-lg shadow-lg">
-            <img
-              src="https://readdy.ai/api/search-image?query=tactical%20RPG%20battle%20scene%2C%20werewolf%20mother%20protecting%20cubs%2C%20enemies%20surrounding%2C%20dark%20fantasy%20style%2C%20high%20quality%20game%20screenshot&width=600&height=400&seq=screen5&orientation=landscape"
-              alt="Combat Scene 2"
-              class="w-full h-auto object-cover"
-            />
-          </div>
-          </div>
+        </div>
       </div>
     </section>
 
@@ -410,25 +421,26 @@ Sure, here is the entire content in English. I've also made sure the demo link p
     >
       <div class="container mx-auto px-4 text-center">
         <h2 class="text-3xl md:text-4xl font-bold mb-6 cinzel text-primary">
-          Experience It Now
+          Start Your Adventure
         </h2>
         <p class="text-xl max-w-3xl mx-auto mb-10">
-          Step into the world of "The Hunger Within" and experience tactical combat and a compelling story. Guide the fate of the mother wolf and embark on a journey to break the curse alongside her children.
+          Dive into our collection of dark fantasy games and experience tactical combat, compelling stories, and atmospheric worlds. Begin your journey with Haus Tacorari today.
         </p>
         <div
           class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6"
         >
           <a
-            href="https://www.tacorari.eu/wolf.html"
+            href="https://www.tacorari.eu/wolfex.html"
             class="cta-button px-8 py-4 text-lg font-bold text-gray-900 rounded-button whitespace-nowrap"
           >
-            Play Demo
+            Play The Matriarch
           </a>
-          <button
-            class="px-8 py-4 text-lg font-bold border-2 border-primary text-primary bg-transparent rounded-button hover:bg-primary hover:bg-opacity-10 transition-all whitespace-nowrap"
+          <a
+            href="https://www.tacorari.eu/leavesex.html"
+            class="cta-button px-8 py-4 text-lg font-bold text-gray-900 rounded-button whitespace-nowrap"
           >
-            Add to Wishlist
-          </button>
+            Play Seasons
+          </a>
         </div>
       </div>
     </section>
@@ -437,38 +449,21 @@ Sure, here is the entire content in English. I've also made sure the demo link p
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <div>
+            <img
+              src="https://soyadayo.github.io/Mappon/Logo_Haus_Tacorari_small_upscaled.png"
+              alt="Haus Tacorari Logo"
+              class="h-8 w-auto mb-2"
+            />
             <h3 class="text-2xl font-bold cinzel text-primary mb-2">
-              The Hunger Within
+              Haus Tacorari
             </h3>
-            <p class="text-gray-400">by Haus Tacorari</p>
+            <p class="text-gray-400">Independent Game Development Studio</p>
           </div>
           <div class="mt-6 md:mt-0">
-            <div class="flex space-x-4">
-              <a
-                href="#"
-                class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
-              >
-                <i class="ri-twitter-x-line ri-lg text-gray-300"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
-              >
-                <i class="ri-discord-line ri-lg text-gray-300"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
-              >
-                <i class="ri-youtube-line ri-lg text-gray-300"></i>
-              </a>
-              <a
-                href="#"
-                class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
-              >
-                <i class="ri-steam-line ri-lg text-gray-300"></i>
-              </a>
-            </div>
+            <p class="text-gray-400 text-sm">
+              Follow us on <a href="https://www.instagram.com/haustacorari/" target="_blank" class="text-primary hover:text-secondary">Instagram</a> | 
+              Support us on <a href="https://buymeacoffee.com/tacorari" target="_blank" class="text-primary hover:text-secondary">Buy Me a Coffee</a>
+            </p>
           </div>
         </div>
         <hr class="border-gray-800 my-8" />
@@ -507,14 +502,6 @@ Sure, here is the entire content in English. I've also made sure the demo link p
       });
     </script>
 
-    <script id="mobileNavigation">
-      document.addEventListener("DOMContentLoaded", function () {
-        const menuButton = document.querySelector(".ri-menu-line").parentElement;
-        // Mobile navigation implementation
-        // Currently, this is a demo and does not include actual functionality
-      });
-    </script>
-
     <script id="scrollAnimation">
       document.addEventListener("DOMContentLoaded", function () {
         const navLinks = document.querySelectorAll(".nav-link");
@@ -525,14 +512,15 @@ Sure, here is the entire content in English. I've also made sure the demo link p
             const targetId = this.getAttribute("href");
             const targetElement = document.querySelector(targetId);
 
-            window.scrollTo({
-              top: targetElement.offsetTop - 80,
-              behavior: "smooth",
-            });
+            if (targetElement) {
+              window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: "smooth",
+              });
+            }
           });
         });
       });
     </script>
   </body>
 </html>
-```
