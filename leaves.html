@@ -294,8 +294,23 @@
                 setTimeout(playMusic, 1000);
             });
             
-            currentAudio.play().catch(e => {
-                console.log('Music play failed');
+            // Try to play immediately, fallback to user interaction
+            currentAudio.play().then(() => {
+                console.log('Music started successfully');
+            }).catch(e => {
+                console.log('Autoplay blocked, will try on user interaction');
+                // Set up one-time click listener to start music
+                const startMusicOnClick = () => {
+                    currentAudio.play().then(() => {
+                        console.log('Music started after user interaction');
+                    }).catch(err => {
+                        console.log('Music failed to start:', err);
+                    });
+                    document.removeEventListener('click', startMusicOnClick);
+                    canvas.removeEventListener('mousemove', startMusicOnClick);
+                };
+                document.addEventListener('click', startMusicOnClick, { once: true });
+                canvas.addEventListener('mousemove', startMusicOnClick, { once: true });
             });
         }
 
@@ -1040,11 +1055,21 @@
         
         document.getElementById('music-toggle').addEventListener('click', toggleMusic);
         
-        setTimeout(() => {
-            if (gameState.musicEnabled) {
+        // Try to start music immediately when page loads
+        playMusic();
+        
+        // Also try to start music on first user interaction if autoplay was blocked
+        const ensureMusicStarts = () => {
+            if (gameState.musicEnabled && (!currentAudio || currentAudio.paused)) {
                 playMusic();
             }
-        }, 1000);
+        };
+        
+        // Multiple fallback triggers for music to start
+        document.addEventListener('click', ensureMusicStarts, { once: true });
+        canvas.addEventListener('mousemove', ensureMusicStarts, { once: true });
+        canvas.addEventListener('touchstart', ensureMusicStarts, { once: true });
+        document.addEventListener('keydown', ensureMusicStarts, { once: true });
         
         gameLoop();
 
