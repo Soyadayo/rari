@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,6 +58,15 @@
             border-radius: 10px;
             border-left: 5px solid #8a2be2;
             margin-bottom: 20px;
+        }
+
+        .screenshot {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.3);
+            border: 3px solid rgba(138, 43, 226, 0.5);
         }
 
         .button-group {
@@ -214,33 +223,6 @@
             margin-bottom: 8px;
         }
 
-        .language-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .language-toggle button {
-            background: linear-gradient(135deg, #8a2be2, #6a1b9a);
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0 5px;
-            transition: all 0.3s ease;
-        }
-
-        .language-toggle button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(138, 43, 226, 0.5);
-        }
-
-        .language-toggle button.active {
-            background: linear-gradient(135deg, #ff1493, #8a2be2);
-        }
-
         .character-showcase {
             display: flex;
             justify-content: center;
@@ -355,304 +337,164 @@
             font-size: 1.5em;
             vertical-align: middle;
         }
-
-        .lang-content {
-            display: none;
-        }
-
-        .lang-content.active {
-            display: block;
-        }
     </style>
 </head>
 <body>
-    <div class="language-toggle">
-        <button id="langJa" class="active">日本語</button>
-        <button id="langEn">English</button>
-        <button id="langZh">中文</button>
-    </div>
-
     <div class="container">
         <header>
             <h1><span class="emoji-wolf">🐺</span> The Matriarch and the Pack <span class="emoji-wolf">🐺</span></h1>
-            
-            <!-- Japanese Content -->
-            <div class="lang-content active" id="content-ja">
-                <p class="subtitle">母ウルフとして群れを率い、最強の捕食者へと進化せよ</p>
-                <div class="game-description">
-                    <p>母ウルフとなって野生の世界を駆け抜け、獲物を狩って群れを拡大し、50のステージを制覇する壮大なサバイバルシミュレーションRPG。戦略的な移動と狩猟、群れの管理、妊娠システムがゲームの鍵となります。</p>
-                </div>
-                <div class="button-group">
-                    <a href="https://www.tacorari.eu/wolf.html" class="play-button">🌐 オンラインでプレイ</a>
-                    <a href="https://buymeacoffee.com/tacorari" class="support-button">☕ 開発者を支援</a>
-                </div>
+            <p class="subtitle">Lead your pack as the Matriarch and evolve into the ultimate predator</p>
+            <div class="game-description">
+                <p>Become the Mother Wolf and traverse the wild world, hunt prey to expand your pack, and conquer 50 stages in this epic survival simulation RPG. Strategic movement, hunting, pack management, and pregnancy system are the keys to the game.</p>
             </div>
-
-            <!-- English Content -->
-            <div class="lang-content" id="content-en">
-                <p class="subtitle">Lead your pack as the Matriarch and evolve into the ultimate predator</p>
-                <div class="game-description">
-                    <p>Become the Mother Wolf and traverse the wild world, hunt prey to expand your pack, and conquer 50 stages in this epic survival simulation RPG. Strategic movement, hunting, pack management, and pregnancy system are the keys to the game.</p>
-                </div>
-                <div class="button-group">
-                    <a href="https://www.tacorari.eu/wolf.html" class="play-button">🌐 Play Online</a>
-                    <a href="https://buymeacoffee.com/tacorari" class="support-button">☕ Support Developer</a>
-                </div>
-            </div>
-
-            <!-- Chinese Content -->
-            <div class="lang-content" id="content-zh">
-                <p class="subtitle">作为母狼率领狼群，进化成最强的捕食者</p>
-                <div class="game-description">
-                    <p>成为母狼，穿越野生世界，狩猎猎物扩大狼群，征服50个关卡的史诗生存模拟RPG。战略性移动、狩猎、狼群管理和妊娠系统是游戏的关键。</p>
-                </div>
-                <div class="button-group">
-                    <a href="https://www.tacorari.eu/wolf.html" class="play-button">🌐 在线游戏</a>
-                    <a href="https://buymeacoffee.com/tacorari" class="support-button">☕ 支持开发者</a>
-                </div>
+            <img src="https://soyadayo.github.io/Mappon/wolfgame.png" alt="Wolf Pack Evolution RPG Screenshot" class="screenshot">
+            <div class="button-group">
+                <a href="https://www.tacorari.eu/wolf.html" class="play-button">🌐 Play Online</a>
+                <a href="https://buymeacoffee.com/tacorari" class="support-button">☕ Support Developer</a>
             </div>
         </header>
 
         <div class="character-showcase">
             <div class="character-card">
                 <div class="character-icon mother-wolf-icon wolf-glow"></div>
-                <div class="lang-content active" id="mother-ja">
-                    <h3>母ウルフ</h3>
-                    <p>群れのリーダー。強力な攻撃力と特殊能力を持つ</p>
-                </div>
-                <div class="lang-content" id="mother-en">
-                    <h3>Mother Wolf</h3>
-                    <p>Leader of the pack. Possesses powerful attack and special abilities</p>
-                </div>
-                <div class="lang-content" id="mother-zh">
-                    <h3>母狼</h3>
-                    <p>狼群的领袖。拥有强大的攻击力和特殊能力</p>
-                </div>
+                <h3>Mother Wolf</h3>
+                <p>Leader of the pack. Possesses powerful attack and special abilities</p>
             </div>
             <div class="character-card">
                 <div class="character-icon pack-wolf-icon"></div>
-                <div class="lang-content active" id="pack-ja">
-                    <h3>群れ</h3>
-                    <p>母ウルフが妊娠して生まれる子ウルフたち。特性を継承する</p>
-                </div>
-                <div class="lang-content" id="pack-en">
-                    <h3>Wolf Pack</h3>
-                    <p>Wolf pups born from Mother Wolf's pregnancy. Inherits traits</p>
-                </div>
-                <div class="lang-content" id="pack-zh">
-                    <h3>狼群</h3>
-                    <p>由母狼妊娠诞生的小狼。继承特性</p>
-                </div>
+                <h3>Wolf Pack</h3>
+                <p>Wolf pups born from Mother Wolf's pregnancy. Inherits traits</p>
             </div>
         </div>
 
         <!-- Game Overview Section -->
         <div class="section">
-            <!-- Japanese Content -->
-            <div class="lang-content active" id="overview-ja">
-                <h2>🎯 ゲーム概要</h2>
-                <h3>目標</h3>
-                <p>母ウルフとして野生の世界を生き抜き、50のステージを制覇することが最終目標です。各ステージでゴール（🏁）に到達すると次のステージに進めます。</p>
-                
-                <h3>進行システム</h3>
-                <p>経験値システム、群れの拡大、妊娠システム、ボス戦、動的BGMなど豊富な要素で構成された本格的なRPGシステムです。</p>
+            <h2>🎯 Game Overview</h2>
+            <h3>Objective</h3>
+            <p>Survive as the Mother Wolf in the wild world and conquer all 50 stages as your ultimate goal. Reach the Goal (🏁) in each stage to advance to the next.</p>
+            
+            <h3>Progression System</h3>
+            <p>A comprehensive RPG system featuring experience points, pack expansion, pregnancy system, boss battles, and dynamic BGM elements.</p>
 
-                <h3>🌍 ゲーム世界</h3>
-                <div class="grid">
-                    <div class="grid-item">
-                        <h4>🌾 草原</h4>
-                        <p>安全な移動エリア。基本的な地形です。</p>
-                    </div>
-                    <div class="grid-item">
-                        <h4>🌲 森林</h4>
-                        <p>通行可能だが敵が潜んでいることが多い。</p>
-                    </div>
-                    <div class="grid-item">
-                        <h4>⛰️ 山岳</h4>
-                        <p>通行不可。レベル3以上で破壊可能。</p>
-                    </div>
-                    <div class="grid-item">
-                        <h4>🏁 ゴール</h4>
-                        <p>ステージクリアの目標地点。金色に輝いている。</p>
-                    </div>
+            <h3>🌍 Game World</h3>
+            <div class="grid">
+                <div class="grid-item">
+                    <h4>🌾 Grassland</h4>
+                    <p>Safe movement area. Basic terrain type.</p>
                 </div>
-
-                <div class="pregnancy-system">
-                    <h4>🤱 妊娠システム</h4>
-                    <p>母ウルフが敵を倒すと1/3の確率で妊娠状態になります。妊娠中に倒した敵の特性を蓄積し、10ターン後に特性を持った子ウルフが誕生します。これが群れ拡大の核心システムです。</p>
+                <div class="grid-item">
+                    <h4>🌲 Forest</h4>
+                    <p>Passable but enemies often lurk here.</p>
                 </div>
-
-                <div class="music-system">
-                    <h4>🎵 音楽システム</h4>
-                    <p>9曲の動的BGMが用意されており、前の曲/次の曲の選択、音量調整、再生/停止が可能です。ゲームの雰囲気を盛り上げる重要な要素です。</p>
+                <div class="grid-item">
+                    <h4>⛰️ Mountain</h4>
+                    <p>Impassable. Can be destroyed at Level 3+.</p>
+                </div>
+                <div class="grid-item">
+                    <h4>🏁 Goal</h4>
+                    <p>Stage clear target point. Glows golden.</p>
                 </div>
             </div>
 
-            <!-- English Content -->
-            <div class="lang-content" id="overview-en">
-                <h2>🎯 Game Overview</h2>
-                <h3>Objective</h3>
-                <p>Survive as the Mother Wolf in the wild world and conquer all 50 stages as your ultimate goal. Reach the Goal (🏁) in each stage to advance to the next.</p>
-                
-                <h3>Progression System</h3>
-                <p>A comprehensive RPG system featuring experience points, pack expansion, pregnancy system, boss battles, and dynamic BGM elements.</p>
-
-                <h3>🌍 Game World</h3>
-                <div class="grid">
-                    <div class="grid-item">
-                        <h4>🌾 Grassland</h4>
-                        <p>Safe movement area. Basic terrain type.</p>
-                    </div>
-                    <div class="grid-item">
-                        <h4>🌲 Forest</h4>
-                        <p>Passable but enemies often lurk here.</p>
-                    </div>
-                    <div class="grid-item">
-                        <h4>⛰️ Mountain</h4>
-                        <p>Impassable. Can be destroyed at Level 3+.</p>
-                    </div>
-                    <div class="grid-item">
-                        <h4>🏁 Goal</h4>
-                        <p>Stage clear target point. Glows golden.</p>
-                    </div>
-                </div>
-
-                <div class="pregnancy-system">
-                    <h4>🤱 Pregnancy System</h4>
-                    <p>When Mother Wolf defeats enemies, there's a 1/3 chance of becoming pregnant. Traits from defeated enemies accumulate during pregnancy, and after 10 turns, a wolf pup with those traits is born. This is the core system for pack expansion.</p>
-                </div>
-
-                <div class="music-system">
-                    <h4>🎵 Music System</h4>
-                    <p>9 dynamic BGM tracks are available with previous/next track selection, volume adjustment, and play/pause controls. An important element that enhances the game atmosphere.</p>
-                </div>
+            <div class="pregnancy-system">
+                <h4>🤱 Pregnancy System</h4>
+                <p>When Mother Wolf defeats enemies, there's a 1/3 chance of becoming pregnant. Traits from defeated enemies accumulate during pregnancy, and after 10 turns, a wolf pup with those traits is born. This is the core system for pack expansion.</p>
             </div>
 
-            <!-- Chinese Content -->
-            <div class="lang-content" id="overview-zh">
-                <h2>🎯 游戏概述</h2>
-                <h3>目标</h3>
-                <p>作为母狼在野生世界中生存，征服所有50个关卡是最终目标。在每个关卡中到达目标（🏁）即可进入下一关。</p>
-                
-                <h3>进度系统</h3>
-                <p>由经验值系统、狼群扩展、妊娠系统、Boss战、动态BGM等丰富要素构成的正统RPG系统。</p>
-
-                <h3>🌍 游戏世界</h3>
-                <div class="grid">
-                    <div class="grid-item">
-                        <h4>🌾 草原</h4>
-                        <p>安全的移动区域。基本地形类型。</p>
-                    </div>
-                    <div class="grid-item">
-                        <h4>🌲 森林</h4>
-                        <p>可通行但经常有敌人潜伏。</p>
-                    </div>
-                    <div class="grid-item">
-                        <h4>⛰️ 山脉</h4>
-                        <p>不可通行。3级以上可以破坏。</p>
-                    </div>
-                    <div class="grid-item">
-                        <h4>🏁 目标</h4>
-                        <p>关卡通关目标点。发出金色光芒。</p>
-                    </div>
-                </div>
-
-                <div class="pregnancy-system">
-                    <h4>🤱 妊娠系统</h4>
-                    <p>母狼击败敌人时有1/3概率进入妊娠状态。妊娠期间积累击败敌人的特性，10回合后诞生拥有这些特性的小狼。这是狼群扩展的核心系统。</p>
-                </div>
-
-                <div class="music-system">
-                    <h4>🎵 音乐系统</h4>
-                    <p>提供9首动态BGM，可进行上一首/下一首选择、音量调整、播放/暂停操作。是增强游戏氛围的重要要素。</p>
-                </div>
+            <div class="music-system">
+                <h4>🎵 Music System</h4>
+                <p>9 dynamic BGM tracks are available with previous/next track selection, volume adjustment, and play/pause controls. An important element that enhances the game atmosphere.</p>
             </div>
         </div>
 
         <!-- Controls Section -->
         <div class="section">
-            <!-- Japanese Content -->
-            <div class="lang-content active" id="controls-ja">
-                <h2>🎮 操作方法</h2>
-                <div class="grid">
-                    <div class="grid-item">
-                        <h3>移動操作</h3>
-                        <p><span class="key">↑ W</span>北に移動</p>
-                        <p><span class="key">↓ S</span>南に移動</p>
-                        <p><span class="key">← A</span>西に移動</p>
-                        <p><span class="key">→ D</span>東に移動</p>
-                    </div>
-                    <div class="grid-item">
-                        <h3>アクション</h3>
-                        <p><span class="key">Space</span>遠吠え（回復）</p>
-                        <p><span class="key">X</span>障害物破壊</p>
-                        <p><span class="key">R</span>ゲームリセット</p>
-                    </div>
-                    <div class="grid-item">
-                        <h3>操作切り替え</h3>
-                        <p><span class="key">Q</span>母ウルフ操作</p>
-                        <p><span class="key">E</span>群れ操作</p>
-                        <p>母ウルフと群れを個別に操作できます。画面下部のボタンまたはキーボードで切り替え可能。</p>
-                    </div>
-                    <div class="grid-item">
-                        <h3>音楽制御</h3>
-                        <p><span class="key">M</span>音楽ON/OFF</p>
-                        <p><span class="key">N</span>次の曲</p>
-                        <p><span class="key">P</span>前の曲</p>
-                        <p>9曲のBGMが用意されており、前の曲/次の曲/再生停止を操作できます。</p>
-                    </div>
+            <h2>🎮 Controls</h2>
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>Movement</h3>
+                    <p><span class="key">↑ W</span>Move North</p>
+                    <p><span class="key">↓ S</span>Move South</p>
+                    <p><span class="key">← A</span>Move West</p>
+                    <p><span class="key">→ D</span>Move East</p>
+                </div>
+                <div class="grid-item">
+                    <h3>Actions</h3>
+                    <p><span class="key">Space</span>Howl (Heal)</p>
+                    <p><span class="key">X</span>Destroy Obstacle</p>
+                    <p><span class="key">R</span>Reset Game</p>
+                </div>
+                <div class="grid-item">
+                    <h3>Control Switching</h3>
+                    <p><span class="key">Q</span>Control Mother Wolf</p>
+                    <p><span class="key">E</span>Control Pack</p>
+                    <p>You can control the Mother Wolf and pack separately. Switch using buttons at the bottom or keyboard.</p>
+                </div>
+                <div class="grid-item">
+                    <h3>Music Control</h3>
+                    <p><span class="key">M</span>Music ON/OFF</p>
+                    <p><span class="key">N</span>Next Track</p>
+                    <p><span class="key">P</span>Previous Track</p>
+                    <p>9 BGM tracks are available with previous/next/play-pause controls.</p>
                 </div>
             </div>
+        </div>
 
-            <!-- English Content -->
-            <div class="lang-content" id="controls-en">
-                <h2>🎮 Controls</h2>
-                <div class="grid">
-                    <div class="grid-item">
-                        <h3>Movement</h3>
-                        <p><span class="key">↑ W</span>Move North</p>
-                        <p><span class="key">↓ S</span>Move South</p>
-                        <p><span class="key">← A</span>Move West</p>
-                        <p><span class="key">→ D</span>Move East</p>
-                    </div>
-                    <div class="grid-item">
-                        <h3>Actions</h3>
-                        <p><span class="key">Space</span>Howl (Heal)</p>
-                        <p><span class="key">X</span>Destroy Obstacle</p>
-                        <p><span class="key">R</span>Reset Game</p>
-                    </div>
-                    <div class="grid-item">
-                        <h3>Control Switching</h3>
-                        <p><span class="key">Q</span>Control Mother Wolf</p>
-                        <p><span class="key">E</span>Control Pack</p>
-                        <p>You can control the Mother Wolf and pack separately. Switch using buttons at the bottom or keyboard.</p>
-                    </div>
-                    <div class="grid-item">
-                        <h3>Music Control</h3>
-                        <p><span class="key">M</span>Music ON/OFF</p>
-                        <p><span class="key">N</span>Next Track</p>
-                        <p><span class="key">P</span>Previous Track</p>
-                        <p>9 BGM tracks are available with previous/next/play-pause controls.</p>
-                    </div>
-                </div>
+        <!-- Gameplay Features Section -->
+        <div class="section">
+            <h2>🎮 Gameplay Features</h2>
+            <div class="feature-list">
+                <div class="feature-item">🎯 50 Challenging Stages</div>
+                <div class="feature-item">🐺 Pack Evolution System</div>
+                <div class="feature-item">🤱 Dynamic Pregnancy Mechanics</div>
+                <div class="feature-item">⚔️ Strategic Combat</div>
+                <div class="feature-item">🎵 Interactive Music System</div>
+                <div class="feature-item">🌟 Trait Inheritance</div>
+                <div class="feature-item">🏔️ Destructible Environment</div>
+                <div class="feature-item">👑 Boss Battles</div>
             </div>
 
-            <!-- Chinese Content -->
-            <div class="lang-content" id="controls-zh">
-                <h2>🎮 操作方法</h2>
-                <div class="grid">
-                    <div class="grid-item">
-                        <h3>移动操作</h3>
-                        <p><span class="key">↑ W</span>向北移动</p>
-                        <p><span class="key">↓ S</span>向南移动</p>
-                        <p><span class="key">← A</span>向西移动</p>
-                        <p><span class="key">→ D</span>向东移动</p>
-                    </div>
-                    <div class="grid-item">
-                        <h3>动作</h3>
-                        <p><span class="key">Space</span>嚎叫（治疗）</p>
-                        <p><span class="key">X</span>破坏障碍物</p>
-                        <p><span class="key">R</span>重置游戏</p>
-                    </div>
-                    <div class="grid-item">
-                        <h3>控制切换</h
+            <div class="tips">
+                <h4>💡 Pro Tips</h4>
+                <ul>
+                    <li>Use the howl ability (Space) to heal when your health is low</li>
+                    <li>Strategic pregnancy timing can give you powerful offspring</li>
+                    <li>Switch between controlling the Mother Wolf and pack for optimal positioning</li>
+                    <li>Mountains can be destroyed at Level 3+ using the X key</li>
+                    <li>Each enemy type gives different traits to your offspring</li>
+                    <li>Plan your route carefully to avoid unnecessary battles</li>
+                    <li>The music system can help set the mood for different situations</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Enemy Types Section -->
+        <div class="section">
+            <h2>👹 Enemy Types & Traits</h2>
+            <div class="grid">
+                <div class="grid-item">
+                    <h4>🐰 Rabbits</h4>
+                    <p>Fast and agile prey. Defeating them may grant speed bonuses to offspring.</p>
+                </div>
+                <div class="grid-item">
+                    <h4>🦌 Deer</h4>
+                    <p>Larger prey with more experience. Can provide endurance traits.</p>
+                </div>
+                <div class="grid-item">
+                    <h4>🐻 Bears</h4>
+                    <p>Powerful predators. Defeating them grants strength traits to wolf pups.</p>
+                </div>
+                <div class="grid-item">
+                    <h4>👑 Boss Enemies</h4>
+                    <p>Unique powerful foes with special abilities and rare trait combinations.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🐺 Experience the wild adventure as the ultimate pack leader! 🐺</p>
+            <p>Created with passion for survival and strategy gaming enthusiasts</p>
+        </div>
+    </div>
+</body>
+</html>
