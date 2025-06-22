@@ -111,6 +111,16 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
+        .game-screenshot {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            margin: 20px auto;
+            display: block;
+            border: 3px solid #DAA520;
+        }
+
         .game-controls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -297,6 +307,54 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #DAA520;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, #FFE135 0%, #FFA500 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 2px solid #FF8C00;
+            text-align: center;
+        }
+
+        .event-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .achievement-item {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 5px 0;
+            border-left: 3px solid #FFD700;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2em;
@@ -309,7 +367,8 @@
             
             .phases-grid,
             .seasons-display,
-            .game-controls {
+            .game-controls,
+            .feature-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -331,59 +390,153 @@
             <div style="text-align: center; margin: 25px 0;">
                 <a href="https://www.tacorari.eu/leaves.html" class="back-button" target="_blank" style="font-size: 1.1em; padding: 15px 30px;">🎮 Play Seasons of Civilization</a>
             </div>
+
+            <img src="https://soyadayo.github.io/Mappon/leavesgame.png" alt="Seasons of Civilization Game Screenshot" class="game-screenshot">
         </section>
 
         <section class="section">
-            <h2>🖱️ Controls</h2>
+            <h2>🆕 New Features & Enhancements</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Achievement System</h3>
+                    <p>Unlock achievements as you progress through the game. Complete specific challenges to earn recognition for your civilization-building skills.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Dynamic Challenges</h3>
+                    <p>Face time-limited challenges that test your ability to rapidly develop population, collect leaves, or create thriving regions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌪️</div>
+                    <h3>Weather Events</h3>
+                    <p>Experience random weather events like droughts, storms, and nature's blessings that dramatically affect gameplay dynamics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏘️</div>
+                    <h3>Enhanced Buildings</h3>
+                    <p>Watch as your regions develop unique architectural styles, complete with lit windows, detailed roofs, and prosperity-based designs.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🖱️ Controls & Gameplay</h2>
             <div class="game-controls">
                 <div class="control-item">
                     <span class="control-icon">🌪️</span>
                     <h3>Mouse Movement</h3>
-                    <p>Move your mouse to control wind direction and strength. Faster movements create stronger winds that affect leaf trajectories.</p>
+                    <p>Move your mouse to control wind direction and strength. Faster movements create stronger winds that dramatically affect leaf trajectories.</p>
                 </div>
                 <div class="control-item">
                     <span class="control-icon">🍃</span>
                     <h3>Leaf Guidance</h3>
-                    <p>Use wind to guide falling leaves to specific regions, promoting development and prosperity in those areas.</p>
+                    <p>Use wind to strategically guide falling leaves to specific regions. Higher leaf density promotes development and prosperity.</p>
                 </div>
                 <div class="control-item">
                     <span class="control-icon">🎵</span>
-                    <h3>Music Control</h3>
-                    <p>Toggle the music system in the top-right corner. Enjoy 8 atmospheric tracks that automatically cycle through different civilizational themes.</p>
+                    <h3>Audio Controls</h3>
+                    <p>Toggle the immersive 8-track music system and access the how-to-play guide directly from the game interface.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🏆 Achievement System</h2>
+            <p>Unlock <span class="highlight">6 unique achievements</span> that recognize your mastery of different aspects of civilization development:</p>
+            <div class="ui-explanation">
+                <div class="achievement-item">
+                    <strong>🍃 First Leaf:</strong> Collect your very first leaf to begin your civilization's journey
+                </div>
+                <div class="achievement-item">
+                    <strong>👥 Population Builder:</strong> Reach 100 population across all regions
+                </div>
+                <div class="achievement-item">
+                    <strong>⚡ Speed Developer:</strong> Achieve 500 population in just 2 minutes
+                </div>
+                <div class="achievement-item">
+                    <strong>🌵 Drought Survivor:</strong> Successfully maintain your civilization during a drought event
+                </div>
+                <div class="achievement-item">
+                    <strong>🌟 Perfect Balance:</strong> Get all 8 regions thriving simultaneously
+                </div>
+                <div class="achievement-item">
+                    <strong>🍂 Leaf Master:</strong> Collect a total of 1000 leaves throughout your journey
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⚡ Dynamic Challenge System</h2>
+            <p>Face <span class="highlight">time-limited challenges</span> that appear randomly during gameplay, testing different aspects of your civilization management skills:</p>
+            <div class="game-controls">
+                <div class="control-item">
+                    <span class="control-icon">👥</span>
+                    <h3>Population Rush</h3>
+                    <p>Reach 100 population within 60 seconds by efficiently distributing leaves across regions.</p>
+                </div>
+                <div class="control-item">
+                    <span class="control-icon">🍃</span>
+                    <h3>Leaf Collection Sprint</h3>
+                    <p>Collect 50 leaves in just 45 seconds using optimal wind control and timing.</p>
+                </div>
+                <div class="control-item">
+                    <span class="control-icon">🏘️</span>
+                    <h3>Regional Mastery</h3>
+                    <p>Get 3 regions to thriving status within 90 seconds through strategic leaf placement.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🌪️ Weather Events</h2>
+            <p>Experience <span class="highlight">dynamic weather systems</span> that randomly affect your world, each with unique effects on gameplay:</p>
+            <div class="seasons-display">
+                <div class="event-card">
+                    <div class="event-name">🌵 Drought</div>
+                    <p>Leaf spawning reduced by 70%<br>Wind effects weakened<br>Duration: 20 seconds</p>
+                </div>
+                <div class="event-card">
+                    <div class="event-name">🌪️ Storm</div>
+                    <p>Leaf spawning doubled<br>Wind effects tripled<br>Duration: 15 seconds</p>
+                </div>
+                <div class="event-card">
+                    <div class="event-name">🌟 Nature's Blessing</div>
+                    <p>Leaf spawning tripled<br>Enhanced wind control<br>Duration: 25 seconds</p>
                 </div>
             </div>
         </section>
 
         <section class="section">
             <h2>🌸 Seasonal System</h2>
-            <p>The game features a <span class="highlight">dynamic seasonal cycle</span> that affects leaf patterns, spawn rates, and wind sensitivity throughout the year.</p>
+            <p>The game features a <span class="highlight">dynamic seasonal cycle</span> that affects leaf patterns, spawn rates, and wind sensitivity throughout the year:</p>
             <div class="seasons-display">
                 <div class="season-card spring">
                     <span class="season-icon">🌸</span>
                     <h3>Spring</h3>
-                    <p>Fresh green leaves fall frequently<br>Wind Effect: Moderate</p>
+                    <p>Fresh green leaves fall moderately<br>Wind Effect: Balanced<br>Spawn Rate: Every 10 seconds</p>
                 </div>
                 <div class="season-card summer">
                     <span class="season-icon">☀️</span>
                     <h3>Summer</h3>
-                    <p>Deep green leaves fall slowly<br>Wind Effect: Weak</p>
+                    <p>Deep green leaves fall slowly<br>Wind Effect: Reduced<br>Spawn Rate: Every 17 seconds</p>
                 </div>
                 <div class="season-card autumn">
                     <span class="season-icon">🍂</span>
                     <h3>Autumn</h3>
-                    <p>Colorful leaves fall rapidly<br>Wind Effect: Strong</p>
+                    <p>Colorful leaves fall rapidly<br>Wind Effect: Enhanced<br>Spawn Rate: Every 5 seconds</p>
                 </div>
                 <div class="season-card winter">
                     <span class="season-icon">❄️</span>
                     <h3>Winter</h3>
-                    <p>Pale leaves fall rarely<br>Wind Effect: Maximum</p>
+                    <p>Pale leaves fall rarely<br>Wind Effect: Maximum<br>Spawn Rate: Every 25 seconds</p>
                 </div>
             </div>
         </section>
 
         <section class="section">
             <h2>🏛️ Civilization Stages</h2>
-            <p>Progress through <span class="highlight">10 evolutionary stages</span> by collecting leaves, each representing a major leap in human development.</p>
+            <p>Progress through <span class="highlight">10 evolutionary stages</span> by collecting leaves, each representing a major leap in human development:</p>
             <div class="phases-grid">
                 <div class="phase-card">
                     <div class="phase-number">1</div>
@@ -439,7 +592,7 @@
         </section>
 
         <section class="section">
-            <h2>📊 User Interface</h2>
+            <h2>📊 Enhanced User Interface</h2>
             <div class="ui-explanation">
                 <div class="ui-item">
                     <div class="ui-icon">🍃</div>
@@ -462,63 +615,44 @@
                 <div class="ui-item">
                     <div class="ui-icon">🏙️</div>
                     <div>
-                        <strong>REGIONS:</strong> Prosperity breakdown by region (Green●=Thriving, Yellow●=Growing, Brown●=Struggling, Gray●=Abandoned)
+                        <strong>REGIONS:</strong> Prosperity breakdown (Green●=Thriving, Yellow●=Growing, Brown●=Struggling, Gray●=Abandoned)
+                    </div>
+                </div>
+                <div class="ui-item">
+                    <div class="ui-icon">⚡</div>
+                    <div>
+                        <strong>CHALLENGE PANEL:</strong> Shows current timed challenge with progress bar and countdown timer.
+                    </div>
+                </div>
+                <div class="ui-item">
+                    <div class="ui-icon">🏆</div>
+                    <div>
+                        <strong>ACHIEVEMENTS:</strong> Displays your unlocked achievements with visual completion indicators.
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="section">
-            <h2>📖 Village Tales System</h2>
-            <p>The "Village Tales" panel on the right side presents <span class="highlight">evolving narratives</span> that change with each civilization stage. These stories depict the daily lives of people and how leaf distribution affects society, from simple tribal disputes to complex modern social issues.</p>
-            <p>Stories update periodically and become more sophisticated as civilization advances, offering insights into the human condition across different eras.</p>
-        </section>
-
-        <section class="section">
-            <h2>🎯 Strategy & Tips</h2>
-            <div class="tips">
-                <h3>💡 Effective Playing Strategies</h3>
-                <div class="tip-item">
-                    <strong>Target Autumn:</strong> Autumn provides the highest leaf spawn rate and strongest wind effects, making it the most efficient season for collection.
-                </div>
-                <div class="tip-item">
-                    <strong>Regional Balance:</strong> Avoid concentrating all leaves in one area. Spread them across multiple regions for balanced development.
-                </div>
-                <div class="tip-item">
-                    <strong>Wind Timing:</strong> Apply wind when leaves are just beginning to fall for maximum guidance effectiveness.
-                </div>
-                <div class="tip-item">
-                    <strong>Seasonal Adaptation:</strong> Adjust your strategy based on seasonal characteristics - be patient in winter, aggressive in autumn.
-                </div>
-                <div class="tip-item">
-                    <strong>Read the Stories:</strong> Village tales provide hints about which regions need attention and reflect current social dynamics.
-                </div>
-                <div class="tip-item">
-                    <strong>Long-term Planning:</strong> Consider that leaves decompose over time, so maintain consistent collection efforts rather than sporadic bursts.
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2>🌍 Regional Development</h2>
+            <h2>🌍 Regional Development System</h2>
             <p>The game world is divided into <span class="highlight">8 distinct regions</span>, each capable of independent development based on leaf density:</p>
             <div class="ui-explanation">
                 <div class="ui-item">
                     <div class="ui-icon">🟢</div>
                     <div>
-                        <strong>Thriving (15+ leaves):</strong> Maximum prosperity with large populations, advanced buildings, and lit windows at night.
+                        <strong>Thriving (15+ leaves):</strong> Maximum prosperity with large populations, advanced buildings with lit windows, and detailed architecture.
                     </div>
                 </div>
                 <div class="ui-item">
                     <div class="ui-icon">🟡</div>
                     <div>
-                        <strong>Growing (8-14 leaves):</strong> Moderate development with steady population growth and basic infrastructure.
+                        <strong>Growing (8-14 leaves):</strong> Moderate development with steady population growth and expanding infrastructure.
                     </div>
                 </div>
                 <div class="ui-item">
                     <div class="ui-icon">🟤</div>
                     <div>
-                        <strong>Struggling (3-7 leaves):</strong> Limited development with small settlements and minimal population.
+                        <strong>Struggling (3-7 leaves):</strong> Limited development with small settlements and basic structures.
                     </div>
                 </div>
                 <div class="ui-item">
@@ -531,15 +665,43 @@
         </section>
 
         <section class="section">
-            <h2>🏆 Victory Conditions</h2>
-            <p>The ultimate goal is reaching the <span class="highlight">"Eco-Future Utopia"</span> phase, requiring 2000 collected leaves. This represents the perfect harmony between nature and technology, where humanity has learned to work with natural systems rather than against them.</p>
-            <p>Each advancement brings new architectural styles, increased population capacity, and more complex social dynamics reflected in the evolving village tales.</p>
+            <h2>🎯 Advanced Strategy & Tips</h2>
+            <div class="tips">
+                <h3>💡 Master-Level Playing Strategies</h3>
+                <div class="tip-item">
+                    <strong>Autumn Optimization:</strong> Autumn provides the highest leaf spawn rate (every 5 seconds) and strongest wind effects - perfect for rapid development.
+                </div>
+                <div class="tip-item">
+                    <strong>Challenge Preparation:</strong> Keep leaf distribution balanced to quickly respond to population or thriving region challenges.
+                </div>
+                <div class="tip-item">
+                    <strong>Event Adaptation:</strong> During droughts, focus on wind precision; during storms, use the chaos to spread leaves widely.
+                </div>
+                <div class="tip-item">
+                    <strong>Achievement Hunting:</strong> Plan your early game to unlock "Speed Developer" by concentrating leaves in 2-3 regions initially.
+                </div>
+                <div class="tip-item">
+                    <strong>Regional Balance:</strong> For the "Perfect Balance" achievement, gradually spread leaves evenly across all 8 regions.
+                </div>
+                <div class="tip-item">
+                    <strong>Weather Timing:</strong> Nature's Blessing events are perfect opportunities to complete leaf collection challenges quickly.
+                </div>
+            </div>
         </section>
 
         <section class="section">
-            <h2>🎵 Audio Experience</h2>
-            <p>The game features an <span class="highlight">8-track ambient soundtrack</span> that automatically cycles through different musical themes. Each track complements the atmospheric and meditative nature of the gameplay, enhancing the connection between player, nature, and civilization.</p>
-            <p>Music can be toggled on/off using the control in the top-right corner, and the current track information is displayed for your reference.</p>
+            <h2>📖 Village Tales & Storytelling</h2>
+            <p>The "Village Tales" panel presents <span class="highlight">evolving narratives</span> that change with each civilization stage. These stories now reflect the impact of challenges, achievements, and weather events, creating a richer narrative experience that responds to your actions and the world's changing conditions.</p>
+        </section>
+
+        <section class="section">
+            <h2>🏆 Victory & End Game</h2>
+            <p>The ultimate goal remains reaching the <span class="highlight">"Eco-Future Utopia"</span> phase with 2000 collected leaves. However, the journey is now enriched with achievements to unlock, challenges to complete, and weather events to master. True victory means not just reaching the final phase, but mastering all aspects of the game's expanded systems.</p>
+        </section>
+
+        <section class="section">
+            <h2>🎵 Enhanced Audio Experience</h2>
+            <p>The game features an <span class="highlight">8-track ambient soundtrack</span> that automatically cycles through different musical themes. The enhanced audio system now includes sound effects for achievements, challenge completions, and weather events, creating a more immersive experience.</p>
         </section>
 
         <div style="text-align: center; margin: 30px 0;">
@@ -581,33 +743,4 @@
                 if (target) {
                     target.scrollIntoView({
                         behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Section fade-in animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.section').forEach(section => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(section);
-        });
-    </script>
-</body>
-</html>
+                        block:
