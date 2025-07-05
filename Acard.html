@@ -281,6 +281,151 @@
     <p><strong>💡 コスト削減</strong>: 白黒印刷で低コスト、どこでも作成可能</p>
 </div>
 
+<!-- 詳細ルール -->
+<div style="border: 3px solid #000; padding: 20px; margin: 20px 0; background: white;">
+    <h2 style="text-align: center; margin-top: 0; font-size: 2em; border-bottom: 2px solid #000; padding-bottom: 10px;">📖 ゲームルール</h2>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px;">
+        <div>
+            <h3 style="background: #000; color: white; padding: 8px; margin: 0 0 10px 0;">🎯 ゲーム概要</h3>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li><strong>プレイヤー数</strong>: 2-4人</li>
+                <li><strong>プレイ時間</strong>: 30-45分</li>
+                <li><strong>対象年齢</strong>: 10歳以上</li>
+                <li><strong>目標</strong>: 最後まで生き残る</li>
+            </ul>
+        </div>
+        
+        <div>
+            <h3 style="background: #000; color: white; padding: 8px; margin: 0 0 10px 0;">🃏 カード構成</h3>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li><strong>アレルギーカード</strong>: 18枚</li>
+                <li><strong>環境カード</strong>: 9枚</li>
+                <li><strong>対策カード</strong>: 11枚</li>
+                <li><strong>プレイヤーボード</strong>: 4枚</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h3 style="background: #000; color: white; padding: 8px; margin: 20px 0 10px 0;">🚀 ゲーム準備</h3>
+    <ol style="margin: 0; padding-left: 20px;">
+        <li><strong>各プレイヤー</strong>: プレイヤーボードを受け取り、体力を10に設定</li>
+        <li><strong>アレルギーカード</strong>: シャッフルして各プレイヤーに3枚ずつ配布</li>
+        <li><strong>環境カード・対策カード</strong>: それぞれシャッフルして山札にする</li>
+        <li><strong>スタートプレイヤー</strong>: 最近アレルギー症状が出た人（または適当に決める）</li>
+    </ol>
+    
+    <h3 style="background: #000; color: white; padding: 8px; margin: 20px 0 10px 0;">🔄 ターンの流れ</h3>
+    <div style="border: 2px solid #000; padding: 15px; background: #f8f8f8;">
+        <h4 style="margin-top: 0;">1️⃣ 環境フェーズ</h4>
+        <p style="margin: 5px 0;">スタートプレイヤーが環境カードを1枚めくり、全員に公開する</p>
+        
+        <h4>2️⃣ 対策フェーズ（ターン順に実行）</h4>
+        <div style="margin-left: 20px;">
+            <p style="margin: 5px 0;"><strong>a) 対策カード獲得判定</strong></p>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>自分のアレルギーと現在の環境カードを照合</li>
+                <li><strong>ダメージを受ける場合のみ</strong>対策カード1枚をドロー</li>
+                <li>ダメージがない場合は何もしない</li>
+            </ul>
+            
+            <p style="margin: 5px 0;"><strong>b) 対策カード使用</strong></p>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>手札の対策カードを好きなだけ使用可能</li>
+                <li>使用したカードは捨て札置き場へ</li>
+            </ul>
+        </div>
+        
+        <h4>3️⃣ ダメージフェーズ（全員同時）</h4>
+        <div style="margin-left: 20px;">
+            <p style="margin: 5px 0;"><strong>a) ダメージ計算</strong></p>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>環境カードと自分のアレルギーを照合</li>
+                <li>該当するアレルギーごとにダメージを計算</li>
+                <li><strong>軽度</strong>: 表示ダメージ×1</li>
+                <li><strong>中度</strong>: 表示ダメージ×1.5（端数切上げ）</li>
+                <li><strong>重度</strong>: 表示ダメージ×2</li>
+            </ul>
+            
+            <p style="margin: 5px 0;"><strong>b) 防護効果適用</strong></p>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>使用した対策カードの効果を適用</li>
+                <li>ダメージを軽減・無効化</li>
+            </ul>
+            
+            <p style="margin: 5px 0;"><strong>c) 体力減少</strong></p>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>最終ダメージ分だけ体力を減らす</li>
+            </ul>
+        </div>
+        
+        <h4>4️⃣ 終了フェーズ</h4>
+        <div style="margin-left: 20px;">
+            <p style="margin: 5px 0;"><strong>a) 脱落判定</strong></p>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>体力が0以下のプレイヤーは脱落</li>
+            </ul>
+            
+            <p style="margin: 5px 0;"><strong>b) アレルギー進行</strong></p>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>6ターン経過ごとに、全プレイヤーはアレルギーカードを1枚追加ドロー</li>
+            </ul>
+            
+            <p style="margin: 5px 0;"><strong>c) 次ターン準備</strong></p>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+                <li>スタートプレイヤーマーカーを時計回りに渡す</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+            <h3 style="background: #000; color: white; padding: 8px; margin: 0 0 10px 0;">🏆 勝利条件</h3>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li><strong>基本勝利</strong>: 最後まで生き残った1人が勝利</li>
+                <li><strong>同時脱落の場合</strong>:</li>
+                <ul style="margin: 5px 0; padding-left: 20px;">
+                    <li>1. より多くのターンを生き残った</li>
+                    <li>2. 最終的な体力が高い</li>
+                    <li>3. 残りアレルギー数が少ない</li>
+                </ul>
+            </ul>
+        </div>
+        
+        <div>
+            <h3 style="background: #000; color: white; padding: 8px; margin: 0 0 10px 0;">⚡ 重要ポイント</h3>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li>対策カードは<strong>ダメージ予定者のみ</strong>獲得</li>
+                <li>複数のアレルギーが該当する場合は<strong>合計</strong></li>
+                <li>一部の対策カードは<strong>他プレイヤーにも使用可能</strong></li>
+                <li>6ターンごとの<strong>アレルギー追加</strong>を忘れずに</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div style="border: 2px solid #000; padding: 15px; margin-top: 20px; background: #fff3cd;">
+        <h3 style="margin-top: 0;">💡 戦略のヒント</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <p><strong>🎯 基本戦略</strong></p>
+                <ul style="margin: 5px 0; padding-left: 20px;">
+                    <li>自分のアレルギーと出やすい環境を把握</li>
+                    <li>回復カードはギリギリまで温存</li>
+                    <li>防護カードで大ダメージを回避</li>
+                </ul>
+            </div>
+            <div>
+                <p><strong>🚀 上級戦略</strong></p>
+                <ul style="margin: 5px 0; padding-left: 20px;">
+                    <li>残り環境カードから危険度を予測</li>
+                    <li>他プレイヤーの状況を観察</li>
+                    <li>体質改善の使用タイミングを見極め</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="icon-legend">
     <div class="icon-item">
         <span style="font-size: 1.5em;">🌲</span>
